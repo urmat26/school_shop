@@ -33,7 +33,7 @@ function formatDate(isoString) {
 /** Форматирование цены */
 function formatPrice(price) {
   if (!price || price === 0) return 'Бесплатно';
-  return new Intl.NumberFormat('ru-RU').format(price) + ' ₸';
+  return new Intl.NumberFormat('ru-RU').format(price) + ' сом';
 }
 
 /** Иконка категории */
