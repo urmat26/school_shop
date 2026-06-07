@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Создать новое объявление на школьном маркетплейсе">
+  <title>Создать объявление — Маркетплейс</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══════════ Header ═══════════ -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">🏪</div>
+        <div class="logo-text"><span>Market</span></div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">
+          <span class="nav-link-icon">🏠</span>
+          Главная
+        </a>
+        <a href="create.html" class="nav-link active">
+          <span class="nav-link-icon">➕</span>
+          Создать
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-primary btn-sm" id="login-btn">
+          👤 Войти
+        </button>
+        <div class="user-display" id="user-display" style="display:none;">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <span class="user-nickname" id="user-nickname"></span>
+          <button id="logout-btn">Выйти</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════ Form ═══════════ -->
+  <main class="form-page" style="position: relative; z-index: 1;">
+    <div class="form-page-header animate-fade-in-up">
+      <div class="breadcrumb">
+        <a href="index.html">Главная</a>
+        <span class="breadcrumb-sep">›</span>
+        <span id="breadcrumb-current">Новое объявление</span>
+      </div>
+      <h1 class="form-page-title" id="page-title">✨ Новое объявление</h1>
+      <p class="form-page-subtitle" id="page-subtitle">Заполните форму, чтобы разместить товар</p>
+    </div>
+
+    <form class="form-card animate-fade-in-up" id="create-form" novalidate>
+      <!-- Image Upload -->
+      <div class="form-group">
+        <label class="form-label">📷 Фото товара</label>
+        <div class="image-upload">
+          <div class="image-upload-area" id="upload-area">
+            <div class="image-upload-icon">📸</div>
+            <p class="image-upload-text">
+              <strong>Нажмите</strong> или перетащите фото
+            </p>
+            <p class="image-upload-hint">JPG, PNG до 2 MB</p>
+            <img id="image-preview" alt="Preview">
+            <input
+              type="file"
+              id="image-input"
+              accept="image/jpeg,image/png,image/webp"
+            >
+          </div>
+          <button type="button" class="image-remove-btn" id="image-remove" title="Удалить фото">✕</button>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div class="form-group" id="title-group">
+        <label class="form-label" for="title-input">
+          Название <span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-input"
+          id="title-input"
+          placeholder="Например: iPhone 12 чехол"
+          maxlength="100"
+          required
+        >
+        <p class="form-error-text">Введите название товара</p>
+        <p class="form-hint">До 100 символов</p>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group" id="description-group">
+        <label class="form-label" for="description-input">
+          Описание <span class="required">*</span>
+        </label>
+        <textarea
+          class="form-textarea"
+          id="description-input"
+          placeholder="Опишите товар подробнее: состояние, размер, цвет..."
+          maxlength="1000"
+          required
+        ></textarea>
+        <p class="form-error-text">Добавьте описание</p>
+        <p class="form-hint">До 1000 символов</p>
+      </div>
+
+      <!-- Price -->
+      <div class="form-group" id="price-group">
+        <label class="form-label" for="price-input">
+          Цена (₸) <span class="required">*</span>
+        </label>
+        <input
+          type="number"
+          class="form-input"
+          id="price-input"
+          placeholder="0 = бесплатно"
+          min="0"
+          max="999999"
+          required
+        >
+        <p class="form-error-text">Укажите цену</p>
+        <p class="form-hint">Введите 0, если отдаёте бесплатно</p>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group" id="category-group">
+        <label class="form-label" for="category-select">
+          Категория <span class="required">*</span>
+        </label>
+        <select class="form-select" id="category-select" required>
+          <option value="">Выберите категорию</option>
+          <!-- Категории добавляются через JS -->
+        </select>
+        <p class="form-error-text">Выберите категорию</p>
+      </div>
+
+      <!-- Contact -->
+      <div class="form-group" id="contact-group">
+        <label class="form-label" for="contact-input">
+          Контакт <span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          class="form-input"
+          id="contact-input"
+          placeholder="Telegram, WhatsApp или номер телефона"
+          maxlength="100"
+          required
+        >
+        <p class="form-error-text">Укажите контакт для связи</p>
+      </div>
+
+      <!-- Form Error -->
+      <div id="form-error" class="text-center" style="color: var(--red); font-size: 0.9rem; display: none;"></div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <a href="index.html" class="btn btn-secondary">← Назад</a>
+        <button type="submit" class="btn btn-primary" id="submit-btn">
+          🚀 Опубликовать
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <!-- ═══════════ Footer ═══════════ -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-text">
+        🏪 Школьный Маркетплейс © 2025 — Создано с ❤️
+      </p>
+    </div>
+  </footer>
+
+  <!-- ═══════════ Auth Modal ═══════════ -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-overlay-bg"></div>
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-icon">👋</div>
+        <h2 class="modal-title">Добро пожаловать!</h2>
+        <p class="modal-subtitle">Введите никнейм, чтобы продолжить</p>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          class="form-input"
+          id="nickname-input"
+          placeholder="Ваш никнейм..."
+          maxlength="20"
+          autocomplete="off"
+        >
+        <div id="auth-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="auth-submit">Войти 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="api.js"></script>
+  <script src="create.js"></script>
+</body>
+</html>

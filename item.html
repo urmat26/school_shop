@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Просмотр объявления на школьном маркетплейсе">
+  <title>Объявление — Маркетплейс</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══════════ Header ═══════════ -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">🏪</div>
+        <div class="logo-text"><span>Market</span></div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">
+          <span class="nav-link-icon">🏠</span>
+          Главная
+        </a>
+        <a href="create.html" class="nav-link">
+          <span class="nav-link-icon">➕</span>
+          Создать
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-primary btn-sm" id="login-btn">
+          👤 Войти
+        </button>
+        <div class="user-display" id="user-display" style="display:none;">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <span class="user-nickname" id="user-nickname"></span>
+          <button id="logout-btn">Выйти</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════ Main Content ═══════════ -->
+  <main class="item-detail-page" style="position: relative; z-index: 1;">
+    <div class="container">
+
+      <!-- Breadcrumb -->
+      <div class="breadcrumb animate-fade-in">
+        <a href="index.html">Главная</a>
+        <span class="breadcrumb-sep">›</span>
+        <span id="breadcrumb-title">Объявление</span>
+      </div>
+
+      <!-- Loading -->
+      <div class="loading-container" id="loading">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Загрузка объявления...</p>
+      </div>
+
+      <!-- Error State -->
+      <div class="empty-state" id="error-state" style="display:none;">
+        <div class="empty-state-icon">😔</div>
+        <h2 class="empty-state-title">Объявление не найдено</h2>
+        <p class="empty-state-text">Возможно, оно было удалено</p>
+        <a href="index.html" class="btn btn-primary">← На главную</a>
+      </div>
+
+      <!-- Item Detail -->
+      <div class="item-detail" id="item-container" style="display:none;">
+        <!-- Gallery -->
+        <div class="item-detail-gallery animate-fade-in-up">
+          <div class="item-detail-image">
+            <img id="item-image" alt="Фото товара" src="">
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="item-detail-info animate-fade-in-up" style="animation-delay: 0.1s;">
+          <!-- Category & Favorite -->
+          <div class="flex items-center justify-between">
+            <div class="item-detail-category">
+              <span class="category-badge" id="item-category" data-category=""></span>
+            </div>
+            <button class="item-card-favorite" id="favorite-btn" title="В избранное">
+              ♡
+            </button>
+          </div>
+
+          <!-- Title -->
+          <div class="item-detail-header">
+            <h1 class="item-detail-title" id="item-title"></h1>
+            <div class="item-detail-price" id="item-price"></div>
+          </div>
+
+          <!-- Stats -->
+          <div class="item-detail-stats">
+            <div class="stat-item">
+              <span class="stat-icon">👁</span>
+              <span id="item-views">0</span> просмотров
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon">📅</span>
+              <span id="item-date"></span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="item-detail-description">
+            <h3>Описание</h3>
+            <p id="item-description"></p>
+          </div>
+
+          <!-- Author -->
+          <div class="author-card">
+            <div class="author-avatar" id="author-avatar">U</div>
+            <div class="author-info">
+              <div class="author-name" id="item-author"></div>
+              <div class="author-label">Продавец</div>
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div class="contact-card">
+            <div class="contact-label">📩 Связаться</div>
+            <div class="contact-value" id="item-contact"></div>
+          </div>
+
+          <!-- Actions (only for owner) -->
+          <div class="item-actions" id="item-actions" style="display:none;">
+            <a href="#" class="btn btn-secondary" id="edit-btn">✏️ Редактировать</a>
+            <button class="btn btn-danger" id="delete-btn">🗑 Удалить</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ═══════════ Footer ═══════════ -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-text">
+        🏪 Школьный Маркетплейс © 2025 — Создано с ❤️
+      </p>
+    </div>
+  </footer>
+
+  <!-- ═══════════ Auth Modal ═══════════ -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-overlay-bg"></div>
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-icon">👋</div>
+        <h2 class="modal-title">Добро пожаловать!</h2>
+        <p class="modal-subtitle">Введите никнейм, чтобы продолжить</p>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          class="form-input"
+          id="nickname-input"
+          placeholder="Ваш никнейм..."
+          maxlength="20"
+          autocomplete="off"
+        >
+        <div id="auth-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="auth-submit">Войти 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ Delete Confirmation Modal ═══════════ -->
+  <div class="modal-overlay delete-modal" id="delete-modal">
+    <div class="modal-overlay-bg"></div>
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-icon">⚠️</div>
+        <h2 class="modal-title">Удалить объявление?</h2>
+        <p class="modal-subtitle">Это действие нельзя отменить</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="delete-cancel">Отмена</button>
+        <button class="btn btn-danger" id="delete-confirm">🗑 Удалить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="api.js"></script>
+  <script src="item.js"></script>
+</body>
+</html>

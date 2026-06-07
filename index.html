@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Школьный маркетплейс — покупай, продавай и обменивай вещи с одноклассниками">
+  <title>Школьный Маркетплейс — Объявления</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══════════ Header ═══════════ -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">🏪</div>
+        <div class="logo-text"><span>Market</span></div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link active">
+          <span class="nav-link-icon">🏠</span>
+          Главная
+        </a>
+        <a href="create.html" class="nav-link">
+          <span class="nav-link-icon">➕</span>
+          Создать
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-primary btn-sm" id="login-btn">
+          👤 Войти
+        </button>
+        <div class="user-display" id="user-display" style="display:none;">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <span class="user-nickname" id="user-nickname"></span>
+          <button id="logout-btn">Выйти</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════ Hero Section ═══════════ -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">
+        Школьный <span class="gradient-text">Маркетплейс</span>
+      </h1>
+      <p class="hero-subtitle">
+        Покупай, продавай и обменивай вещи с одноклассниками.
+        Учебники, гаджеты, одежда и многое другое!
+      </p>
+      <a href="create.html" class="btn btn-primary btn-lg">
+        ✨ Разместить объявление
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════ Search & Filters ═══════════ -->
+  <section class="search-section">
+    <div class="container">
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="search-input"
+          id="search-input"
+          placeholder="Искать объявления..."
+          autocomplete="off"
+        >
+        <button class="search-clear" id="search-clear" title="Очистить">✕</button>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="filters-row">
+        <div class="filter-pills" id="category-filters">
+          <button class="filter-pill active" data-category="all">
+            <span class="filter-pill-icon">🔥</span> Все
+          </button>
+          <!-- Категории добавляются через JS -->
+        </div>
+
+        <div class="sort-controls">
+          <span class="sort-label">Сортировка:</span>
+          <select class="sort-select" id="sort-select">
+            <option value="date-desc">Сначала новые</option>
+            <option value="date-asc">Сначала старые</option>
+            <option value="price-asc">Цена ↑</option>
+            <option value="price-desc">Цена ↓</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Results Info -->
+      <div class="results-info">
+        <span class="results-count" id="results-count"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ Items Grid ═══════════ -->
+  <main>
+    <div class="container">
+      <!-- Loading -->
+      <div class="loading-container" id="loading">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Загрузка объявлений...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <div class="empty-state-icon">📭</div>
+        <h2 class="empty-state-title">Ничего не найдено</h2>
+        <p class="empty-state-text">Попробуйте изменить поиск или фильтры</p>
+        <a href="create.html" class="btn btn-primary">Создать объявление</a>
+      </div>
+
+      <!-- Items Grid -->
+      <div class="items-grid" id="items-grid" style="display:none;"></div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </main>
+
+  <!-- ═══════════ Footer ═══════════ -->
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-text">
+        🏪 Школьный Маркетплейс © 2025 — Создано с ❤️
+      </p>
+    </div>
+  </footer>
+
+  <!-- ═══════════ Auth Modal ═══════════ -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-overlay-bg"></div>
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-icon">👋</div>
+        <h2 class="modal-title">Добро пожаловать!</h2>
+        <p class="modal-subtitle">Введите никнейм, чтобы продолжить</p>
+      </div>
+      <div class="modal-body">
+        <input
+          type="text"
+          class="form-input"
+          id="nickname-input"
+          placeholder="Ваш никнейм..."
+          maxlength="20"
+          autocomplete="off"
+        >
+        <div id="auth-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="auth-submit">Войти 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="api.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
