@@ -242,10 +242,10 @@ async function incrementViews(id) {
   const viewedKey = 'marketplace_viewed';
   let viewed = [];
   try {
-    viewed = JSON.parse(sessionStorage.getItem(viewedKey) || '[]');
+    viewed = JSON.parse(localStorage.getItem(viewedKey) || '[]');
   } catch { /* ignore */ }
 
-  // Не считать повторные просмотры в одной сессии
+  // Не считать повторные просмотры с одного браузера
   if (viewed.includes(id)) return;
 
   const data = await fetchAll();
@@ -254,6 +254,6 @@ async function incrementViews(id) {
     item.views = (item.views || 0) + 1;
     await saveAll(data);
     viewed.push(id);
-    sessionStorage.setItem(viewedKey, JSON.stringify(viewed));
+    localStorage.setItem(viewedKey, JSON.stringify(viewed));
   }
 }
