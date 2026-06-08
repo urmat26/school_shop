@@ -1,0 +1,8 @@
+# Локальные ключи API — не публикуйте в репозиторий
+config.js
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
