@@ -30,6 +30,7 @@ let currentItem = null;
 // ───────────────────── Init ─────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   Auth.init();
+  updateFavCount();
 
   const id = getUrlParam('id');
   if (!id) {
@@ -39,6 +40,64 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await loadItem(id);
 });
+
+function updateFavCount() {
+  const badges = document.querySelectorAll('.fav-count-badge');
+  const count = Favorites.count();
+  badges.forEach(b => { b.textContent = count; b.style.display = count > 0 ? 'inline' : 'none'; });
+}
+
+function trackRecentlyViewed(item) {
+  const key = 'marketplace_recently';
+  let recent = [];
+  try { recent = JSON.parse(localStorage.getItem(key) || '[]'); } catch { recent = []; }
+  recent = recent.filter(i => i.id !== item.id);
+  recent.unshift({ id: item.id, title: item.title, price: item.price, category: item.category, image: item.image });
+  if (recent.length > 10) recent = recent.slice(0, 10);
+  localStorage.setItem(key, JSON.stringify(recent));
+}
+
+function renderRecentlyViewed() {
+  const key = 'marketplace_recently';
+  let recent = [];
+  try { recent = JSON.parse(localStorage.getItem(key) || '[]'); } catch { return; }
+  const filtered = recent.filter(i => i.id !== currentItem.id);
+  if (filtered.length === 0) return;
+  const container = document.getElementById('recently-viewed');
+  const grid = document.getElementById('recently-viewed-grid');
+  if (!container || !grid) return;
+  container.style.display = 'block';
+  grid.innerHTML = filtered.slice(0, 5).map(i => `
+    <div class="recently-viewed-card" onclick="window.location.href='item.html?id=${i.id}'">
+      <img src="${i.image || getPlaceholderSVG(i.category)}" alt="${i.title}" loading="lazy">
+      <div class="recently-viewed-card-body">
+        <div class="recently-viewed-card-title">${i.title}</div>
+        <div class="recently-viewed-card-price">${formatPrice(i.price)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function renderSimilarItems() {
+  const container = document.getElementById('similar-items');
+  const grid = document.getElementById('similar-items-grid');
+  if (!container || !grid || !currentItem) return;
+  const data = await fetchAll();
+  const similar = (data.items || [])
+    .filter(i => i.id !== currentItem.id && i.category === currentItem.category && i.status === 'active')
+    .slice(0, 4);
+  if (similar.length === 0) return;
+  container.style.display = 'block';
+  grid.innerHTML = similar.map(i => `
+    <div class="recently-viewed-card" onclick="window.location.href='item.html?id=${i.id}'">
+      <img src="${i.image || getPlaceholderSVG(i.category)}" alt="${i.title}" loading="lazy">
+      <div class="recently-viewed-card-body">
+        <div class="recently-viewed-card-title">${i.title}</div>
+        <div class="recently-viewed-card-price">${formatPrice(i.price)}</div>
+      </div>
+    </div>
+  `).join('');
+}
 
 // ───────────────────── Load Item ─────────────────────
 async function loadItem(id) {
@@ -100,7 +159,15 @@ function renderItem(item) {
 
   // Date & Views
   itemDate.textContent = formatDate(item.created);
-  itemViews.textContent = (item.views || 0) + 1; // +1 for current view
+  const viewCount = (item.views || 0) + 1;
+  itemViews.textContent = viewCount;
+  // Animate views counter
+  itemViews.classList.remove('views-animate');
+  void itemViews.offsetWidth; // trigger reflow
+  itemViews.classList.add('views-animate');
+
+  // Track recently viewed
+  trackRecentlyViewed(item);
 
   // Favorite
   const isFav = Favorites.isFavorite(item.id);
@@ -113,6 +180,21 @@ function renderItem(item) {
     itemActions.style.display = 'flex';
     editBtn.href = `create.html?id=${item.id}`;
     deleteBtn.addEventListener('click', () => showDeleteModal());
+  }
+
+  // Recently viewed & similar items
+  renderRecentlyViewed();
+  renderSimilarItems();
+
+  // Scroll to top
+  const scrollBtn = document.getElementById('scroll-top');
+  if (scrollBtn) {
+    window.addEventListener('scroll', () => {
+      scrollBtn.classList.toggle('visible', window.scrollY > 400);
+    });
+    scrollBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 
   // Delete modal events

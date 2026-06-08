@@ -10,6 +10,9 @@ let selectedCategory = 'all';
 let currentSort = 'date-desc';
 let searchQuery = '';
 let searchTimer = null;
+let myAdsOnly = false;
+let priceMin = '';
+let priceMax = '';
 
 // ───────────────────── DOM Elements ─────────────────────
 const searchInput = document.getElementById('search-input');
@@ -21,12 +24,18 @@ const loadingEl = document.getElementById('loading');
 const emptyState = document.getElementById('empty-state');
 const resultsCount = document.getElementById('results-count');
 const paginationEl = document.getElementById('pagination');
+const myAdsBtn = document.getElementById('my-ads-btn');
+const priceMinInput = document.getElementById('price-min');
+const priceMaxInput = document.getElementById('price-max');
+const clearFiltersBtn = document.getElementById('clear-filters-btn');
+const skeletonGrid = document.getElementById('skeleton-grid');
 
 // ───────────────────── Init ─────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   Auth.init();
   buildCategoryFilters();
   attachEvents();
+  updateFavCount();
   await loadItems();
 });
 
@@ -83,6 +92,58 @@ function attachEvents() {
     currentPage = 1;
     applyFilters();
   });
+
+  // My ads filter
+  myAdsBtn.addEventListener('click', () => {
+    myAdsOnly = !myAdsOnly;
+    myAdsBtn.classList.toggle('active', myAdsOnly);
+    currentPage = 1;
+    applyFilters();
+  });
+
+  // Price range
+  priceMinInput.addEventListener('input', () => {
+    priceMin = priceMinInput.value;
+    currentPage = 1;
+    applyFilters();
+  });
+  priceMaxInput.addEventListener('input', () => {
+    priceMax = priceMaxInput.value;
+    currentPage = 1;
+    applyFilters();
+  });
+
+  // Clear all filters
+  clearFiltersBtn.addEventListener('click', clearAllFilters);
+
+  // Scroll to top
+  const scrollBtn = document.getElementById('scroll-top');
+  if (scrollBtn) {
+    window.addEventListener('scroll', () => {
+      scrollBtn.classList.toggle('visible', window.scrollY > 400);
+    });
+    scrollBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+}
+
+function clearAllFilters() {
+  searchInput.value = '';
+  searchQuery = '';
+  searchClear.classList.remove('visible');
+  selectedCategory = 'all';
+  categoryFilters.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  const allPill = categoryFilters.querySelector('[data-category="all"]');
+  if (allPill) allPill.classList.add('active');
+  currentSort = 'date-desc';
+  sortSelect.value = 'date-desc';
+  myAdsOnly = false;
+  myAdsBtn.classList.remove('active');
+  priceMin = ''; priceMinInput.value = '';
+  priceMax = ''; priceMaxInput.value = '';
+  currentPage = 1;
+  applyFilters();
 }
 
 // ───────────────────── Load Items ─────────────────────
@@ -104,7 +165,12 @@ function applyFilters() {
 
     const matchCategory = selectedCategory === 'all' || item.category === selectedCategory;
 
-    return matchSearch && matchCategory;
+    const matchMyAds = !myAdsOnly || !Auth.getUser() || item.author === Auth.getUser();
+
+    const matchPriceMin = !priceMin || (item.price || 0) >= parseInt(priceMin);
+    const matchPriceMax = !priceMax || (item.price || 0) <= parseInt(priceMax);
+
+    return matchSearch && matchCategory && matchMyAds && matchPriceMin && matchPriceMax;
   });
 
   // Sort
@@ -118,6 +184,8 @@ function applyFilters() {
         return (a.price || 0) - (b.price || 0);
       case 'price-desc':
         return (b.price || 0) - (a.price || 0);
+      case 'views-desc':
+        return (b.views || 0) - (a.views || 0);
       default:
         return 0;
     }
@@ -284,6 +352,12 @@ function showLoading(show) {
     itemsGrid.style.display = 'none';
     emptyState.style.display = 'none';
   }
+}
+
+function updateFavCount() {
+  const badges = document.querySelectorAll('.fav-count-badge');
+  const count = Favorites.count();
+  badges.forEach(b => { b.textContent = count; b.style.display = count > 0 ? 'inline' : 'none'; });
 }
 
 function escapeHtml(str) {

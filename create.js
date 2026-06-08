@@ -89,6 +89,43 @@ function attachEvents() {
     clearImage();
   });
 
+  // Character counter for description
+  const descCounter = document.getElementById('desc-counter');
+  descriptionInput.addEventListener('input', () => {
+    const len = descriptionInput.value.length;
+    const max = descriptionInput.maxLength || 5000;
+    if (descCounter) {
+      descCounter.textContent = `${len} / ${max}`;
+      descCounter.className = 'char-counter' + (len > max * 0.9 ? ' danger' : len > max * 0.75 ? ' warning' : '');
+    }
+  });
+
+  // Unsaved changes warning
+  let formDirty = false;
+  const markDirty = () => { formDirty = true; };
+  [titleInput, descriptionInput, priceInput, categorySelect, contactInput].forEach(input => {
+    input.addEventListener('input', markDirty);
+    if (input.tagName === 'SELECT') input.addEventListener('change', markDirty);
+  });
+  window.addEventListener('beforeunload', (e) => {
+    if (formDirty) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+  form.addEventListener('submit', () => { formDirty = false; });
+
+  // Scroll to top
+  const scrollBtn = document.getElementById('scroll-top');
+  if (scrollBtn) {
+    window.addEventListener('scroll', () => {
+      scrollBtn.classList.toggle('visible', window.scrollY > 400);
+    });
+    scrollBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
   // Clear validation errors on input
   [titleInput, descriptionInput, priceInput, categorySelect, contactInput].forEach(input => {
     input.addEventListener('input', () => {

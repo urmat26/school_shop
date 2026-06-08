@@ -26,6 +26,10 @@
           <span class="nav-link-icon">➕</span>
           Создать
         </a>
+        <a href="favorites.html" class="nav-link" id="favorites-nav-link">
+          <span class="nav-link-icon">♥</span>
+          Избранное <span class="fav-count-badge" id="fav-count-nav">0</span>
+        </a>
       </nav>
 
       <div class="header-actions">
@@ -89,8 +93,24 @@
             <option value="date-asc">Сначала старые</option>
             <option value="price-asc">Цена ↑</option>
             <option value="price-desc">Цена ↓</option>
+            <option value="views-desc">По просмотрам</option>
           </select>
         </div>
+      </div>
+
+      <!-- Extended Filters -->
+      <div class="filters-row-extended" id="extended-filters">
+        <button class="filter-btn" id="my-ads-btn" title="Показать только мои объявления">
+          👤 Мои
+        </button>
+        <div class="price-range">
+          <input type="number" id="price-min" placeholder="Цена от" min="0">
+          <span class="price-range-sep">—</span>
+          <input type="number" id="price-max" placeholder="Цена до" min="0">
+        </div>
+        <button class="filter-btn filter-btn-danger" id="clear-filters-btn" title="Сбросить все фильтры">
+          ✕ Сбросить
+        </button>
       </div>
 
       <!-- Results Info -->
@@ -105,8 +125,14 @@
     <div class="container">
       <!-- Loading -->
       <div class="loading-container" id="loading">
-        <div class="loading-spinner"></div>
-        <p class="loading-text">Загрузка объявлений...</p>
+        <div class="skeleton-grid" id="skeleton-grid">
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+        </div>
       </div>
 
       <!-- Empty State -->
@@ -162,6 +188,9 @@
 
   <!-- Toast Container -->
   <div id="toast-container"></div>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
 
   <!-- Scripts -->
   <script src="config.js"></script>

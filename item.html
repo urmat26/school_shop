@@ -26,6 +26,10 @@
           <span class="nav-link-icon">➕</span>
           Создать
         </a>
+        <a href="favorites.html" class="nav-link">
+          <span class="nav-link-icon">♥</span>
+          Избранное <span class="fav-count-badge" id="fav-count-nav">0</span>
+        </a>
       </nav>
 
       <div class="header-actions">
@@ -134,6 +138,17 @@
         </div>
       </div>
 
+      <!-- Recently Viewed -->
+      <div class="recently-viewed" id="recently-viewed" style="display:none;">
+        <h3 class="recently-viewed-title">👁 Недавно вы смотрели</h3>
+        <div class="recently-viewed-grid" id="recently-viewed-grid"></div>
+      </div>
+
+      <!-- Similar Items -->
+      <div class="recently-viewed" id="similar-items" style="display:none;">
+        <h3 class="recently-viewed-title">📂 Похожие объявления</h3>
+        <div class="recently-viewed-grid" id="similar-items-grid"></div>
+      </div>
     </div>
   </main>
 
@@ -190,6 +205,9 @@
 
   <!-- Toast Container -->
   <div id="toast-container"></div>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
 
   <!-- Scripts -->
   <script src="config.js"></script>

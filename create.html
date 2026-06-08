@@ -26,6 +26,10 @@
           <span class="nav-link-icon">➕</span>
           Создать
         </a>
+        <a href="favorites.html" class="nav-link">
+          <span class="nav-link-icon">♥</span>
+          Избранное <span class="fav-count-badge" id="fav-count-nav">0</span>
+        </a>
       </nav>
 
       <div class="header-actions">
@@ -105,7 +109,7 @@
           required
         ></textarea>
         <p class="form-error-text">Добавьте описание</p>
-        <p class="form-hint">До 5000 символов</p>
+        <p class="form-hint">До 5000 символов <span class="char-counter" id="desc-counter">0 / 5000</span></p>
       </div>
 
       <!-- Price -->
@@ -204,6 +208,9 @@
 
   <!-- Toast Container -->
   <div id="toast-container"></div>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
 
   <!-- Scripts -->
   <script src="config.js"></script>

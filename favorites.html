@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Избранные объявления на школьном маркетплейсе">
+  <title>Избранное — School Shop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <img src="logo.png" alt="School Shop Logo" class="logo-img">
+        <div class="logo-text"><span>School</span> Shop</div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">
+          <span class="nav-link-icon">🏠</span>
+          Главная
+        </a>
+        <a href="create.html" class="nav-link">
+          <span class="nav-link-icon">➕</span>
+          Создать
+        </a>
+        <a href="favorites.html" class="nav-link active">
+          <span class="nav-link-icon">♥</span>
+          Избранное <span class="fav-count-badge" id="fav-count-nav">0</span>
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="btn btn-primary btn-sm" id="login-btn">👤 Войти</button>
+        <div class="user-display" id="user-display" style="display:none;">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <span class="user-nickname" id="user-nickname"></span>
+          <button id="logout-btn">Выйти</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container" style="padding-top: 32px;">
+      <h1 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 8px;">♥ Избранное</h1>
+      <p style="color: var(--text-secondary); margin-bottom: 24px;" id="fav-subtitle">Ваши сохранённые объявления</p>
+
+      <div class="loading-container" id="loading">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Загрузка...</p>
+      </div>
+
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <div class="empty-state-icon">💔</div>
+        <h2 class="empty-state-title">Избранного пока нет</h2>
+        <p class="empty-state-text">Добавляйте объявления в избранное, чтобы не потерять</p>
+        <a href="index.html" class="btn btn-primary">← На главную</a>
+      </div>
+
+      <div class="items-grid" id="items-grid" style="display:none;"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-text">🎒 School Shop © 2026 — Создано с ❤️</p>
+    </div>
+  </footer>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-overlay-bg"></div>
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-icon">👋</div>
+        <h2 class="modal-title">Добро пожаловать!</h2>
+        <p class="modal-subtitle">Введите никнейм, чтобы продолжить</p>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-input" id="nickname-input" placeholder="Ваш никнейм..." maxlength="20" autocomplete="off">
+        <div id="auth-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="auth-submit">Войти 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
+
+  <script src="config.js"></script>
+  <script src="auth.js"></script>
+  <script src="api.js"></script>
+  <script src="favorites.js"></script>
+</body>
+</html>
