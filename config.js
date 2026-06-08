@@ -5,6 +5,7 @@
 const CONFIG = {
   BIN_ID: '6a253eecda38895dfe9433b1',
   API_KEY: '$2a$10$fiHdhRvk3KmHunM3LiFwQup5ESfIC3gi33YWwYu.gfy7kTpRhJD9m',
+  IMGBB_API_KEY: '6d99550405de855a50e134d5cb9715fa',
   BASE_URL: 'https://api.jsonbin.io/v3',
 
   // Настройки приложения

@@ -149,6 +149,20 @@ function getPlaceholderSVG(category) {
   `)}`;
 }
 
+// ───────────────────── Загрузка фото на ImgBB ─────────────────────
+
+async function uploadImage(base64) {
+  const formData = new FormData();
+  formData.append('image', base64.split(',')[1]);
+  const res = await fetch('https://api.imgbb.com/1/upload?key=' + CONFIG.IMGBB_API_KEY, {
+    method: 'POST',
+    body: formData
+  });
+  const json = await res.json();
+  if (!json.success) throw new Error('Ошибка загрузки фото');
+  return json.data.url;
+}
+
 // ───────────────────── API: работа с JSONBin ─────────────────────
 
 /** Загрузить все данные */

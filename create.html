@@ -54,6 +54,27 @@
     </div>
 
     <form class="form-card animate-fade-in-up" id="create-form" novalidate>
+      <!-- Image Upload -->
+      <div class="form-group">
+        <label class="form-label">📷 Фото товара</label>
+        <div class="image-upload">
+          <div class="image-upload-area" id="upload-area">
+            <div class="image-upload-icon">📸</div>
+            <p class="image-upload-text">
+              <strong>Нажмите</strong> или перетащите фото
+            </p>
+            <p class="image-upload-hint">JPG, PNG до 2 MB</p>
+            <img id="image-preview" alt="Preview">
+            <input
+              type="file"
+              id="image-input"
+              accept="image/jpeg,image/png,image/webp"
+            >
+          </div>
+          <button type="button" class="image-remove-btn" id="image-remove" title="Удалить фото">✕</button>
+        </div>
+      </div>
+
       <!-- Title -->
       <div class="form-group" id="title-group">
         <label class="form-label" for="title-input">

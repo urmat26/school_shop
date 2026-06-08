@@ -5,7 +5,7 @@
 // ───────────────────── State ─────────────────────
 let isEditMode = false;
 let editId = null;
-
+let imageData = '';
 
 // ───────────────────── DOM Elements ─────────────────────
 const form = document.getElementById('create-form');
@@ -14,6 +14,10 @@ const descriptionInput = document.getElementById('description-input');
 const priceInput = document.getElementById('price-input');
 const categorySelect = document.getElementById('category-select');
 const contactInput = document.getElementById('contact-input');
+const imageInput = document.getElementById('image-input');
+const imagePreview = document.getElementById('image-preview');
+const imageRemoveBtn = document.getElementById('image-remove');
+const uploadArea = document.getElementById('upload-area');
 const submitBtn = document.getElementById('submit-btn');
 const pageTitle = document.getElementById('page-title');
 const pageSubtitle = document.getElementById('page-subtitle');
@@ -54,6 +58,37 @@ function attachEvents() {
   // Form submit
   form.addEventListener('submit', handleSubmit);
 
+  // Image upload
+  imageInput.addEventListener('change', handleImageUpload);
+
+  // Drag & drop
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = 'var(--accent)';
+    uploadArea.style.background = 'var(--accent-glow)';
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.style.borderColor = '';
+    uploadArea.style.background = '';
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '';
+    uploadArea.style.background = '';
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      processImage(file);
+    }
+  });
+
+  // Remove image
+  imageRemoveBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    clearImage();
+  });
+
   // Clear validation errors on input
   [titleInput, descriptionInput, priceInput, categorySelect, contactInput].forEach(input => {
     input.addEventListener('input', () => {
@@ -61,6 +96,60 @@ function attachEvents() {
       formError.style.display = 'none';
     });
   });
+}
+
+// ───────────────────── Image Handling ─────────────────────
+
+function handleImageUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    showToast('Выберите изображение (JPG, PNG)', 'error');
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('Файл слишком большой (макс. 2 MB)', 'error');
+    return;
+  }
+
+  processImage(file);
+}
+
+function processImage(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imageData = e.target.result;
+    imagePreview.src = imageData;
+    imagePreview.classList.add('visible');
+    imageRemoveBtn.classList.add('visible');
+    uploadArea.classList.add('has-image');
+
+    const uploadIcon = uploadArea.querySelector('.image-upload-icon');
+    const uploadText = uploadArea.querySelector('.image-upload-text');
+    const uploadHint = uploadArea.querySelector('.image-upload-hint');
+    if (uploadIcon) uploadIcon.style.display = 'none';
+    if (uploadText) uploadText.style.display = 'none';
+    if (uploadHint) uploadHint.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImage() {
+  imageData = '';
+  imageInput.value = '';
+  imagePreview.src = '';
+  imagePreview.classList.remove('visible');
+  imageRemoveBtn.classList.remove('visible');
+  uploadArea.classList.remove('has-image');
+
+  const uploadIcon = uploadArea.querySelector('.image-upload-icon');
+  const uploadText = uploadArea.querySelector('.image-upload-text');
+  const uploadHint = uploadArea.querySelector('.image-upload-hint');
+  if (uploadIcon) uploadIcon.style.display = '';
+  if (uploadText) uploadText.style.display = '';
+  if (uploadHint) uploadHint.style.display = '';
 }
 
 // ───────────────────── Load Item for Edit ─────────────────────
@@ -85,6 +174,21 @@ async function loadItemForEdit(id) {
     priceInput.value = item.price || 0;
     categorySelect.value = item.category || '';
     contactInput.value = item.contact || '';
+
+    if (item.image) {
+      imageData = item.image;
+      imagePreview.src = imageData;
+      imagePreview.classList.add('visible');
+      imageRemoveBtn.classList.add('visible');
+      uploadArea.classList.add('has-image');
+
+      const uploadIcon = uploadArea.querySelector('.image-upload-icon');
+      const uploadText = uploadArea.querySelector('.image-upload-text');
+      const uploadHint = uploadArea.querySelector('.image-upload-hint');
+      if (uploadIcon) uploadIcon.style.display = 'none';
+      if (uploadText) uploadText.style.display = 'none';
+      if (uploadHint) uploadHint.style.display = 'none';
+    }
   } catch (error) {
     console.error('Load error:', error);
     showToast('Ошибка загрузки', 'error');
@@ -154,15 +258,24 @@ async function handleSubmit(e) {
   submitBtn.disabled = true;
   submitBtn.classList.add('loading');
   const originalText = submitBtn.textContent;
-  submitBtn.textContent = '⏳ Сохранение...';
 
   try {
+    // Upload image to ImgBB if new image was selected
+    let imageUrl = imageData || '';
+    if (imageData && imageData.startsWith('data:image')) {
+      submitBtn.textContent = '⏳ Загрузка фото...';
+      imageUrl = await uploadImage(imageData);
+    }
+
+    submitBtn.textContent = '⏳ Сохранение...';
+
     const itemData = {
       title: titleInput.value.trim(),
       description: descriptionInput.value.trim(),
       price: parseInt(priceInput.value) || 0,
       category: categorySelect.value,
-      contact: contactInput.value.trim()
+      contact: contactInput.value.trim(),
+      image: imageUrl
     };
 
     if (isEditMode) {
