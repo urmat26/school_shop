@@ -222,6 +222,18 @@ function renderItems(items) {
   itemsGrid.style.display = 'grid';
   itemsGrid.innerHTML = items.map(item => createCardHTML(item)).join('');
 
+  // Broken image fallback
+  itemsGrid.querySelectorAll('.item-card-image img').forEach(img => {
+    img.addEventListener('error', function () {
+      this.onerror = null;
+      const card = this.closest('.item-card');
+      if (card) {
+        const cat = card.querySelector('.category-badge')?.dataset.category;
+        this.src = getPlaceholderSVG(cat);
+      }
+    });
+  });
+
   // Attach card events
   itemsGrid.querySelectorAll('.item-card').forEach(card => {
     card.addEventListener('click', (e) => {

@@ -41,9 +41,22 @@
           <span class="user-nickname" id="user-nickname"></span>
           <button id="logout-btn">Выйти</button>
         </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Меню">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-menu-nav">
+      <a href="index.html" class="mobile-menu-link active">🏠 Главная</a>
+      <a href="create.html" class="mobile-menu-link">➕ Создать</a>
+      <a href="favorites.html" class="mobile-menu-link">♥ Избранное <span class="fav-count-badge">0</span></a>
+    </nav>
+  </div>
 
   <!-- ═══════════ Hero Section ═══════════ -->
   <section class="hero">

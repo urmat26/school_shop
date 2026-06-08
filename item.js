@@ -135,6 +135,10 @@ function renderItem(item) {
   const imageUrl = item.image || getPlaceholderSVG(item.category);
   itemImage.src = imageUrl;
   itemImage.alt = item.title;
+  itemImage.onerror = function () {
+    this.onerror = null;
+    this.src = getPlaceholderSVG(item.category);
+  };
 
   // Price
   const price = formatPrice(item.price);
@@ -196,6 +200,12 @@ function renderItem(item) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
+
+  // Share
+  document.getElementById('share-btn')?.addEventListener('click', () => {
+    navigator.clipboard.writeText(window.location.href);
+    showToast('Ссылка скопирована! 🔗', 'success');
+  });
 
   // Delete modal events
   deleteCancel.addEventListener('click', hideDeleteModal);

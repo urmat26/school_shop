@@ -251,7 +251,49 @@ async function getItemById(id) {
   return item || null;
 }
 
-/** Увеличить счётчик просмотров */
+// ───────────────────── Mobile Menu ─────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const overlay = document.getElementById('mobile-overlay');
+  if (!btn || !menu || !overlay) return;
+
+  const open = () => {
+    btn.classList.add('active');
+    menu.classList.add('active');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const close = () => {
+    btn.classList.remove('active');
+    menu.classList.remove('active');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  btn.addEventListener('click', () => {
+    if (menu.classList.contains('active')) {
+      close();
+    } else {
+      open();
+    }
+  });
+
+  overlay.addEventListener('click', close);
+
+  menu.querySelectorAll('.mobile-menu-link').forEach(link => {
+    link.addEventListener('click', close);
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu.classList.contains('active')) close();
+  });
+});
+
+// ───────────────────── Увеличить счётчик просмотров ─────────────────────
 async function incrementViews(id) {
   const viewedKey = 'marketplace_viewed';
   let viewed = [];
