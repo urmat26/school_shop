@@ -6,7 +6,25 @@
 
 /** Генерация уникального ID */
 function generateId() {
-  return Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+  return Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+}
+
+/** Экранирование HTML */
+function escapeHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+/** Склонение числительных (ru) */
+function pluralize(n, one, few, many) {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 19) return many;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
 }
 
 /** Форматирование даты */
@@ -81,7 +99,7 @@ function showToast(message, type = 'info') {
 
   toast.innerHTML = `
     <span class="toast-icon">${icons[type] || icons.info}</span>
-    <span class="toast-message">${message}</span>
+    <span class="toast-message">${escapeHtml(message)}</span>
   `;
 
   container.appendChild(toast);
@@ -163,10 +181,146 @@ async function uploadImage(base64) {
   return json.data.url;
 }
 
+// ───────────────────── Карточки объявлений ─────────────────────
+
+function createCardHTML(item, options = {}) {
+  const favTitle = options.favTitle || 'В избранное';
+  const isFav = Favorites.isFavorite(item.id);
+  const imageUrl = item.image || getPlaceholderSVG(item.category);
+  const priceClass = (!item.price || item.price === 0) ? 'free' : '';
+  const priceText = formatPrice(item.price);
+
+  return `
+    <article class="item-card" data-id="${escapeHtml(item.id)}">
+      <div class="item-card-image">
+        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy">
+        <div class="item-card-badge">
+          <span class="category-badge" data-category="${escapeHtml(item.category)}">
+            ${getCategoryIcon(item.category)} ${escapeHtml(item.category)}
+          </span>
+        </div>
+        <button class="item-card-favorite ${isFav ? 'active' : ''}" data-id="${escapeHtml(item.id)}" title="${escapeHtml(favTitle)}">
+          ${isFav ? '♥' : '♡'}
+        </button>
+      </div>
+      <div class="item-card-body">
+        <h3 class="item-card-title">${escapeHtml(item.title)}</h3>
+        <p class="item-card-description">${escapeHtml(truncate(item.description, 80))}</p>
+        <div class="item-card-footer">
+          <span class="item-card-price ${priceClass}">${escapeHtml(priceText)}</span>
+          <div class="item-card-meta">
+            <span class="item-card-meta-item">👁 ${item.views || 0}</span>
+            <span class="item-card-meta-item">${escapeHtml(formatDate(item.created))}</span>
+          </div>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function createMiniCardHTML(item) {
+  const imageUrl = item.image || getPlaceholderSVG(item.category);
+  return `
+    <div class="recently-viewed-card" data-id="${escapeHtml(item.id)}" role="link" tabindex="0">
+      <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy">
+      <div class="recently-viewed-card-body">
+        <div class="recently-viewed-card-title">${escapeHtml(item.title)}</div>
+        <div class="recently-viewed-card-price">${escapeHtml(formatPrice(item.price))}</div>
+      </div>
+    </div>
+  `;
+}
+
+function attachItemCardEvents(grid, options = {}) {
+  const { onFavoriteToggle } = options;
+
+  grid.querySelectorAll('.item-card-image img').forEach(img => {
+    img.addEventListener('error', function () {
+      this.onerror = null;
+      const card = this.closest('.item-card');
+      if (card) {
+        const cat = card.querySelector('.category-badge')?.dataset.category;
+        this.src = getPlaceholderSVG(cat);
+      }
+    });
+  });
+
+  grid.querySelectorAll('.item-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.item-card-favorite')) return;
+      window.location.href = `item.html?id=${encodeURIComponent(card.dataset.id)}`;
+    });
+  });
+
+  grid.querySelectorAll('.item-card-favorite').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.id;
+      const isFav = Favorites.toggle(id);
+      btn.classList.toggle('active', isFav);
+      btn.innerHTML = isFav ? '♥' : '♡';
+
+      if (onFavoriteToggle) {
+        await onFavoriteToggle(id, isFav);
+      } else if (isFav) {
+        btn.classList.add('heart-bounce');
+        setTimeout(() => btn.classList.remove('heart-bounce'), 400);
+        showToast('Добавлено в избранное', 'success');
+      } else {
+        showToast('Удалено из избранного', 'info');
+      }
+
+      updateFavCount();
+    });
+  });
+}
+
+function attachMiniCardEvents(container) {
+  container.querySelectorAll('.recently-viewed-card').forEach(card => {
+    const navigate = () => {
+      window.location.href = `item.html?id=${encodeURIComponent(card.dataset.id)}`;
+    };
+    card.addEventListener('click', navigate);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        navigate();
+      }
+    });
+  });
+}
+
+function updateFavCount() {
+  const badges = document.querySelectorAll('.fav-count-badge');
+  const count = Favorites.count();
+  badges.forEach(b => {
+    b.textContent = count;
+    b.style.display = count > 0 ? 'inline' : 'none';
+  });
+}
+
 // ───────────────────── API: работа с JSONBin ─────────────────────
 
+let _dataCache = null;
+let _cacheTime = 0;
+const CACHE_TTL = 30000;
+
+function invalidateCache() {
+  _dataCache = null;
+  _cacheTime = 0;
+}
+
+function cloneData(data) {
+  if (typeof structuredClone === 'function') return structuredClone(data);
+  return JSON.parse(JSON.stringify(data));
+}
+
 /** Загрузить все данные */
-async function fetchAll() {
+async function fetchAll(forceRefresh = false) {
+  if (!forceRefresh && _dataCache && Date.now() - _cacheTime < CACHE_TTL) {
+    return cloneData(_dataCache);
+  }
+
   try {
     const response = await fetch(`${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}/latest`, {
       headers: {
@@ -175,7 +329,10 @@ async function fetchAll() {
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const json = await response.json();
-    return json.record || { items: [] };
+    const data = json.record || { items: [] };
+    _dataCache = data;
+    _cacheTime = Date.now();
+    return cloneData(data);
   } catch (error) {
     console.error('fetchAll error:', error);
     showToast('Ошибка загрузки данных', 'error');
@@ -195,6 +352,8 @@ async function saveAll(data) {
       body: JSON.stringify(data)
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    _dataCache = data;
+    _cacheTime = Date.now();
     return true;
   } catch (error) {
     console.error('saveAll error:', error);
@@ -205,7 +364,7 @@ async function saveAll(data) {
 
 /** Создать объявление */
 async function createItem(newItem) {
-  const data = await fetchAll();
+  const data = await fetchAll(true);
   newItem.id = generateId();
   newItem.author = Auth.getUser();
   newItem.created = new Date().toISOString();
@@ -220,7 +379,7 @@ async function createItem(newItem) {
 
 /** Обновить объявление */
 async function updateItem(id, updates) {
-  const data = await fetchAll();
+  const data = await fetchAll(true);
   const index = data.items.findIndex(i => i.id === id);
   if (index === -1) throw new Error('Объявление не найдено');
   if (data.items[index].author !== Auth.getUser()) {
@@ -233,7 +392,7 @@ async function updateItem(id, updates) {
 
 /** Удалить объявление */
 async function deleteItem(id) {
-  const data = await fetchAll();
+  const data = await fetchAll(true);
   const index = data.items.findIndex(i => i.id === id);
   if (index === -1) throw new Error('Объявление не найдено');
   if (data.items[index].author !== Auth.getUser()) {
@@ -304,7 +463,7 @@ async function incrementViews(id) {
   // Не считать повторные просмотры с одного браузера
   if (viewed.includes(id)) return;
 
-  const data = await fetchAll();
+  const data = await fetchAll(true);
   const item = data.items.find(i => i.id === id);
   if (item) {
     item.views = (item.views || 0) + 1;

@@ -41,12 +41,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadItem(id);
 });
 
-function updateFavCount() {
-  const badges = document.querySelectorAll('.fav-count-badge');
-  const count = Favorites.count();
-  badges.forEach(b => { b.textContent = count; b.style.display = count > 0 ? 'inline' : 'none'; });
-}
-
 function trackRecentlyViewed(item) {
   const key = 'marketplace_recently';
   let recent = [];
@@ -67,15 +61,8 @@ function renderRecentlyViewed() {
   const grid = document.getElementById('recently-viewed-grid');
   if (!container || !grid) return;
   container.style.display = 'block';
-  grid.innerHTML = filtered.slice(0, 5).map(i => `
-    <div class="recently-viewed-card" onclick="window.location.href='item.html?id=${i.id}'">
-      <img src="${i.image || getPlaceholderSVG(i.category)}" alt="${i.title}" loading="lazy">
-      <div class="recently-viewed-card-body">
-        <div class="recently-viewed-card-title">${i.title}</div>
-        <div class="recently-viewed-card-price">${formatPrice(i.price)}</div>
-      </div>
-    </div>
-  `).join('');
+  grid.innerHTML = filtered.slice(0, 5).map(i => createMiniCardHTML(i)).join('');
+  attachMiniCardEvents(grid);
 }
 
 async function renderSimilarItems() {
@@ -88,15 +75,8 @@ async function renderSimilarItems() {
     .slice(0, 4);
   if (similar.length === 0) return;
   container.style.display = 'block';
-  grid.innerHTML = similar.map(i => `
-    <div class="recently-viewed-card" onclick="window.location.href='item.html?id=${i.id}'">
-      <img src="${i.image || getPlaceholderSVG(i.category)}" alt="${i.title}" loading="lazy">
-      <div class="recently-viewed-card-body">
-        <div class="recently-viewed-card-title">${i.title}</div>
-        <div class="recently-viewed-card-price">${formatPrice(i.price)}</div>
-      </div>
-    </div>
-  `).join('');
+  grid.innerHTML = similar.map(i => createMiniCardHTML(i)).join('');
+  attachMiniCardEvents(grid);
 }
 
 // ───────────────────── Load Item ─────────────────────
