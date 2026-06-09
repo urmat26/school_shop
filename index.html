@@ -4,7 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Школьный маркетплейс — покупай, продавай и обменивай вещи с одноклассниками">
+  <meta name="color-scheme" content="dark light">
   <title>School Shop — Объявления</title>
+  <script>
+    (function () {
+      var t = localStorage.getItem('marketplace_theme');
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.style.colorScheme = t;
+    })();
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -33,6 +44,7 @@
       </nav>
 
       <div class="header-actions">
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
         <button class="btn btn-primary btn-sm" id="login-btn">
           👤 Войти
         </button>
@@ -206,6 +218,7 @@
   <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
 
   <!-- Scripts -->
+  <script src="theme.js"></script>
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script src="api.js"></script>
