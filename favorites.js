@@ -5,6 +5,7 @@ const loadingEl = document.getElementById('loading');
 const emptyState = document.getElementById('empty-state');
 const itemsGrid = document.getElementById('items-grid');
 const favSubtitle = document.getElementById('fav-subtitle');
+const favSkeleton = document.getElementById('fav-skeleton');
 
 document.addEventListener('DOMContentLoaded', async () => {
   Auth.init();
@@ -25,9 +26,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadFavorites() {
   showLoading(true);
+  if (favSkeleton) favSkeleton.style.display = 'grid';
   const data = await fetchAll();
   allItems = (data.items || []).filter(i => i.status === 'active');
   showLoading(false);
+  if (favSkeleton) favSkeleton.style.display = 'none';
 
   const favIds = Favorites.getAll();
   filteredItems = allItems.filter(i => favIds.includes(i.id));

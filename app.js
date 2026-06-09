@@ -215,6 +215,15 @@ function renderItems(items) {
   if (items.length === 0) {
     itemsGrid.style.display = 'none';
     emptyState.style.display = 'block';
+    const emptyTitle = emptyState.querySelector('.empty-state-title');
+    const emptyText = emptyState.querySelector('.empty-state-text');
+    if (searchQuery) {
+      if (emptyTitle) emptyTitle.textContent = 'Ничего не найдено';
+      if (emptyText) emptyText.textContent = `По запросу «${escapeHtml(searchQuery)}» нет объявлений`;
+    } else {
+      if (emptyTitle) emptyTitle.textContent = 'Объявлений пока нет';
+      if (emptyText) emptyText.textContent = 'Будьте первым, кто разместит объявление!';
+    }
     return;
   }
 

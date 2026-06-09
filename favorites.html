@@ -65,6 +65,12 @@
         <p class="loading-text">Загрузка...</p>
       </div>
 
+      <div class="skeleton-grid" id="fav-skeleton" style="display:none;">
+        <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+      </div>
+
       <div class="empty-state" id="empty-state" style="display:none;">
         <div class="empty-state-icon">💔</div>
         <h2 class="empty-state-title">Избранного пока нет</h2>
@@ -77,8 +83,9 @@
   </main>
 
   <footer class="footer">
-    <div class="container">
+    <div class="container footer-inner">
       <p class="footer-text">🎒 School Shop © 2026 — Создано с ❤️</p>
+      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" title="Скачать резервную копию">💾 Экспорт</button>
     </div>
   </footer>
 

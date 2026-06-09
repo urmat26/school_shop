@@ -144,7 +144,16 @@
           </div>
 
           <!-- Share -->
-          <button class="btn btn-secondary" id="share-btn" style="width:100%;">🔗 Поделиться</button>
+          <div class="share-buttons-row" id="share-buttons">
+            <button class="btn btn-secondary" id="share-btn" title="Копировать ссылку">🔗</button>
+            <a class="btn btn-secondary" id="share-tg" href="#" target="_blank" title="Поделиться в Telegram">✈️</a>
+            <a class="btn btn-secondary" id="share-wa" href="#" target="_blank" title="Поделиться в WhatsApp">💬</a>
+          </div>
+
+          <!-- Restore (only for owner of deleted) -->
+          <div class="item-actions" id="item-restore" style="display:none;">
+            <button class="btn btn-primary" id="restore-btn">♻️ Восстановить</button>
+          </div>
 
           <!-- Actions (only for owner) -->
           <div class="item-actions" id="item-actions" style="display:none;">
@@ -158,22 +167,35 @@
       <div class="recently-viewed" id="recently-viewed" style="display:none;">
         <h3 class="recently-viewed-title">👁 Недавно вы смотрели</h3>
         <div class="recently-viewed-grid" id="recently-viewed-grid"></div>
+        <div class="skeleton-mini" id="recently-skeleton">
+          <div class="skeleton-mini-card"></div>
+          <div class="skeleton-mini-card"></div>
+          <div class="skeleton-mini-card"></div>
+          <div class="skeleton-mini-card"></div>
+        </div>
       </div>
 
       <!-- Similar Items -->
       <div class="recently-viewed" id="similar-items" style="display:none;">
         <h3 class="recently-viewed-title">📂 Похожие объявления</h3>
         <div class="recently-viewed-grid" id="similar-items-grid"></div>
+        <div class="skeleton-mini" id="similar-skeleton">
+          <div class="skeleton-mini-card"></div>
+          <div class="skeleton-mini-card"></div>
+          <div class="skeleton-mini-card"></div>
+          <div class="skeleton-mini-card"></div>
+        </div>
       </div>
     </div>
   </main>
 
   <!-- ═══════════ Footer ═══════════ -->
   <footer class="footer">
-    <div class="container">
+    <div class="container footer-inner">
       <p class="footer-text">
         🎒 School Shop © 2026 — Создано с ❤️
       </p>
+      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" title="Скачать резервную копию">💾 Экспорт</button>
     </div>
   </footer>
 
@@ -210,7 +232,7 @@
       <div class="modal-header">
         <div class="modal-icon">⚠️</div>
         <h2 class="modal-title">Удалить объявление?</h2>
-        <p class="modal-subtitle">Это действие нельзя отменить</p>
+        <p class="modal-subtitle">Объявление можно будет восстановить</p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" id="delete-cancel">Отмена</button>

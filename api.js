@@ -117,13 +117,17 @@ function showToast(message, type = 'info') {
 
 const Favorites = {
   KEY: 'marketplace_favorites',
+  _cache: null,
 
   getAll() {
-    try {
-      return JSON.parse(localStorage.getItem(this.KEY) || '[]');
-    } catch {
-      return [];
+    if (this._cache === null) {
+      try {
+        this._cache = JSON.parse(localStorage.getItem(this.KEY) || '[]');
+      } catch {
+        this._cache = [];
+      }
     }
+    return this._cache;
   },
 
   isFavorite(id) {
@@ -139,6 +143,7 @@ const Favorites = {
       favs.push(id);
     }
     localStorage.setItem(this.KEY, JSON.stringify(favs));
+    this._cache = favs;
     return !wasFav; // возвращает новое состояние
   },
 
@@ -172,10 +177,12 @@ function getPlaceholderSVG(category) {
 async function uploadImage(base64) {
   const formData = new FormData();
   formData.append('image', base64.split(',')[1]);
-  const res = await fetch('https://api.imgbb.com/1/upload?key=' + CONFIG.IMGBB_API_KEY, {
-    method: 'POST',
-    body: formData
-  });
+
+  const url = CONFIG.USE_VERCEL_PROXY
+    ? CONFIG.VERCEL_UPLOAD_URL
+    : 'https://api.imgbb.com/1/upload?key=' + CONFIG.IMGBB_API_KEY;
+
+  const res = await fetch(url, { method: 'POST', body: formData });
   const json = await res.json();
   if (!json.success) throw new Error('Ошибка загрузки фото');
   return json.data.url;
@@ -189,10 +196,12 @@ function createCardHTML(item, options = {}) {
   const imageUrl = item.image || getPlaceholderSVG(item.category);
   const priceClass = (!item.price || item.price === 0) ? 'free' : '';
   const priceText = formatPrice(item.price);
+  const isSold = item.status === 'sold';
 
   return `
     <article class="item-card" data-id="${escapeHtml(item.id)}">
       <div class="item-card-image">
+        ${isSold ? '<div class="sold-badge">Продано</div>' : ''}
         <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy">
         <div class="item-card-badge">
           <span class="category-badge" data-category="${escapeHtml(item.category)}">
@@ -322,14 +331,24 @@ async function fetchAll(forceRefresh = false) {
   }
 
   try {
-    const response = await fetch(`${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}/latest`, {
-      headers: {
-        'X-Master-Key': CONFIG.API_KEY
-      }
-    });
+    const url = CONFIG.USE_VERCEL_PROXY
+      ? CONFIG.VERCEL_DATA_URL + '?latest=true'
+      : `${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}/latest`;
+
+    const headers = CONFIG.USE_VERCEL_PROXY ? {} : { 'X-Master-Key': CONFIG.API_KEY };
+    const response = await fetch(url, { headers });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const json = await response.json();
-    const data = json.record || { items: [] };
+
+    let json;
+    if (CONFIG.USE_VERCEL_PROXY) {
+      json = await response.json();
+      json = json.record || json;
+    } else {
+      json = await response.json();
+      json = json.record || { items: [] };
+    }
+    const data = json || { items: [] };
+    _lastVersion = data._version || 0;
     _dataCache = data;
     _cacheTime = Date.now();
     return cloneData(data);
@@ -340,18 +359,30 @@ async function fetchAll(forceRefresh = false) {
   }
 }
 
+let _lastVersion = 0;
+
 /** Сохранить все данные */
 async function saveAll(data) {
+  // Проверка конфликта версий (между fetchAll и saveAll)
+  if (data._version !== undefined && data._version !== _lastVersion) {
+    showToast('Конфликт версий — обновите страницу', 'error');
+    return false;
+  }
+  data._version = (data._version || 0) + 1;
+
   try {
-    const response = await fetch(`${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}`, {
+    const url = CONFIG.USE_VERCEL_PROXY ? CONFIG.VERCEL_DATA_URL : `${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}`;
+    const headers = CONFIG.USE_VERCEL_PROXY
+      ? { 'Content-Type': 'application/json' }
+      : { 'Content-Type': 'application/json', 'X-Master-Key': CONFIG.API_KEY };
+
+    const response = await fetch(url, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': CONFIG.API_KEY
-      },
+      headers,
       body: JSON.stringify(data)
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    _lastVersion = data._version;
     _dataCache = data;
     _cacheTime = Date.now();
     return true;
@@ -390,7 +421,7 @@ async function updateItem(id, updates) {
   if (!success) throw new Error('Ошибка обновления');
 }
 
-/** Удалить объявление */
+/** Удалить объявление (мягкое удаление) */
 async function deleteItem(id) {
   const data = await fetchAll(true);
   const index = data.items.findIndex(i => i.id === id);
@@ -398,9 +429,50 @@ async function deleteItem(id) {
   if (data.items[index].author !== Auth.getUser()) {
     throw new Error('Нет прав на удаление');
   }
-  data.items.splice(index, 1);
+  data.items[index].status = 'deleted';
+  data.items[index].deletedAt = new Date().toISOString();
   const success = await saveAll(data);
   if (!success) throw new Error('Ошибка удаления');
+}
+
+/** Восстановить объявление */
+async function restoreItem(id) {
+  const data = await fetchAll(true);
+  const item = data.items.find(i => i.id === id);
+  if (!item) throw new Error('Объявление не найдено');
+  if (item.author !== Auth.getUser()) throw new Error('Нет прав');
+  item.status = 'active';
+  delete item.deletedAt;
+  const success = await saveAll(data);
+  if (!success) throw new Error('Ошибка восстановления');
+}
+
+/** Получить количество удалённых объявлений текущего пользователя */
+async function getDeletedCount() {
+  const data = await fetchAll();
+  const user = Auth.getUser();
+  if (!user) return 0;
+  return data.items.filter(i => i.author === user && i.status === 'deleted').length;
+}
+
+/** Экспорт данных в JSON (скачивание) */
+function downloadBackup() {
+  fetchAll().then(data => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `school-shop-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+/** Валидация формы (кратко) */
+function validateItemForm(title, description) {
+  if (!title || title.trim().length < 3) return 'Название должно быть минимум 3 символа';
+  if (description && description.length > 5000) return 'Описание не может быть длиннее 5000 символов';
+  return null;
 }
 
 /** Получить объявление по ID */

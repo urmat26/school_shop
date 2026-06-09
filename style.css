@@ -670,6 +670,29 @@ ul, ol {
   z-index: 2;
 }
 
+.sold-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-20deg);
+  z-index: 3;
+  background: #ef4444;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.1rem;
+  padding: 6px 18px;
+  border-radius: 6px;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5);
+  pointer-events: none;
+  animation: soldPulse 2s ease-in-out infinite;
+}
+
+@keyframes soldPulse {
+  0%, 100% { transform: translate(-50%, -50%) rotate(-20deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(-20deg) scale(1.08); }
+}
+
 .item-card-favorite {
   position: absolute;
   top: 12px;
@@ -1224,6 +1247,17 @@ ul, ol {
   flex: 1;
 }
 
+.share-buttons-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.share-buttons-row .btn {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 1.1rem;
+}
+
 /* ───────────────────── Pagination ───────────────────── */
 .pagination {
   display: flex;
@@ -1525,6 +1559,13 @@ ul, ol {
   z-index: 1;
 }
 
+.footer .container.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .footer-text {
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -1797,6 +1838,22 @@ ul, ol {
 @keyframes shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+/* ───────────────────── Mini Skeleton (similar / recently) ───────────────────── */
+.skeleton-mini {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+.skeleton-mini-card {
+  height: 160px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-card-hover) 50%, var(--bg-tertiary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
 /* ───────────────────── Filters Row Extended ───────────────────── */

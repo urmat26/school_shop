@@ -24,6 +24,10 @@ const itemActions = document.getElementById('item-actions');
 const deleteModal = document.getElementById('delete-modal');
 const deleteCancel = document.getElementById('delete-cancel');
 const deleteConfirm = document.getElementById('delete-confirm');
+const restoreBtn = document.getElementById('restore-btn');
+const itemRestore = document.getElementById('item-restore');
+const recentlySkeleton = document.getElementById('recently-skeleton');
+const similarSkeleton = document.getElementById('similar-skeleton');
 
 let currentItem = null;
 
@@ -52,6 +56,7 @@ function trackRecentlyViewed(item) {
 }
 
 function renderRecentlyViewed() {
+  if (recentlySkeleton) recentlySkeleton.style.display = 'none';
   const key = 'marketplace_recently';
   let recent = [];
   try { recent = JSON.parse(localStorage.getItem(key) || '[]'); } catch { return; }
@@ -66,6 +71,7 @@ function renderRecentlyViewed() {
 }
 
 async function renderSimilarItems() {
+  if (similarSkeleton) similarSkeleton.style.display = 'none';
   const container = document.getElementById('similar-items');
   const grid = document.getElementById('similar-items-grid');
   if (!container || !grid || !currentItem) return;
@@ -166,7 +172,9 @@ function renderItem(item) {
     deleteBtn.addEventListener('click', () => showDeleteModal());
   }
 
-  // Recently viewed & similar items
+  // Recently viewed & similar items (show skeleton while loading)
+  if (recentlySkeleton) recentlySkeleton.style.display = 'grid';
+  if (similarSkeleton) similarSkeleton.style.display = 'grid';
   renderRecentlyViewed();
   renderSimilarItems();
 
@@ -182,10 +190,26 @@ function renderItem(item) {
   }
 
   // Share
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent(`${item.title} — School Shop`);
   document.getElementById('share-btn')?.addEventListener('click', () => {
     navigator.clipboard.writeText(window.location.href);
     showToast('Ссылка скопирована! 🔗', 'success');
   });
+  document.getElementById('share-tg')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank', 'noopener');
+  });
+  document.getElementById('share-wa')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.open(`https://wa.me/?text=${url}%20${text}`, '_blank', 'noopener');
+  });
+
+  // Restore
+  if (item.status === 'deleted' && Auth.canEdit(item)) {
+    itemRestore.style.display = 'flex';
+    restoreBtn.addEventListener('click', handleRestore);
+  }
 
   // Delete modal events
   deleteCancel.addEventListener('click', hideDeleteModal);
@@ -219,7 +243,7 @@ function hideDeleteModal() {
   deleteModal.classList.remove('active');
 }
 
-// ───────────────────── Delete Item ─────────────────────
+// ───────────────────── Delete Item (soft) ─────────────────────
 async function handleDelete() {
   if (!currentItem) return;
 
@@ -229,16 +253,35 @@ async function handleDelete() {
   try {
     await deleteItem(currentItem.id);
     hideDeleteModal();
-    showToast('Объявление удалено! 🗑', 'success');
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 1200);
+    showToast('Объявление скрыто. Его можно восстановить ♻️', 'success');
+    currentItem.status = 'deleted';
+    itemActions.style.display = 'none';
+    itemRestore.style.display = 'flex';
+    restoreBtn.addEventListener('click', handleRestore);
   } catch (error) {
     console.error('Delete error:', error);
     showToast(error.message || 'Ошибка удаления', 'error');
     deleteConfirm.disabled = false;
     deleteConfirm.textContent = '🗑 Удалить';
   }
+}
+
+// ───────────────────── Restore Item ─────────────────────
+async function handleRestore() {
+  if (!currentItem) return;
+  restoreBtn.disabled = true;
+  restoreBtn.textContent = '⏳ Восстановление...';
+  try {
+    await restoreItem(currentItem.id);
+    showToast('Объявление восстановлено! ✅', 'success');
+    currentItem.status = 'active';
+    itemRestore.style.display = 'none';
+    itemActions.style.display = 'flex';
+  } catch (error) {
+    showToast(error.message || 'Ошибка восстановления', 'error');
+  }
+  restoreBtn.disabled = false;
+  restoreBtn.textContent = '♻️ Восстановить';
 }
 
 // ───────────────────── Helpers ─────────────────────

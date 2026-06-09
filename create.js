@@ -266,8 +266,15 @@ function validateForm() {
     isValid = false;
   }
 
+  // Also check description length via shared validator
+  const validationError = validateItemForm(titleInput.value, descriptionInput.value);
+  if (validationError) {
+    formError.textContent = validationError;
+    formError.style.display = 'block';
+    isValid = false;
+  }
+
   if (!isValid) {
-    formError.textContent = 'Заполните все обязательные поля';
     formError.style.display = 'block';
   }
 

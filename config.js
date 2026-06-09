@@ -8,6 +8,11 @@ const CONFIG = {
   IMGBB_API_KEY: '6d99550405de855a50e134d5cb9715fa',
   BASE_URL: 'https://api.jsonbin.io/v3',
 
+  // Vercel Serverless (использовать вместо прямых вызовов JSONBin/ImgBB)
+  USE_VERCEL_PROXY: false,         // true = использовать /api/data + /api/upload
+  VERCEL_DATA_URL: '/api/data',   // прокси для JSONBin
+  VERCEL_UPLOAD_URL: '/api/upload', // прокси для ImgBB
+
   // Настройки приложения
   ITEMS_PER_PAGE: 10,
 
