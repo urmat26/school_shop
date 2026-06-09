@@ -15,13 +15,12 @@ const Theme = {
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.style.colorScheme = theme;
 
-    const btn = document.getElementById('theme-toggle');
-    if (btn) {
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
       const isDark = theme === 'dark';
       btn.setAttribute('aria-label', isDark ? 'Включить светлую тему' : 'Включить тёмную тему');
       btn.title = isDark ? 'Светлая тема' : 'Тёмная тема';
       btn.textContent = isDark ? '☀️' : '🌙';
-    }
+    });
   },
 
   toggle() {
@@ -33,10 +32,9 @@ const Theme = {
   init() {
     this.apply(this.get());
 
-    const btn = document.getElementById('theme-toggle');
-    if (btn) {
+    document.querySelectorAll('.theme-toggle').forEach(btn => {
       btn.addEventListener('click', () => this.toggle());
-    }
+    });
   }
 };
 

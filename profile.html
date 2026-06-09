@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Профиль пользователя School Shop">
+  <meta name="color-scheme" content="dark light">
+  <title>Профиль — School Shop</title>
+  <script>
+    (function () {
+      var t = localStorage.getItem('marketplace_theme');
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.style.colorScheme = t;
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+
+  <!-- ═══════════ Header ═══════════ -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <img src="logo.png" alt="School Shop Logo" class="logo-img">
+        <div class="logo-text"><span>School</span> Shop</div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">
+          <span class="nav-link-icon">🏠</span>
+          Главная
+        </a>
+        <a href="create.html" class="nav-link">
+          <span class="nav-link-icon">➕</span>
+          Создать
+        </a>
+        <a href="favorites.html" class="nav-link" id="favorites-nav-link">
+          <span class="nav-link-icon">♥</span>
+          Избранное <span class="fav-count-badge" id="fav-count-nav">0</span>
+        </a>
+        <a href="profile.html" class="nav-link active">
+          <span class="nav-link-icon">👤</span>
+          Профиль
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+        <div class="user-display" id="user-display" style="display:none;">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <span class="user-nickname" id="user-nickname"></span>
+          <button id="logout-btn">Выйти</button>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Меню">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-menu-nav">
+      <a href="index.html" class="mobile-menu-link">🏠 Главная</a>
+      <a href="create.html" class="mobile-menu-link">➕ Создать</a>
+      <a href="favorites.html" class="mobile-menu-link">♥ Избранное <span class="fav-count-badge">0</span></a>
+      <a href="profile.html" class="mobile-menu-link active">👤 Профиль</a>
+      <button class="theme-toggle mobile-theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+    </nav>
+  </div>
+
+  <!-- ═══════════ Profile Content ═══════════ -->
+  <main class="profile-page">
+    <div class="container">
+      <div class="profile-layout">
+
+        <!-- Sidebar -->
+        <aside class="profile-sidebar">
+          <div class="profile-card">
+            <div class="profile-avatar" id="profile-avatar">U</div>
+            <h1 class="profile-nickname" id="profile-nickname"></h1>
+            <div class="profile-name" id="profile-name"></div>
+            <div class="profile-bio" id="profile-bio"></div>
+            <div class="profile-email" id="profile-email"></div>
+            <div class="profile-location" id="profile-location"></div>
+            <div class="profile-website" id="profile-website"></div>
+            <div class="profile-social" id="profile-social"></div>
+            <div class="profile-since" id="profile-since"></div>
+            <div class="profile-actions">
+              <button class="btn btn-primary w-full" id="profile-edit">✏️ Редактировать</button>
+              <button class="btn btn-danger w-full" id="profile-logout">🚪 Выйти</button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main -->
+        <section class="profile-main">
+          <div class="profile-section-header">
+            <h2 class="profile-section-title">Мои объявления</h2>
+            <span class="profile-section-count" id="profile-items-count"></span>
+          </div>
+          <div id="profile-items">
+            <div class="loading-container" id="profile-loading">
+              <div class="loading-spinner"></div>
+              <div class="loading-text">Загрузка объявлений…</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══════════ Footer ═══════════ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="footer-text">
+        🎒 School Shop © 2026 — Создано с ❤️
+      </p>
+      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" title="Скачать резервную копию">💾 Экспорт</button>
+    </div>
+  </footer>
+
+  <!-- ═══════════ Edit Profile Modal ═══════════ -->
+  <div class="modal-overlay" id="profile-edit-modal">
+    <div class="modal-overlay-bg"></div>
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <div class="modal-icon">✏️</div>
+        <h2 class="modal-title">Редактировать профиль</h2>
+        <p class="modal-subtitle">Заполните информацию о себе</p>
+      </div>
+      <div class="modal-body">
+
+        <!-- Avatar -->
+        <div class="form-group">
+          <label class="form-label">Фото профиля</label>
+          <div class="profile-avatar-upload">
+            <div class="profile-avatar-preview" id="edit-avatar-preview">U</div>
+            <div class="profile-avatar-actions">
+              <button class="btn btn-secondary btn-sm" id="edit-avatar-btn">📷 Загрузить</button>
+              <button class="btn btn-ghost btn-sm" id="edit-avatar-remove" style="display:none">✕ Удалить</button>
+              <input type="file" id="edit-avatar-input" accept="image/jpeg,image/png,image/webp" hidden>
+            </div>
+          </div>
+        </div>
+
+        <!-- Username -->
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-input" id="edit-nickname" disabled>
+        </div>
+
+        <!-- Display Name -->
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-input" id="edit-name" placeholder="Your display name" maxlength="60">
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" id="edit-email" placeholder="example@school.edu">
+        </div>
+
+        <!-- Bio -->
+        <div class="form-group">
+          <label class="form-label">Bio</label>
+          <textarea class="form-textarea form-textarea-sm" id="edit-bio" placeholder="Add a bio&#10;&#10;You can @mention other users and organizations to link to them." maxlength="500"></textarea>
+        </div>
+
+        <!-- Pronouns -->
+        <div class="form-group">
+          <label class="form-label">Pronouns</label>
+          <input type="text" class="form-input" id="edit-pronouns" placeholder="e.g. he/him, she/her, they/them" maxlength="40">
+        </div>
+
+        <!-- Company -->
+        <div class="form-group">
+          <label class="form-label">Company</label>
+          <input type="text" class="form-input" id="edit-company" placeholder="e.g. School Shop Inc." maxlength="80">
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input type="text" class="form-input" id="edit-location" placeholder="e.g. Bishkek, Kyrgyzstan" maxlength="80">
+        </div>
+
+        <!-- Website -->
+        <div class="form-group">
+          <label class="form-label">Website</label>
+          <input type="url" class="form-input" id="edit-website" placeholder="https://example.com" maxlength="200">
+        </div>
+
+        <!-- Social accounts -->
+        <div class="form-group">
+          <label class="form-label">Social accounts</label>
+          <div class="social-links-edit">
+            <input type="url" class="form-input" id="edit-social-1" placeholder="Link to social profile 1" maxlength="300">
+            <input type="url" class="form-input" id="edit-social-2" placeholder="Link to social profile 2" maxlength="300">
+            <input type="url" class="form-input" id="edit-social-3" placeholder="Link to social profile 3" maxlength="300">
+            <input type="url" class="form-input" id="edit-social-4" placeholder="Link to social profile 4" maxlength="300">
+          </div>
+        </div>
+
+        <div id="edit-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="edit-cancel">Отмена</button>
+        <button class="btn btn-primary" id="edit-save">💾 Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
+
+  <!-- Scripts -->
+  <script src="theme.js"></script>
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>
