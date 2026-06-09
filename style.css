@@ -2589,6 +2589,12 @@ ul, ol {
   }
 }
 
+/* ───────────────────── Profile Nav Link (hidden until login) ───────────────────── */
+.profile-nav-link,
+.profile-nav-link-mobile {
+  display: none;
+}
+
 /* ───────────────────── Utility ───────────────────── */
 .visually-hidden {
   position: absolute;

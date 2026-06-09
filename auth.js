@@ -260,6 +260,8 @@ const Auth = {
     const userDisplay = document.getElementById('user-display');
     const userNickname = document.getElementById('user-nickname');
     const userAvatar = document.getElementById('user-avatar');
+    const profileLinks = document.querySelectorAll('.profile-nav-link');
+    const profileMobileLinks = document.querySelectorAll('.profile-nav-link-mobile');
 
     if (!loginBtn || !userDisplay) return;
 
@@ -268,9 +270,13 @@ const Auth = {
       userDisplay.style.display = 'flex';
       if (userNickname) userNickname.textContent = user;
       if (userAvatar) userAvatar.textContent = user.charAt(0).toUpperCase();
+      profileLinks.forEach(el => el.style.display = '');
+      profileMobileLinks.forEach(el => el.style.display = '');
     } else {
       loginBtn.style.display = 'flex';
       userDisplay.style.display = 'none';
+      profileLinks.forEach(el => el.style.display = 'none');
+      profileMobileLinks.forEach(el => el.style.display = 'none');
     }
   },
 
