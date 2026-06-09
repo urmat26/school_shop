@@ -270,8 +270,8 @@ const Auth = {
       userDisplay.style.display = 'flex';
       if (userNickname) userNickname.textContent = user;
       if (userAvatar) userAvatar.textContent = user.charAt(0).toUpperCase();
-      profileLinks.forEach(el => el.style.display = '');
-      profileMobileLinks.forEach(el => el.style.display = '');
+      profileLinks.forEach(el => el.style.display = 'flex');
+      profileMobileLinks.forEach(el => el.style.display = 'flex');
     } else {
       loginBtn.style.display = 'flex';
       userDisplay.style.display = 'none';
