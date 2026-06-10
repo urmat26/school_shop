@@ -175,23 +175,10 @@ function getPlaceholderSVG(category) {
 // ───────────────────── Загрузка фото на ImgBB ─────────────────────
 
 async function uploadImage(base64) {
-  const url = CONFIG.USE_VERCEL_PROXY
-    ? CONFIG.VERCEL_UPLOAD_URL
-    : 'https://api.imgbb.com/1/upload?key=' + CONFIG.IMGBB_API_KEY;
+  const formData = new FormData();
+  formData.append('image', base64.split(',')[1]);
 
-  let headers = {};
-  let body;
-
-  if (CONFIG.USE_VERCEL_PROXY) {
-    headers['Content-Type'] = 'application/json';
-    body = JSON.stringify({ image: base64.split(',')[1] });
-  } else {
-    const formData = new FormData();
-    formData.append('image', base64.split(',')[1]);
-    body = formData;
-  }
-
-  const res = await fetch(url, { method: 'POST', headers, body });
+  const res = await fetch('https://api.imgbb.com/1/upload?key=' + CONFIG.IMGBB_API_KEY, { method: 'POST', body: formData });
   const json = await res.json();
   if (!json.success) throw new Error('Ошибка загрузки фото');
   return json.data.url;
@@ -340,23 +327,13 @@ async function fetchAll(forceRefresh = false) {
   }
 
   try {
-    const url = CONFIG.USE_VERCEL_PROXY
-      ? CONFIG.VERCEL_DATA_URL + '?latest=true'
-      : `${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}/latest`;
-
-    const headers = CONFIG.USE_VERCEL_PROXY ? {} : { 'X-Master-Key': CONFIG.API_KEY };
-    const response = await fetch(url, { headers });
+    const response = await fetch(`${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}/latest`, {
+      headers: { 'X-Master-Key': CONFIG.API_KEY }
+    });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-    let json;
-    if (CONFIG.USE_VERCEL_PROXY) {
-      json = await response.json();
-      json = json.record || json;
-    } else {
-      json = await response.json();
-      json = json.record || { items: [] };
-    }
-    const data = json || { items: [] };
+    const json = await response.json();
+    const data = json.record || { items: [] };
     _lastVersion = data._version || 0;
     _dataCache = data;
     _cacheTime = Date.now();
@@ -380,14 +357,9 @@ async function saveAll(data) {
   data._version = (data._version || 0) + 1;
 
   try {
-    const url = CONFIG.USE_VERCEL_PROXY ? CONFIG.VERCEL_DATA_URL : `${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}`;
-    const headers = CONFIG.USE_VERCEL_PROXY
-      ? { 'Content-Type': 'application/json' }
-      : { 'Content-Type': 'application/json', 'X-Master-Key': CONFIG.API_KEY };
-
-    const response = await fetch(url, {
+    const response = await fetch(`${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}`, {
       method: 'PUT',
-      headers,
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': CONFIG.API_KEY },
       body: JSON.stringify(data)
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
