@@ -9,7 +9,7 @@ const CONFIG = {
   BASE_URL: 'https://api.jsonbin.io/v3',
 
   // Vercel Serverless (использовать вместо прямых вызовов JSONBin/ImgBB)
-  USE_VERCEL_PROXY: true,          // true = использовать /api/data + /api/upload
+  USE_VERCEL_PROXY: false,         // true = /api/data + /api/upload (только на Vercel)
   VERCEL_DATA_URL: '/api/data',   // прокси для JSONBin
   VERCEL_UPLOAD_URL: '/api/upload', // прокси для ImgBB
 
