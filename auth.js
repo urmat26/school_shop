@@ -9,10 +9,69 @@ const Auth = {
     localStorage.setItem(this.STORAGE_KEY, username);
   },
 
+  _confirmModal: null,
+
+  _createConfirmModal() {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.id = 'auth-confirm-modal';
+    overlay.innerHTML = `
+      <div class="modal-overlay-bg"></div>
+      <div class="modal modal-sm">
+        <div class="modal-header">
+          <div class="modal-icon">🚪</div>
+          <h2 class="modal-title">Выйти из аккаунта?</h2>
+          <p class="modal-subtitle">Вы уверены, что хотите выйти?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="confirm-cancel">Отмена</button>
+          <button class="btn btn-danger" id="confirm-ok">🚪 Выйти</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    this._confirmModal = overlay;
+  },
+
+  _showConfirm(title, subtitle, okText, okClass, action) {
+    if (!this._confirmModal) this._createConfirmModal();
+    const modal = this._confirmModal;
+    modal.querySelector('.modal-title').textContent = title;
+    modal.querySelector('.modal-subtitle').textContent = subtitle;
+    const okBtn = modal.querySelector('#confirm-ok');
+    okBtn.textContent = okText;
+    okBtn.className = `btn ${okClass}`;
+    const cancelBtn = modal.querySelector('#confirm-cancel');
+    const bg = modal.querySelector('.modal-overlay-bg');
+
+    const cleanup = () => {
+      modal.classList.remove('active');
+      cancelBtn.removeEventListener('click', onCancel);
+      okBtn.removeEventListener('click', onOk);
+      bg.removeEventListener('click', onCancel);
+      document.removeEventListener('keydown', onEscape);
+    };
+    const onCancel = () => cleanup();
+    const onOk = () => { cleanup(); action(); };
+    const onEscape = (e) => { if (e.key === 'Escape') cleanup(); };
+    cancelBtn.addEventListener('click', onCancel);
+    okBtn.addEventListener('click', onOk);
+    bg.addEventListener('click', onCancel);
+    document.addEventListener('keydown', onEscape);
+    modal.classList.add('active');
+  },
+
   logout() {
-    localStorage.removeItem(this.STORAGE_KEY);
-    this.updateUI();
-    showToast('Вы вышли из аккаунта', 'info');
+    this._showConfirm(
+      'Выйти из аккаунта?',
+      'Вы уверены, что хотите выйти?',
+      '🚪 Выйти',
+      'btn-danger',
+      () => {
+        localStorage.removeItem(this.STORAGE_KEY);
+        this.updateUI();
+        showToast('Вы вышли из аккаунта', 'info');
+      }
+    );
   },
 
   canEdit(item) {

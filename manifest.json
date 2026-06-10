@@ -1,0 +1,19 @@
+{
+  "name": "School Shop",
+  "short_name": "School Shop",
+  "description": "Школьный маркетплейс — покупай, продавай и обменивай вещи с одноклассниками",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0f1a",
+  "theme_color": "#6c5ce7",
+  "orientation": "portrait",
+  "categories": ["education", "shopping"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

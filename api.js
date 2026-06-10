@@ -175,14 +175,23 @@ function getPlaceholderSVG(category) {
 // ───────────────────── Загрузка фото на ImgBB ─────────────────────
 
 async function uploadImage(base64) {
-  const formData = new FormData();
-  formData.append('image', base64.split(',')[1]);
-
   const url = CONFIG.USE_VERCEL_PROXY
     ? CONFIG.VERCEL_UPLOAD_URL
     : 'https://api.imgbb.com/1/upload?key=' + CONFIG.IMGBB_API_KEY;
 
-  const res = await fetch(url, { method: 'POST', body: formData });
+  let headers = {};
+  let body;
+
+  if (CONFIG.USE_VERCEL_PROXY) {
+    headers['Content-Type'] = 'application/json';
+    body = JSON.stringify({ image: base64.split(',')[1] });
+  } else {
+    const formData = new FormData();
+    formData.append('image', base64.split(',')[1]);
+    body = formData;
+  }
+
+  const res = await fetch(url, { method: 'POST', headers, body });
   const json = await res.json();
   if (!json.success) throw new Error('Ошибка загрузки фото');
   return json.data.url;
@@ -433,6 +442,18 @@ async function deleteItem(id) {
   data.items[index].deletedAt = new Date().toISOString();
   const success = await saveAll(data);
   if (!success) throw new Error('Ошибка удаления');
+}
+
+/** Переключить статус объявления (active ↔ sold) */
+async function toggleItemSold(id) {
+  const data = await fetchAll(true);
+  const item = data.items.find(i => i.id === id);
+  if (!item) throw new Error('Объявление не найдено');
+  if (item.author !== Auth.getUser()) throw new Error('Нет прав');
+  item.status = item.status === 'sold' ? 'active' : 'sold';
+  const success = await saveAll(data);
+  if (!success) throw new Error('Ошибка обновления статуса');
+  return item.status;
 }
 
 /** Восстановить объявление */

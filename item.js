@@ -20,6 +20,8 @@ const breadcrumbTitle = document.getElementById('breadcrumb-title');
 const favoriteBtn = document.getElementById('favorite-btn');
 const editBtn = document.getElementById('edit-btn');
 const deleteBtn = document.getElementById('delete-btn');
+const soldToggleBtn = document.getElementById('sold-toggle-btn');
+const soldDetailBadge = document.getElementById('sold-detail-badge');
 const itemActions = document.getElementById('item-actions');
 const deleteModal = document.getElementById('delete-modal');
 const deleteCancel = document.getElementById('delete-cancel');
@@ -165,11 +167,18 @@ function renderItem(item) {
   favoriteBtn.innerHTML = isFav ? '♥' : '♡';
   favoriteBtn.addEventListener('click', handleFavorite);
 
+  // Sold badge on detail image
+  if (item.status === 'sold') {
+    soldDetailBadge.style.display = 'flex';
+  }
+
   // Actions (only for owner)
   if (Auth.canEdit(item)) {
     itemActions.style.display = 'flex';
     editBtn.href = `create.html?id=${item.id}`;
     deleteBtn.addEventListener('click', () => showDeleteModal());
+    updateSoldToggleBtn(item.status);
+    soldToggleBtn.addEventListener('click', handleSoldToggle);
   }
 
   // Recently viewed & similar items (show skeleton while loading)
@@ -232,6 +241,8 @@ function handleFavorite() {
   } else {
     showToast('Удалено из избранного', 'info');
   }
+
+  updateFavCount();
 }
 
 // ───────────────────── Delete Modal ─────────────────────
@@ -257,6 +268,7 @@ async function handleDelete() {
     currentItem.status = 'deleted';
     itemActions.style.display = 'none';
     itemRestore.style.display = 'flex';
+    soldDetailBadge.style.display = 'none';
     restoreBtn.addEventListener('click', handleRestore);
   } catch (error) {
     console.error('Delete error:', error);
@@ -277,11 +289,42 @@ async function handleRestore() {
     currentItem.status = 'active';
     itemRestore.style.display = 'none';
     itemActions.style.display = 'flex';
+    updateSoldToggleBtn('active');
+    soldDetailBadge.style.display = 'none';
   } catch (error) {
     showToast(error.message || 'Ошибка восстановления', 'error');
   }
   restoreBtn.disabled = false;
   restoreBtn.textContent = '♻️ Восстановить';
+}
+
+// ───────────────────── Sold Toggle ─────────────────────
+function updateSoldToggleBtn(status) {
+  if (status === 'sold') {
+    soldToggleBtn.textContent = '↩️ Вернуть в продажу';
+    soldToggleBtn.className = 'btn btn-secondary';
+  } else {
+    soldToggleBtn.textContent = '✅ Продано';
+    soldToggleBtn.className = 'btn btn-success';
+  }
+}
+
+async function handleSoldToggle() {
+  if (!currentItem) return;
+  soldToggleBtn.disabled = true;
+  const prevText = soldToggleBtn.textContent;
+  soldToggleBtn.textContent = '⏳ Сохранение...';
+  try {
+    const newStatus = await toggleItemSold(currentItem.id);
+    currentItem.status = newStatus;
+    updateSoldToggleBtn(newStatus);
+    soldDetailBadge.style.display = newStatus === 'sold' ? 'flex' : 'none';
+    showToast(newStatus === 'sold' ? '✅ Объявление помечено как проданное' : '↩️ Объявление снова в продаже', 'success');
+  } catch (error) {
+    showToast(error.message || 'Ошибка обновления статуса', 'error');
+    soldToggleBtn.textContent = prevText;
+  }
+  soldToggleBtn.disabled = false;
 }
 
 // ───────────────────── Helpers ─────────────────────

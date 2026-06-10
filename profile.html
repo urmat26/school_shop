@@ -16,6 +16,7 @@
       document.documentElement.style.colorScheme = t;
     })();
   </script>
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
@@ -156,26 +157,26 @@
 
         <!-- Display Name -->
         <div class="form-group">
-          <label class="form-label">Name</label>
-          <input type="text" class="form-input" id="edit-name" placeholder="Your display name" maxlength="60">
+          <label class="form-label">Имя</label>
+          <input type="text" class="form-input" id="edit-name" placeholder="Иван Иванов" maxlength="60">
         </div>
 
         <!-- Email -->
         <div class="form-group">
           <label class="form-label">Email</label>
-          <input type="email" class="form-input" id="edit-email" placeholder="example@school.edu">
+          <input type="email" class="form-input" id="edit-email" placeholder="your@school.edu">
         </div>
 
         <!-- Bio -->
         <div class="form-group">
-          <label class="form-label">Bio</label>
-          <textarea class="form-textarea form-textarea-sm" id="edit-bio" placeholder="О себе, увлечения, контакты…" maxlength="500"></textarea>
+          <label class="form-label">О себе</label>
+          <textarea class="form-textarea form-textarea-sm" id="edit-bio" placeholder="Расскажите о себе, увлечениях, контактах…" maxlength="500"></textarea>
         </div>
 
         <!-- Location -->
         <div class="form-group">
-          <label class="form-label">Location</label>
-          <input type="text" class="form-input" id="edit-location" placeholder="Город / Школа, например: Бишкек, Кыргызстан" maxlength="80">
+          <label class="form-label">Город / Школа</label>
+          <input type="text" class="form-input" id="edit-location" placeholder="Например: Бишкек, Школа №70" maxlength="80">
         </div>
 
         <div id="edit-error"></div>

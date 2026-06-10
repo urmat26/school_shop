@@ -459,6 +459,18 @@ ul, ol {
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.15);
 }
 
+.btn-success {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: var(--green);
+}
+
+.btn-success:hover {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.5);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.15);
+}
+
 .btn-ghost {
   background: transparent;
   color: var(--text-secondary);
@@ -785,6 +797,26 @@ ul, ol {
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5);
   pointer-events: none;
   animation: soldPulse 2s ease-in-out infinite;
+}
+
+.sold-detail-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  z-index: 3;
+  background: #ef4444;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.6rem;
+  padding: 10px 28px;
+  border-radius: 8px;
+  letter-spacing: 2px;
+  box-shadow: 0 6px 24px rgba(239, 68, 68, 0.5);
+  pointer-events: none;
+  animation: soldPulse 2s ease-in-out infinite;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes soldPulse {
@@ -1194,6 +1226,7 @@ ul, ol {
 }
 
 .item-detail-image {
+  position: relative;
   width: 100%;
   aspect-ratio: 4/3;
   border-radius: var(--radius-lg);
@@ -1344,11 +1377,13 @@ ul, ol {
 /* Item Actions */
 .item-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .item-actions .btn {
   flex: 1;
+  min-width: 120px;
 }
 
 .share-buttons-row {
@@ -1455,6 +1490,10 @@ ul, ol {
 
 .modal-overlay.active .modal {
   transform: scale(1) translateY(0);
+}
+
+.modal-sm {
+  max-width: 360px;
 }
 
 .modal-header {

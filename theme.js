@@ -39,3 +39,8 @@ const Theme = {
 };
 
 document.addEventListener('DOMContentLoaded', () => Theme.init());
+
+// PWA: Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}

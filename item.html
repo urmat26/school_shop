@@ -16,6 +16,7 @@
       document.documentElement.style.colorScheme = t;
     })();
   </script>
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
@@ -107,6 +108,7 @@
         <!-- Gallery -->
         <div class="item-detail-gallery animate-fade-in-up">
           <div class="item-detail-image">
+            <div class="sold-detail-badge" id="sold-detail-badge" style="display:none;">Продано</div>
             <img id="item-image" alt="Фото товара" src="">
           </div>
         </div>
@@ -180,6 +182,7 @@
 
           <!-- Actions (only for owner) -->
           <div class="item-actions" id="item-actions" style="display:none;">
+            <button class="btn btn-success" id="sold-toggle-btn">✅ Продано</button>
             <a href="#" class="btn btn-secondary" id="edit-btn">✏️ Редактировать</a>
             <button class="btn btn-danger" id="delete-btn">🗑 Удалить</button>
           </div>
