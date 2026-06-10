@@ -178,7 +178,11 @@ async function uploadImage(base64) {
   const formData = new FormData();
   formData.append('image', base64.split(',')[1]);
 
-  const res = await fetch('https://api.imgbb.com/1/upload?key=' + CONFIG.IMGBB_API_KEY, { method: 'POST', body: formData });
+  const url = CONFIG.USE_VERCEL_PROXY
+    ? CONFIG.VERCEL_UPLOAD_URL
+    : 'https://api.imgbb.com/1/upload?key=' + CONFIG.IMGBB_API_KEY;
+
+  const res = await fetch(url, { method: 'POST', body: formData });
   const json = await res.json();
   if (!json.success) throw new Error('Ошибка загрузки фото');
   return json.data.url;
@@ -327,13 +331,23 @@ async function fetchAll(forceRefresh = false) {
   }
 
   try {
-    const response = await fetch(`${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}/latest`, {
-      headers: { 'X-Master-Key': CONFIG.API_KEY }
-    });
+    const url = CONFIG.USE_VERCEL_PROXY
+      ? CONFIG.VERCEL_DATA_URL + '?latest=true'
+      : `${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}/latest`;
+
+    const headers = CONFIG.USE_VERCEL_PROXY ? {} : { 'X-Master-Key': CONFIG.API_KEY };
+    const response = await fetch(url, { headers });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-    const json = await response.json();
-    const data = json.record || { items: [] };
+    let json;
+    if (CONFIG.USE_VERCEL_PROXY) {
+      json = await response.json();
+      json = json.record || json;
+    } else {
+      json = await response.json();
+      json = json.record || { items: [] };
+    }
+    const data = json || { items: [] };
     _lastVersion = data._version || 0;
     _dataCache = data;
     _cacheTime = Date.now();
@@ -357,9 +371,14 @@ async function saveAll(data) {
   data._version = (data._version || 0) + 1;
 
   try {
-    const response = await fetch(`${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}`, {
+    const url = CONFIG.USE_VERCEL_PROXY ? CONFIG.VERCEL_DATA_URL : `${CONFIG.BASE_URL}/b/${CONFIG.BIN_ID}`;
+    const headers = CONFIG.USE_VERCEL_PROXY
+      ? { 'Content-Type': 'application/json' }
+      : { 'Content-Type': 'application/json', 'X-Master-Key': CONFIG.API_KEY };
+
+    const response = await fetch(url, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': CONFIG.API_KEY },
+      headers,
       body: JSON.stringify(data)
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -416,18 +435,6 @@ async function deleteItem(id) {
   if (!success) throw new Error('Ошибка удаления');
 }
 
-/** Переключить статус объявления (active ↔ sold) */
-async function toggleItemSold(id) {
-  const data = await fetchAll(true);
-  const item = data.items.find(i => i.id === id);
-  if (!item) throw new Error('Объявление не найдено');
-  if (item.author !== Auth.getUser()) throw new Error('Нет прав');
-  item.status = item.status === 'sold' ? 'active' : 'sold';
-  const success = await saveAll(data);
-  if (!success) throw new Error('Ошибка обновления статуса');
-  return item.status;
-}
-
 /** Восстановить объявление */
 async function restoreItem(id) {
   const data = await fetchAll(true);
@@ -438,6 +445,18 @@ async function restoreItem(id) {
   delete item.deletedAt;
   const success = await saveAll(data);
   if (!success) throw new Error('Ошибка восстановления');
+}
+
+/** Переключить статус объявления (active ↔ sold) */
+async function toggleItemSold(id) {
+  const data = await fetchAll(true);
+  const item = data.items.find(i => i.id === id);
+  if (!item) throw new Error('Объявление не найдено');
+  if (item.author !== Auth.getUser()) throw new Error('Нет прав');
+  item.status = item.status === 'sold' ? 'active' : 'sold';
+  const success = await saveAll(data);
+  if (!success) throw new Error('Ошибка обновления статуса');
+  return item.status;
 }
 
 /** Получить количество удалённых объявлений текущего пользователя */
