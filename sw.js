@@ -1,4 +1,4 @@
-const CACHE = 'school-shop-v1';
+const CACHE = 'school-shop-v2';
 const STATIC = [
   '/',
   '/index.html',
