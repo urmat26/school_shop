@@ -1,47 +1,47 @@
-# Project Guidelines
+# Правила проекта
 
-## Git Workflow
+## Git-работа
 
 ```powershell
 git add -A; if ($?) { git commit -m "..." }; if ($?) { git push }
 ```
 
-- Commit messages must be written in **Russian**
-- Push directly to `main` (no PR workflow)
-- `config.js` is in `.gitignore` — never commit it manually
+- Сообщения коммитов — только на **русском**
+- Пушим напрямую в `main` (без PR)
+- `config.js` в `.gitignore` — никогда не коммитить вручную
 
-## Commit Scope
+## Что коммитить
 
-All files in the repo should be committed. The `.gitignore` already excludes:
-- `config.js` (local API keys)
+Все файлы в репозитории. `.gitignore` уже исключает:
+- `config.js` (локальные API-ключи)
 - `.DS_Store`, `Thumbs.db`, `.vscode/`, `.idea/`
 
-## Code Style
+## Стиль кода
 
-- **No comments** in production code (unless absolutely necessary for explanation)
-- No emojis in code (except user-facing UI strings)
-- Follow existing patterns — use `const $ = id => document.getElementById(id)` for DOM queries
-- Scripts load in order: `theme.js → config.js → api.js → auth.js → page-specific.js`
+- **Без комментариев** в production-коде (кроме случаев, когда они действительно необходимы)
+- Без эмодзи в коде (кроме пользовательских UI-строк)
+- Следовать существующим паттернам — использовать `const $ = id ⇒ document.getElementById(id)` для DOM-запросов
+- Скрипты подключать в порядке: `theme.js → config.js → api.js → auth.js → page-specific.js`
 
-## Naming
+## Именование
 
-- HTML files: lowercase with hyphens (`profile.html`, not `Profile.html`)
-- JS files: lowercase (`auth.js`, `api.js`)
-- CSS classes: kebab-case (`profile-nav-link`, `item-card-body`)
-- JS identifiers: camelCase (`loadProfileData`, `handleFavorite`)
+- HTML-файлы: маленькие буквы, дефисы (`profile.html`, не `Profile.html`)
+- JS-файлы: маленькие буквы (`auth.js`, `api.js`)
+- CSS-классы: kebab-case (`profile-nav-link`, `item-card-body`)
+- JS-идентификаторы: camelCase (`loadProfileData`, `handleFavorite`)
 
-## Storage
+## Хранилище
 
-- Profile data (avatar, name, bio, email, location) → localStorage (`marketplace_profile`)
-- Favorites → localStorage (`marketplace_favorites`)
-- Theme preference → localStorage (`marketplace_theme`)
-- Recently viewed → localStorage (`marketplace_recently`)
-- Auth session → localStorage (`marketplace_user`)
-- Items, users, messages → JSONBin.io via Vercel Proxy (`/api/data`)
+- Данные профиля (аватар, имя, bio, email, локация) → localStorage (`marketplace_profile`)
+- Избранное → localStorage (`marketplace_favorites`)
+- Тема → localStorage (`marketplace_theme`)
+- Недавно просмотренное → localStorage (`marketplace_recently`)
+- Сессия авторизации → localStorage (`marketplace_user`)
+- Товары, пользователи, сообщения → JSONBin.io через Vercel Proxy (`/api/data`)
 
-## Auth / Routing
+## Авторизация / Роутинг
 
-- Login/register without callback → redirect to `profile.html`
-- Login/register with callback (e.g. `requireAuth` from `create.html`) → fire callback, no redirect
-- Auth modal is the single entry point; no separate login page
-- Profile nav link visible only when logged in (CSS `display: none` + JS sets `display: flex`)
+- Вход/регистрация без callback → редирект на `profile.html`
+- Вход/регистрация с callback (например `requireAuth` из `create.html`) → вызов callback, без редиректа
+- Модалка авторизации — единая точка входа; отдельной страницы логина нет
+- Ссылка «Профиль» в навигации видна только когда пользователь залогинен (CSS `display: none` + JS меняет на `display: flex`)
