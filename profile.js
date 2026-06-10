@@ -2,6 +2,20 @@
    profile.js — Страница профиля пользователя
    ========================================================= */
 
+const PROFILE_KEY = 'marketplace_profile';
+
+function getProfile() {
+  try {
+    return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function saveProfile(data) {
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(data));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const username = Auth.getUser();
   if (!username) {
@@ -12,10 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
   Auth.updateUI();
   updateFavCount();
 
-  const editBtn = document.getElementById('profile-edit');
-  const logoutBtn = document.getElementById('profile-logout');
-
   const $ = id => document.getElementById(id);
+  const editBtn = $('profile-edit');
+  const logoutBtn = $('profile-logout');
 
   const els = {
     avatar: $('profile-avatar'),
@@ -24,8 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     bio: $('profile-bio'),
     email: $('profile-email'),
     location: $('profile-location'),
-    website: $('profile-website'),
-    social: $('profile-social'),
     since: $('profile-since'),
   };
 
@@ -48,64 +59,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const logoutHeader = $('logout-btn');
   if (logoutHeader) {
     logoutHeader.addEventListener('click', () => {
+      Auth.logout();
       window.location.href = 'index.html';
     });
   }
 });
 
-const $ = id => document.getElementById(id);
+function loadProfileData(username, els) {
+  const p = getProfile();
 
-async function loadProfileData(username, els) {
-  const data = await fetchAll();
-  const u = (data.users || []).find(x => x.username === username);
-  if (!u) return;
+  const renderName = p.name || '';
+  const renderBio = p.bio || '';
+  const renderEmail = p.email || '';
+  const renderLocation = p.location || '';
 
   if (els.avatar) {
-    if (u.avatar) {
-      els.avatar.innerHTML = `<img src="${escapeHtml(u.avatar)}" alt="">`;
+    if (p.avatar) {
+      els.avatar.innerHTML = `<img src="${p.avatar}" alt="">`;
       els.avatar.classList.add('has-image');
     } else {
       els.avatar.textContent = username.charAt(0).toUpperCase();
     }
   }
 
-  if (els.name) els.name.textContent = u.displayName || '';
-  if (els.name && !u.displayName) els.name.style.display = 'none';
-
-  if (els.email) els.email.textContent = u.email || 'Email не указан';
-  if (els.email && !u.email) els.email.style.display = 'none';
+  if (els.name) {
+    els.name.textContent = renderName;
+    els.name.style.display = renderName ? '' : 'none';
+  }
 
   if (els.bio) {
-    els.bio.textContent = u.bio || '';
-    if (!u.bio) els.bio.style.display = 'none';
+    els.bio.textContent = renderBio;
+    els.bio.style.display = renderBio ? '' : 'none';
+  }
+
+  if (els.email) {
+    els.email.textContent = renderEmail || 'Email не указан';
+    els.email.style.display = renderEmail ? '' : 'none';
   }
 
   if (els.location) {
-    els.location.textContent = u.location ? `📍 ${u.location}` : '';
-    if (!u.location) els.location.style.display = 'none';
+    els.location.textContent = renderLocation ? `📍 ${renderLocation}` : '';
+    els.location.style.display = renderLocation ? '' : 'none';
   }
 
-  if (els.website && u.website) {
-    els.website.innerHTML = `<a href="${escapeHtml(u.website)}" target="_blank" rel="noopener">🔗 ${escapeHtml(u.website)}</a>`;
-  } else if (els.website) {
-    els.website.style.display = 'none';
-  }
-
-  if (els.social) {
-    const links = u.socialLinks || [];
-    const active = links.filter(Boolean);
-    if (active.length > 0) {
-      els.social.innerHTML = active.map((link, i) =>
-        `<a href="${escapeHtml(link)}" target="_blank" rel="noopener" class="profile-social-link">🌐 ${escapeHtml(link)}</a>`
-      ).join('');
-    } else {
-      els.social.style.display = 'none';
-    }
-  }
-
-  if (els.since && u.createdAt) {
-    const d = new Date(u.createdAt);
-    els.since.textContent = `Участник с ${d.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })}`;
+  if (els.since) {
+    els.since.textContent = 'Участник с 2026 года';
   }
 }
 
@@ -130,8 +128,10 @@ async function loadUserItems(username) {
     countEl.textContent = `${c} ${label}`;
   }
 
+  if (loading) loading.remove();
+  container.innerHTML = '';
+
   if (userItems.length === 0) {
-    if (loading) loading.remove();
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">📭</div>
@@ -143,8 +143,6 @@ async function loadUserItems(username) {
     return;
   }
 
-  if (loading) loading.remove();
-  container.innerHTML = '';
   const grid = document.createElement('div');
   grid.className = 'items-grid';
   grid.innerHTML = userItems.map(item => createCardHTML(item)).join('');
@@ -169,19 +167,28 @@ function openEditModal(username, els) {
     name: $('edit-name'),
     email: $('edit-email'),
     bio: $('edit-bio'),
-    pronouns: $('edit-pronouns'),
-    company: $('edit-company'),
     location: $('edit-location'),
-    website: $('edit-website'),
-    social1: $('edit-social-1'),
-    social2: $('edit-social-2'),
-    social3: $('edit-social-3'),
-    social4: $('edit-social-4'),
   };
 
-  let newAvatarDataUrl = null;
+  const p = getProfile();
 
-  loadEditData(username, fields);
+  if (fields.nickname) fields.nickname.value = username;
+  if (fields.name) fields.name.value = p.name || '';
+  if (fields.email) fields.email.value = p.email || '';
+  if (fields.bio) fields.bio.value = p.bio || '';
+  if (fields.location) fields.location.value = p.location || '';
+
+  if (fields.avatar) {
+    if (p.avatar) {
+      fields.avatar.innerHTML = `<img src="${p.avatar}" alt="">`;
+      fields.avatar.classList.add('has-image');
+      if (fields.avatarRemove) fields.avatarRemove.style.display = '';
+    } else {
+      fields.avatar.textContent = username.charAt(0).toUpperCase();
+    }
+  }
+
+  let newAvatarDataUrl = null;
   modal.classList.add('active');
 
   const close = () => {
@@ -226,46 +233,26 @@ function openEditModal(username, els) {
   }
 
   // ── Save ──
-  const onSave = async () => {
+  const onSave = () => {
     if (errorEl) errorEl.textContent = '';
     if (saveBtn) saveBtn.disabled = true;
 
     try {
-      let avatarUrl = null;
+      const data = {
+        name: fields.name ? fields.name.value.trim() : '',
+        email: fields.email ? fields.email.value.trim() : '',
+        bio: fields.bio ? fields.bio.value.trim() : '',
+        location: fields.location ? fields.location.value.trim() : '',
+      };
 
-      // Upload avatar if changed
-      if (newAvatarDataUrl) {
-        try {
-          avatarUrl = await uploadImage(newAvatarDataUrl);
-        } catch {
-          throw new Error('Ошибка загрузки фото');
-        }
+      if (newAvatarDataUrl !== null) {
+        data.avatar = newAvatarDataUrl;
+      } else if (p.avatar && newAvatarDataUrl === null) {
+        // Keep existing avatar unless explicitly removed
+        data.avatar = p.avatar;
       }
 
-      const data = await fetchAll(true);
-      const idx = (data.users || []).findIndex(u => u.username === username);
-      if (idx === -1) throw new Error('Пользователь не найден');
-
-      const user = data.users[idx];
-
-      if (newAvatarDataUrl !== null) user.avatar = avatarUrl;
-      user.displayName = fields.name ? fields.name.value.trim() : '';
-      user.email = fields.email ? fields.email.value.trim() : '';
-      user.bio = fields.bio ? fields.bio.value.trim() : '';
-      user.pronouns = fields.pronouns ? fields.pronouns.value.trim() : '';
-      user.company = fields.company ? fields.company.value.trim() : '';
-      user.location = fields.location ? fields.location.value.trim() : '';
-      user.website = fields.website ? fields.website.value.trim() : '';
-      user.socialLinks = [
-        fields.social1 ? fields.social1.value.trim() : '',
-        fields.social2 ? fields.social2.value.trim() : '',
-        fields.social3 ? fields.social3.value.trim() : '',
-        fields.social4 ? fields.social4.value.trim() : '',
-      ];
-
-      const ok = await saveAll(data);
-      if (!ok) throw new Error('Ошибка сохранения');
-
+      saveProfile(data);
       close();
       showToast('Профиль обновлён', 'success');
       loadProfileData(username, els);
@@ -292,32 +279,6 @@ function openEditModal(username, els) {
   document.addEventListener('keydown', escHandler = (e) => {
     if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escHandler); }
   });
-}
-
-async function loadEditData(username, fields) {
-  const data = await fetchAll();
-  const u = (data.users || []).find(x => x.username === username);
-  if (!u) return;
-
-  if (fields.nickname) fields.nickname.value = username;
-  if (fields.name) fields.name.value = u.displayName || '';
-  if (fields.email) fields.email.value = u.email || '';
-  if (fields.bio) fields.bio.value = u.bio || '';
-  if (fields.pronouns) fields.pronouns.value = u.pronouns || '';
-  if (fields.company) fields.company.value = u.company || '';
-  if (fields.location) fields.location.value = u.location || '';
-  if (fields.website) fields.website.value = u.website || '';
-  if (fields.social1) fields.social1.value = (u.socialLinks || [])[0] || '';
-  if (fields.social2) fields.social2.value = (u.socialLinks || [])[1] || '';
-  if (fields.social3) fields.social3.value = (u.socialLinks || [])[2] || '';
-  if (fields.social4) fields.social4.value = (u.socialLinks || [])[3] || '';
-
-  // Show existing avatar in preview
-  if (fields.avatar && u.avatar) {
-    fields.avatar.innerHTML = `<img src="${escapeHtml(u.avatar)}" alt="">`;
-    fields.avatar.classList.add('has-image');
-    if (fields.avatarRemove) fields.avatarRemove.style.display = '';
-  }
 }
 
 function cloneAndReplace(el, handler) {

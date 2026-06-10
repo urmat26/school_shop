@@ -2435,40 +2435,6 @@ ul, ol {
   margin-bottom: 4px;
 }
 
-.profile-website {
-  font-size: 0.85rem;
-  margin-bottom: 4px;
-}
-
-.profile-website a {
-  color: var(--accent-light);
-  word-break: break-all;
-}
-
-.profile-website a:hover {
-  text-decoration: underline;
-}
-
-.profile-social {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-bottom: 4px;
-}
-
-.profile-social-link {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  word-break: break-all;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.profile-social-link:hover {
-  color: var(--accent-light);
-}
-
 .profile-since {
   font-size: 0.82rem;
   color: var(--text-muted);
@@ -2519,13 +2485,6 @@ ul, ol {
   flex-direction: column;
   gap: 6px;
   align-items: flex-start;
-}
-
-/* Social links edit group */
-.social-links-edit {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
 }
 
 /* Larger modal */
