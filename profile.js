@@ -2,6 +2,8 @@
    profile.js — Страница профиля пользователя
    ========================================================= */
 
+const $ = id => document.getElementById(id);
+
 const PROFILE_KEY = 'marketplace_profile';
 
 function getProfile() {
@@ -26,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
   Auth.updateUI();
   updateFavCount();
 
-  const $ = id => document.getElementById(id);
   const editBtn = $('profile-edit');
   const logoutBtn = $('profile-logout');
 
