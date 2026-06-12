@@ -137,7 +137,7 @@ function renderItem(item) {
 
   // Category
   itemCategory.dataset.category = item.category;
-  itemCategory.innerHTML = `${getCategoryIcon(item.category)} ${Lang.t('cat.' + item.category)}`;
+  itemCategory.innerHTML = `${getCategoryIcon(item.category)} <span data-i18n="cat.${escapeHtml(item.category)}">${Lang.t('cat.' + item.category)}</span>`;
 
   // Description
   itemDescription.textContent = item.description || Lang.t('item.no.description');

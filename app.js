@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   attachEvents();
   updateFavCount();
   await loadItems();
+  Lang.onChange(() => {
+    updateResultsCount();
+  });
 });
 
 // ───────────────────── Build Category Filters ─────────────────────
@@ -45,7 +48,7 @@ function buildCategoryFilters() {
     const pill = document.createElement('button');
     pill.className = 'filter-pill';
     pill.dataset.category = cat.id;
-    pill.innerHTML = `<span class="filter-pill-icon">${cat.icon}</span> ${Lang.t('cat.' + cat.id)}`;
+    pill.innerHTML = `<span class="filter-pill-icon">${cat.icon}</span> <span data-i18n="cat.${cat.id}">${Lang.t('cat.' + cat.id)}</span>`;
     categoryFilters.appendChild(pill);
   });
 }
@@ -192,12 +195,7 @@ function applyFilters() {
   });
 
   // Update results count
-  const total = filteredItems.length;
-  if (total === 0) {
-    resultsCount.innerHTML = '';
-  } else {
-    resultsCount.innerHTML = `${Lang.t('items.found')}: <strong>${total}</strong> ${pluralize(total, 'объявление', 'объявления', 'объявлений')}`;
-  }
+  updateResultsCount();
 
   // Paginate
   const totalPages = Math.ceil(filteredItems.length / CONFIG.ITEMS_PER_PAGE);
@@ -208,6 +206,15 @@ function applyFilters() {
 
   renderItems(pageItems);
   renderPagination(totalPages);
+}
+
+function updateResultsCount() {
+  const total = filteredItems.length;
+  if (total === 0) {
+    resultsCount.innerHTML = '';
+  } else {
+    resultsCount.innerHTML = `${Lang.t('items.found')}: <strong>${total}</strong> ${pluralize(total, Lang.t('items.one'), Lang.t('items.few'), Lang.t('items.many'))}`;
+  }
 }
 
 // ───────────────────── Render Items ─────────────────────

@@ -41,16 +41,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.title = 'Редактировать — Маркетплейс';
     await loadItemForEdit(editId);
   }
+  Lang.onChange(() => {
+    buildCategoryOptions();
+  });
 });
 
 // ───────────────────── Build Category Options ─────────────────────
 function buildCategoryOptions() {
+  const placeholder = categorySelect.querySelector('option[value=""]');
+  const prevValue = categorySelect.value;
+  categorySelect.innerHTML = '';
+  if (placeholder) categorySelect.appendChild(placeholder);
   CONFIG.CATEGORIES.forEach(cat => {
     const option = document.createElement('option');
     option.value = cat.id;
     option.textContent = `${cat.icon} ${Lang.t('cat.' + cat.id)}`;
     categorySelect.appendChild(option);
   });
+  categorySelect.value = prevValue;
 }
 
 // ───────────────────── Events ─────────────────────

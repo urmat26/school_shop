@@ -205,7 +205,7 @@ function createCardHTML(item, options = {}) {
         <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy">
         <div class="item-card-badge">
           <span class="category-badge" data-category="${escapeHtml(item.category)}">
-            ${getCategoryIcon(item.category)} ${Lang.t('cat.' + item.category)}
+            ${getCategoryIcon(item.category)} <span data-i18n="cat.${escapeHtml(item.category)}">${Lang.t('cat.' + item.category)}</span>
           </span>
         </div>
         <button class="item-card-favorite ${isFav ? 'active' : ''}" data-id="${escapeHtml(item.id)}" title="${escapeHtml(favTitle)}">

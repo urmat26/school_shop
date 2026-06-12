@@ -874,6 +874,15 @@ const Lang = {
       const key = el.getAttribute('data-i18n-alt');
       el.alt = this.t(key);
     });
+  },
+
+  onChange(fn) {
+    this._cbs = this._cbs || [];
+    this._cbs.push(fn);
+  },
+
+  _fireChange() {
+    if (this._cbs) this._cbs.forEach(fn => fn());
   }
 };
 
@@ -883,6 +892,7 @@ const onLangChange = (code) => {
   if (typeof Theme !== 'undefined') {
     Theme.apply(Theme.get());
   }
+  Lang._fireChange();
 };
 
 document.addEventListener('DOMContentLoaded', () => {
