@@ -44,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (els.nickname) els.nickname.textContent = username;
 
   loadProfileData(username, els);
-  loadUserItems(username);
+  setupTabs(username);
+  loadUserItems(username, 'active');
 
   if (editBtn) {
     editBtn.addEventListener('click', () => openEditModal(username, els));
@@ -69,6 +70,29 @@ document.addEventListener('DOMContentLoaded', () => {
     updateProfileItemCount();
   });
 });
+
+let currentTab = 'active';
+
+function setupTabs(username) {
+  const tabActive = $('tab-active');
+  const tabDeleted = $('tab-deleted');
+
+  tabActive.addEventListener('click', () => switchTab(username, 'active'));
+  tabDeleted.addEventListener('click', () => switchTab(username, 'deleted'));
+
+  getDeletedCount().then(count => {
+    const badge = $('deleted-count');
+    if (badge) badge.textContent = count;
+  });
+}
+
+function switchTab(username, tab) {
+  if (tab === currentTab) return;
+  currentTab = tab;
+  document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.profile-tab[data-status="${tab}"]`)?.classList.add('active');
+  loadUserItems(username, tab);
+}
 
 function loadProfileData(username, els) {
   const p = getProfile();
@@ -112,10 +136,10 @@ function loadProfileData(username, els) {
   }
 }
 
-async function loadUserItems(username) {
+async function loadUserItems(username, status) {
   const data = await fetchAll();
   const userItems = data.items.filter(
-    i => i.author === username && i.status !== 'deleted'
+    i => i.author === username && i.status === status
   );
 
   const container = $('profile-items');
@@ -131,12 +155,13 @@ async function loadUserItems(username) {
   container.innerHTML = '';
 
   if (userItems.length === 0) {
+    const emptyKey = status === 'deleted' ? 'profile.empty.deleted' : 'profile.empty.title';
+    const emptyTextKey = status === 'deleted' ? 'profile.empty.deleted.text' : 'profile.empty.text';
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-state-icon">📭</div>
-        <h2 class="empty-state-title">${Lang.t('profile.empty.title')}</h2>
-        <p class="empty-state-text">${Lang.t('profile.empty.text')}</p>
-        <a href="create.html" class="btn btn-primary">${Lang.t('profile.empty.btn')}</a>
+        <div class="empty-state-icon">${status === 'deleted' ? '🗑️' : '📭'}</div>
+        <h2 class="empty-state-title">${Lang.t(emptyKey)}</h2>
+        <p class="empty-state-text">${Lang.t(emptyTextKey)}</p>
       </div>
     `;
     return;
