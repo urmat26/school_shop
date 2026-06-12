@@ -177,11 +177,17 @@ function renderItem(item) {
 
   // Actions (only for owner)
   if (Auth.canEdit(item)) {
-    itemActions.style.display = 'flex';
-    editBtn.href = `create.html?id=${item.id}`;
-    deleteBtn.addEventListener('click', () => showDeleteModal());
-    updateSoldToggleBtn(item.status);
-    soldToggleBtn.addEventListener('click', handleSoldToggle);
+    if (item.status === 'deleted') {
+      itemActions.style.display = 'none';
+      itemRestore.style.display = 'flex';
+      restoreBtn.addEventListener('click', handleRestore);
+    } else {
+      itemActions.style.display = 'flex';
+      editBtn.href = `create.html?id=${item.id}`;
+      deleteBtn.addEventListener('click', () => showDeleteModal());
+      updateSoldToggleBtn(item.status);
+      soldToggleBtn.addEventListener('click', handleSoldToggle);
+    }
   }
 
   // Chat button (for non-owners, logged in)
@@ -240,12 +246,6 @@ function renderItem(item) {
     e.preventDefault();
     window.open(`https://wa.me/?text=${url}%20${text}`, '_blank', 'noopener');
   });
-
-  // Restore
-  if (item.status === 'deleted' && Auth.canEdit(item)) {
-    itemRestore.style.display = 'flex';
-    restoreBtn.addEventListener('click', handleRestore);
-  }
 
   // Delete modal events
   deleteCancel.addEventListener('click', hideDeleteModal);
