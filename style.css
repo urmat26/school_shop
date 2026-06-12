@@ -344,7 +344,7 @@ ul, ol {
   display: flex;
   background: var(--bg-glass);
   border: 1px solid var(--border);
-  color: var(--text);
+  color: var(--text-primary);
   font-size: 1.1rem;
   padding: 4px 6px;
   border-radius: var(--radius-sm);
@@ -360,8 +360,8 @@ ul, ol {
   background: var(--bg-card-hover);
 }
 .lang-select option {
-  background: var(--bg-card);
-  color: var(--text);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .mobile-lang-select {
@@ -388,8 +388,8 @@ ul, ol {
   background: var(--bg-card);
 }
 .mobile-lang-select option {
-  background: var(--bg-card);
-  color: var(--text);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
 }
 
 .user-display {
