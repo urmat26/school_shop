@@ -26,6 +26,7 @@ const itemActions = document.getElementById('item-actions');
 const deleteModal = document.getElementById('delete-modal');
 const deleteCancel = document.getElementById('delete-cancel');
 const deleteConfirm = document.getElementById('delete-confirm');
+const deleteItemName = document.getElementById('delete-item-name');
 const restoreBtn = document.getElementById('restore-btn');
 const itemRestore = document.getElementById('item-restore');
 const recentlySkeleton = document.getElementById('recently-skeleton');
@@ -248,11 +249,20 @@ function handleFavorite() {
 
 // ───────────────────── Delete Modal ─────────────────────
 function showDeleteModal() {
+  if (currentItem) {
+    deleteItemName.textContent = `«${currentItem.title}»`;
+  }
   deleteModal.classList.add('active');
+  document.addEventListener('keydown', onDeleteEscape);
 }
 
 function hideDeleteModal() {
   deleteModal.classList.remove('active');
+  document.removeEventListener('keydown', onDeleteEscape);
+}
+
+function onDeleteEscape(e) {
+  if (e.key === 'Escape') hideDeleteModal();
 }
 
 // ───────────────────── Delete Item (soft) ─────────────────────
@@ -260,7 +270,7 @@ async function handleDelete() {
   if (!currentItem) return;
 
   deleteConfirm.disabled = true;
-  deleteConfirm.textContent = '⏳ Удаление...';
+  deleteConfirm.classList.add('loading');
 
   try {
     await deleteItem(currentItem.id);
@@ -275,6 +285,7 @@ async function handleDelete() {
     console.error('Delete error:', error);
     showToast(error.message || Lang.t('toast.delete.error'), 'error');
     deleteConfirm.disabled = false;
+    deleteConfirm.classList.remove('loading');
     deleteConfirm.textContent = Lang.t('item.delete');
   }
 }
@@ -283,7 +294,7 @@ async function handleDelete() {
 async function handleRestore() {
   if (!currentItem) return;
   restoreBtn.disabled = true;
-  restoreBtn.textContent = '⏳ Восстановление...';
+  restoreBtn.classList.add('loading');
   try {
     await restoreItem(currentItem.id);
     showToast(Lang.t('toast.restored'), 'success');
@@ -296,7 +307,10 @@ async function handleRestore() {
     showToast(error.message || Lang.t('toast.restore.error'), 'error');
   }
   restoreBtn.disabled = false;
-  restoreBtn.textContent = Lang.t('item.restore');
+  restoreBtn.classList.remove('loading');
+}
+  restoreBtn.disabled = false;
+  restoreBtn.classList.remove('loading');
 }
 
 // ───────────────────── Sold Toggle ─────────────────────

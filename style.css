@@ -1569,6 +1569,20 @@ ul, ol {
   color: var(--text-secondary);
 }
 
+.modal-item-name {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-style: italic;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .modal-body {
   padding: 24px 28px;
 }
