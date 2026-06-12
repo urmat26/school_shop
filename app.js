@@ -29,15 +29,25 @@ const priceMinInput = document.getElementById('price-min');
 const priceMaxInput = document.getElementById('price-max');
 const clearFiltersBtn = document.getElementById('clear-filters-btn');
 const skeletonGrid = document.getElementById('skeleton-grid');
+const priceRangeFill = document.getElementById('price-range-fill');
+const priceMinLabel = document.getElementById('price-min-label');
+const priceMaxLabel = document.getElementById('price-max-label');
+const PRICE_MAX = 200000;
+
+function fmtPrice(v) {
+  return new Intl.NumberFormat('ru-RU').format(v) + ' ' + Lang.t('item.currency');
+}
 
 // ───────────────────── Init ─────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   Auth.init();
   buildCategoryFilters();
   attachEvents();
+  updateRangeSlider();
   updateFavCount();
   await loadItems();
   Lang.onChange(() => {
+    updateRangeSlider();
     updateResultsCount();
   });
 });
@@ -106,13 +116,21 @@ function attachEvents() {
 
   // Price range
   priceMinInput.addEventListener('input', () => {
+    const min = parseInt(priceMinInput.value) || 0;
+    const max = parseInt(priceMaxInput.value) || PRICE_MAX;
+    if (min > max) { priceMinInput.value = max; }
     priceMin = priceMinInput.value;
     currentPage = 1;
+    updateRangeSlider();
     applyFilters();
   });
   priceMaxInput.addEventListener('input', () => {
+    const min = parseInt(priceMinInput.value) || 0;
+    const max = parseInt(priceMaxInput.value) || PRICE_MAX;
+    if (max < min) { priceMaxInput.value = min; }
     priceMax = priceMaxInput.value;
     currentPage = 1;
+    updateRangeSlider();
     applyFilters();
   });
 
@@ -143,10 +161,22 @@ function clearAllFilters() {
   sortSelect.value = 'date-desc';
   myAdsOnly = false;
   myAdsBtn.classList.remove('active');
-  priceMin = ''; priceMinInput.value = '';
-  priceMax = ''; priceMaxInput.value = '';
+  priceMin = ''; priceMinInput.value = 0;
+  priceMax = ''; priceMaxInput.value = PRICE_MAX;
+  updateRangeSlider();
   currentPage = 1;
   applyFilters();
+}
+
+function updateRangeSlider() {
+  const min = parseInt(priceMinInput.value) || 0;
+  const max = parseInt(priceMaxInput.value) || PRICE_MAX;
+  const pctMin = (min / PRICE_MAX) * 100;
+  const pctMax = (max / PRICE_MAX) * 100;
+  priceRangeFill.style.left = pctMin + '%';
+  priceRangeFill.style.right = (100 - pctMax) + '%';
+  priceMinLabel.textContent = fmtPrice(min);
+  priceMaxLabel.textContent = max >= PRICE_MAX ? fmtPrice(PRICE_MAX) + '+' : fmtPrice(max);
 }
 
 // ───────────────────── Load Items ─────────────────────

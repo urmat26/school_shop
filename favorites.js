@@ -32,6 +32,7 @@ async function loadFavorites() {
   showLoading(false);
   if (favSkeleton) favSkeleton.style.display = 'none';
 
+  await Favorites.loadFromServer();
   const favIds = Favorites.getAll();
   filteredItems = allItems.filter(i => favIds.includes(i.id));
 

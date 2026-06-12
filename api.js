@@ -51,7 +51,7 @@ function formatDate(isoString) {
 /** Форматирование цены */
 function formatPrice(price) {
   if (!price || price === 0) return Lang.t('item.free');
-  return new Intl.NumberFormat('ru-RU').format(price) + ' Сом';
+  return new Intl.NumberFormat('ru-RU').format(price) + ' ' + Lang.t('item.currency');
 }
 
 /** Иконка категории */
@@ -113,7 +113,7 @@ function showToast(message, type = 'info') {
   }, 3500);
 }
 
-// ───────────────────── Избранное (localStorage) ─────────────────────
+// ───────────────────── Избранное (localStorage + JSONBin) ─────────────────────
 
 const Favorites = {
   KEY: 'marketplace_favorites',
@@ -144,11 +144,44 @@ const Favorites = {
     }
     localStorage.setItem(this.KEY, JSON.stringify(favs));
     this._cache = favs;
-    return !wasFav; // возвращает новое состояние
+    return !wasFav;
   },
 
   count() {
     return this.getAll().length;
+  },
+
+  async syncToServer() {
+    const username = Auth.getUser();
+    if (!username) return;
+    try {
+      const data = await fetchAll(true);
+      if (!data.users) return;
+      const user = data.users.find(u => u.username === username);
+      if (!user) return;
+      user.favorites = this.getAll();
+      await saveAll(data);
+    } catch (e) {
+      console.error('Favorites sync error:', e);
+    }
+  },
+
+  async loadFromServer() {
+    const username = Auth.getUser();
+    if (!username) return;
+    try {
+      const data = await fetchAll(true);
+      if (!data.users) return;
+      const user = data.users.find(u => u.username === username);
+      if (!user || !user.favorites) return;
+      const server = user.favorites;
+      const local = this.getAll();
+      const merged = [...new Set([...server, ...local])];
+      localStorage.setItem(this.KEY, JSON.stringify(merged));
+      this._cache = merged;
+    } catch (e) {
+      console.error('Favorites load error:', e);
+    }
   }
 };
 
@@ -280,6 +313,7 @@ function attachItemCardEvents(grid, options = {}) {
       }
 
       updateFavCount();
+      Favorites.syncToServer();
     });
   });
 }

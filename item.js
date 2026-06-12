@@ -243,6 +243,7 @@ function handleFavorite() {
   }
 
   updateFavCount();
+  Favorites.syncToServer();
 }
 
 // ───────────────────── Delete Modal ─────────────────────

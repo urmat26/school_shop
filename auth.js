@@ -103,6 +103,7 @@ const Auth = {
     if (!ok) throw new Error(Lang.t('auth.register.error'));
     this.setUser(username);
     this.updateUI();
+    Favorites.loadFromServer();
   },
 
   async login(username, password) {
@@ -113,6 +114,7 @@ const Auth = {
     if (hash !== user.passwordHash) throw new Error(Lang.t('auth.wrongpass'));
     this.setUser(username);
     this.updateUI();
+    Favorites.loadFromServer();
   },
 
   showModal(mode, callback) {

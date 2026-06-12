@@ -147,9 +147,17 @@
           👤 <span data-i18n="filter.myads">Мои</span>
         </button>
         <div class="price-range">
-          <input type="number" id="price-min" data-i18n-placeholder="filter.price.from" placeholder="Цена от" min="0">
-          <span class="price-range-sep">—</span>
-          <input type="number" id="price-max" data-i18n-placeholder="filter.price.to" placeholder="Цена до" min="0">
+          <div class="price-range-slider">
+            <div class="price-range-track"></div>
+            <div class="price-range-fill" id="price-range-fill"></div>
+            <input type="range" class="price-range-input range-min" id="price-min" min="0" max="200000" step="500" value="0">
+            <input type="range" class="price-range-input range-max" id="price-max" min="0" max="200000" step="500" value="200000">
+          </div>
+          <div class="price-range-labels">
+            <span class="price-range-label" id="price-min-label">0 Сом</span>
+            <span class="price-range-sep">—</span>
+            <span class="price-range-label" id="price-max-label">200 000 Сом</span>
+          </div>
         </div>
         <button class="filter-btn filter-btn-danger" id="clear-filters-btn" title="Сбросить все фильтры">
           ✕ <span data-i18n="filter.reset">Сбросить</span>
