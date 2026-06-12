@@ -24,7 +24,14 @@ git add -A; if ($?) { git commit -m "..." }; if ($?) { git push }
 - **Без комментариев** в production-коде (кроме случаев, когда они действительно необходимы)
 - Без эмодзи в коде (кроме пользовательских UI-строк)
 - Следовать существующим паттернам — использовать `const $ = id ⇒ document.getElementById(id)` для DOM-запросов
-- Скрипты подключать в порядке: `theme.js → config.js → api.js → auth.js → page-specific.js`
+- Скрипты подключать в порядке: `lang.js → theme.js → config.js → api.js → auth.js → page-specific.js`
+
+## TypeScript
+
+- Исходники `.ts` лежат в `src/`, компилируются в корень: `npm run build` (запускает `tsc`)
+- Сейчас на TypeScript: `config.ts`, `api.ts` (остальные пока `.js`)
+- `config.js` и `api.js` в корне — это скомпилированный вывод; их код в `src/*.ts`
+- Типы и интерфейсы: `src/global.d.ts`
 
 ## Именование
 
