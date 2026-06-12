@@ -659,3 +659,18 @@ async function incrementViews(id) {
     localStorage.setItem(viewedKey, JSON.stringify(viewed));
   }
 }
+
+// ───────────────────── Обновить бейдж непрочитанных чатов ─────────────────────
+
+async function updateUnreadBadge() {
+  const navBadge = document.getElementById('chat-unread-nav');
+  if (!navBadge) return;
+  const data = await fetchAll();
+  const count = getUnreadCount(data);
+  if (count > 0) {
+    navBadge.textContent = count;
+    navBadge.style.display = '';
+  } else {
+    navBadge.style.display = 'none';
+  }
+}

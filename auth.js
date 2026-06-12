@@ -339,6 +339,7 @@ const Auth = {
       chatLinks.forEach(el => el.style.display = 'flex');
       chatMobileLinks.forEach(el => el.style.display = 'flex');
       unreadBadges.forEach(el => el.style.display = 'none');
+      updateUnreadBadge();
     } else {
       loginBtn.style.display = 'flex';
       userDisplay.style.display = 'none';

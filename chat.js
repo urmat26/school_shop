@@ -175,18 +175,6 @@ async function refreshMessages() {
   updateUnreadBadge();
 }
 
-function updateUnreadBadge() {
-  const navBadge = $('chat-unread-nav');
-  if (!navBadge) return;
-  const count = getUnreadCount(allData || {});
-  if (count > 0) {
-    navBadge.textContent = count;
-    navBadge.style.display = '';
-  } else {
-    navBadge.style.display = 'none';
-  }
-}
-
 function formatChatTime(iso) {
   const d = new Date(iso);
   const now = new Date();
