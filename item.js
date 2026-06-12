@@ -345,9 +345,6 @@ async function handleRestore() {
   restoreBtn.disabled = false;
   restoreBtn.classList.remove('loading');
 }
-  restoreBtn.disabled = false;
-  restoreBtn.classList.remove('loading');
-}
 
 // ───────────────────── Sold Toggle ─────────────────────
 function updateSoldToggleBtn(status) {
