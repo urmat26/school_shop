@@ -137,17 +137,17 @@ function renderItem(item) {
 
   // Category
   itemCategory.dataset.category = item.category;
-  itemCategory.innerHTML = `${getCategoryIcon(item.category)} ${item.category}`;
+  itemCategory.innerHTML = `${getCategoryIcon(item.category)} ${Lang.t('cat.' + item.category)}`;
 
   // Description
-  itemDescription.textContent = item.description || 'Без описания';
+  itemDescription.textContent = item.description || Lang.t('item.no.description');
 
   // Author
   itemAuthor.textContent = item.author;
   authorAvatar.textContent = item.author ? item.author.charAt(0).toUpperCase() : '?';
 
   // Contact
-  itemContact.textContent = item.contact || 'Не указан';
+  itemContact.textContent = item.contact || Lang.t('item.no.contact');
 
   // Date & Views
   itemDate.textContent = formatDate(item.created);
@@ -203,7 +203,7 @@ function renderItem(item) {
   const text = encodeURIComponent(`${item.title} — School Shop`);
   document.getElementById('share-btn')?.addEventListener('click', () => {
     navigator.clipboard.writeText(window.location.href);
-    showToast('Ссылка скопирована! 🔗', 'success');
+    showToast(Lang.t('toast.copied'), 'success');
   });
   document.getElementById('share-tg')?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -237,9 +237,9 @@ function handleFavorite() {
   if (isFav) {
     favoriteBtn.classList.add('heart-bounce');
     setTimeout(() => favoriteBtn.classList.remove('heart-bounce'), 400);
-    showToast('Добавлено в избранное ❤️', 'success');
+    showToast(Lang.t('item.fav.add') + ' ❤️', 'success');
   } else {
-    showToast('Удалено из избранного', 'info');
+    showToast(Lang.t('item.fav.remove'), 'info');
   }
 
   updateFavCount();
@@ -264,7 +264,7 @@ async function handleDelete() {
   try {
     await deleteItem(currentItem.id);
     hideDeleteModal();
-    showToast('Объявление скрыто. Его можно восстановить ♻️', 'success');
+    showToast(Lang.t('toast.deleted'), 'success');
     currentItem.status = 'deleted';
     itemActions.style.display = 'none';
     itemRestore.style.display = 'flex';
@@ -272,9 +272,9 @@ async function handleDelete() {
     restoreBtn.addEventListener('click', handleRestore);
   } catch (error) {
     console.error('Delete error:', error);
-    showToast(error.message || 'Ошибка удаления', 'error');
+    showToast(error.message || Lang.t('toast.delete.error'), 'error');
     deleteConfirm.disabled = false;
-    deleteConfirm.textContent = '🗑 Удалить';
+    deleteConfirm.textContent = Lang.t('item.delete');
   }
 }
 
@@ -285,26 +285,26 @@ async function handleRestore() {
   restoreBtn.textContent = '⏳ Восстановление...';
   try {
     await restoreItem(currentItem.id);
-    showToast('Объявление восстановлено! ✅', 'success');
+    showToast(Lang.t('toast.restored'), 'success');
     currentItem.status = 'active';
     itemRestore.style.display = 'none';
     itemActions.style.display = 'flex';
     updateSoldToggleBtn('active');
     soldDetailBadge.style.display = 'none';
   } catch (error) {
-    showToast(error.message || 'Ошибка восстановления', 'error');
+    showToast(error.message || Lang.t('toast.restore.error'), 'error');
   }
   restoreBtn.disabled = false;
-  restoreBtn.textContent = '♻️ Восстановить';
+  restoreBtn.textContent = Lang.t('item.restore');
 }
 
 // ───────────────────── Sold Toggle ─────────────────────
 function updateSoldToggleBtn(status) {
   if (status === 'sold') {
-    soldToggleBtn.textContent = '↩️ Вернуть в продажу';
+    soldToggleBtn.textContent = Lang.t('item.sold.untoggle');
     soldToggleBtn.className = 'btn btn-secondary';
   } else {
-    soldToggleBtn.textContent = '✅ Продано';
+    soldToggleBtn.textContent = Lang.t('item.sold.toggle');
     soldToggleBtn.className = 'btn btn-success';
   }
 }
@@ -319,9 +319,9 @@ async function handleSoldToggle() {
     currentItem.status = newStatus;
     updateSoldToggleBtn(newStatus);
     soldDetailBadge.style.display = newStatus === 'sold' ? 'flex' : 'none';
-    showToast(newStatus === 'sold' ? '✅ Объявление помечено как проданное' : '↩️ Объявление снова в продаже', 'success');
+    showToast(newStatus === 'sold' ? Lang.t('toast.sold') : Lang.t('toast.active'), 'success');
   } catch (error) {
-    showToast(error.message || 'Ошибка обновления статуса', 'error');
+    showToast(error.message || Lang.t('toast.status.error'), 'error');
     soldToggleBtn.textContent = prevText;
   }
   soldToggleBtn.disabled = false;

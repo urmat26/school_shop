@@ -36,10 +36,10 @@ function formatDate(isoString) {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMins < 1) return 'Только что';
-  if (diffMins < 60) return `${diffMins} мин. назад`;
-  if (diffHours < 24) return `${diffHours} ч. назад`;
-  if (diffDays < 7) return `${diffDays} дн. назад`;
+  if (diffMins < 1) return Lang.t('time.justnow');
+  if (diffMins < 60) return `${diffMins} ${Lang.t('time.minutes')}`;
+  if (diffHours < 24) return `${diffHours} ${Lang.t('time.hours')}`;
+  if (diffDays < 7) return `${diffDays} ${Lang.t('time.days')}`;
 
   return date.toLocaleDateString('ru-RU', {
     day: 'numeric',
@@ -50,7 +50,7 @@ function formatDate(isoString) {
 
 /** Форматирование цены */
 function formatPrice(price) {
-  if (!price || price === 0) return 'Бесплатно';
+  if (!price || price === 0) return Lang.t('item.free');
   return new Intl.NumberFormat('ru-RU').format(price) + ' Сом';
 }
 
@@ -184,14 +184,14 @@ async function uploadImage(base64) {
 
   const res = await fetch(url, { method: 'POST', body: formData });
   const json = await res.json();
-  if (!json.success) throw new Error('Ошибка загрузки фото');
+  if (!json.success) throw new Error(Lang.t('toast.photo.error'));
   return json.data.url;
 }
 
 // ───────────────────── Карточки объявлений ─────────────────────
 
 function createCardHTML(item, options = {}) {
-  const favTitle = options.favTitle || 'В избранное';
+  const favTitle = options.favTitle || Lang.t('item.fav.add.title');
   const isFav = Favorites.isFavorite(item.id);
   const imageUrl = item.image || getPlaceholderSVG(item.category);
   const priceClass = (!item.price || item.price === 0) ? 'free' : '';
@@ -201,11 +201,11 @@ function createCardHTML(item, options = {}) {
   return `
     <article class="item-card" data-id="${escapeHtml(item.id)}">
       <div class="item-card-image">
-        ${isSold ? '<div class="sold-badge">Продано</div>' : ''}
+        ${isSold ? '<div class="sold-badge">' + Lang.t('item.sold') + '</div>' : ''}
         <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy">
         <div class="item-card-badge">
           <span class="category-badge" data-category="${escapeHtml(item.category)}">
-            ${getCategoryIcon(item.category)} ${escapeHtml(item.category)}
+            ${getCategoryIcon(item.category)} ${Lang.t('cat.' + item.category)}
           </span>
         </div>
         <button class="item-card-favorite ${isFav ? 'active' : ''}" data-id="${escapeHtml(item.id)}" title="${escapeHtml(favTitle)}">
@@ -274,9 +274,9 @@ function attachItemCardEvents(grid, options = {}) {
       } else if (isFav) {
         btn.classList.add('heart-bounce');
         setTimeout(() => btn.classList.remove('heart-bounce'), 400);
-        showToast('Добавлено в избранное', 'success');
+        showToast(Lang.t('item.fav.add'), 'success');
       } else {
-        showToast('Удалено из избранного', 'info');
+        showToast(Lang.t('item.fav.remove'), 'info');
       }
 
       updateFavCount();
@@ -354,7 +354,7 @@ async function fetchAll(forceRefresh = false) {
     return cloneData(data);
   } catch (error) {
     console.error('fetchAll error:', error);
-    showToast('Ошибка загрузки данных', 'error');
+    showToast(Lang.t('toast.load.error'), 'error');
     return { items: [] };
   }
 }
@@ -365,7 +365,7 @@ let _lastVersion = 0;
 async function saveAll(data) {
   // Проверка конфликта версий (между fetchAll и saveAll)
   if (data._version !== undefined && data._version !== _lastVersion) {
-    showToast('Конфликт версий — обновите страницу', 'error');
+    showToast(Lang.t('toast.version.error'), 'error');
     return false;
   }
   data._version = (data._version || 0) + 1;
@@ -388,7 +388,7 @@ async function saveAll(data) {
     return true;
   } catch (error) {
     console.error('saveAll error:', error);
-    showToast('Ошибка сохранения данных', 'error');
+    showToast(Lang.t('toast.save.error'), 'error');
     return false;
   }
 }
@@ -404,7 +404,7 @@ async function createItem(newItem) {
 
   data.items.unshift(newItem); // новые — в начало
   const success = await saveAll(data);
-  if (!success) throw new Error('Ошибка создания объявления');
+  if (!success) throw new Error(Lang.t('toast.create.error'));
   return newItem;
 }
 
@@ -412,50 +412,50 @@ async function createItem(newItem) {
 async function updateItem(id, updates) {
   const data = await fetchAll(true);
   const index = data.items.findIndex(i => i.id === id);
-  if (index === -1) throw new Error('Объявление не найдено');
+  if (index === -1) throw new Error(Lang.t('detail.notfound'));
   if (data.items[index].author !== Auth.getUser()) {
-    throw new Error('Нет прав на редактирование');
+    throw new Error(Lang.t('create.error.permission'));
   }
   Object.assign(data.items[index], updates);
   const success = await saveAll(data);
-  if (!success) throw new Error('Ошибка обновления');
+  if (!success) throw new Error(Lang.t('toast.update.error'));
 }
 
 /** Удалить объявление (мягкое удаление) */
 async function deleteItem(id) {
   const data = await fetchAll(true);
   const index = data.items.findIndex(i => i.id === id);
-  if (index === -1) throw new Error('Объявление не найдено');
+  if (index === -1) throw new Error(Lang.t('detail.notfound'));
   if (data.items[index].author !== Auth.getUser()) {
-    throw new Error('Нет прав на удаление');
+    throw new Error(Lang.t('create.error.permission'));
   }
   data.items[index].status = 'deleted';
   data.items[index].deletedAt = new Date().toISOString();
   const success = await saveAll(data);
-  if (!success) throw new Error('Ошибка удаления');
+  if (!success) throw new Error(Lang.t('toast.delete.error'));
 }
 
 /** Восстановить объявление */
 async function restoreItem(id) {
   const data = await fetchAll(true);
   const item = data.items.find(i => i.id === id);
-  if (!item) throw new Error('Объявление не найдено');
-  if (item.author !== Auth.getUser()) throw new Error('Нет прав');
+  if (!item) throw new Error(Lang.t('detail.notfound'));
+  if (item.author !== Auth.getUser()) throw new Error(Lang.t('create.error.permission'));
   item.status = 'active';
   delete item.deletedAt;
   const success = await saveAll(data);
-  if (!success) throw new Error('Ошибка восстановления');
+  if (!success) throw new Error(Lang.t('toast.restore.error'));
 }
 
 /** Переключить статус объявления (active ↔ sold) */
 async function toggleItemSold(id) {
   const data = await fetchAll(true);
   const item = data.items.find(i => i.id === id);
-  if (!item) throw new Error('Объявление не найдено');
-  if (item.author !== Auth.getUser()) throw new Error('Нет прав');
+  if (!item) throw new Error(Lang.t('detail.notfound'));
+  if (item.author !== Auth.getUser()) throw new Error(Lang.t('create.error.permission'));
   item.status = item.status === 'sold' ? 'active' : 'sold';
   const success = await saveAll(data);
-  if (!success) throw new Error('Ошибка обновления статуса');
+  if (!success) throw new Error(Lang.t('toast.status.error'));
   return item.status;
 }
 
@@ -482,8 +482,8 @@ function downloadBackup() {
 
 /** Валидация формы (кратко) */
 function validateItemForm(title, description) {
-  if (!title || title.trim().length < 3) return 'Название должно быть минимум 3 символа';
-  if (description && description.length > 5000) return 'Описание не может быть длиннее 5000 символов';
+  if (!title || title.trim().length < 3) return Lang.t('validate.title.len');
+  if (description && description.length > 5000) return Lang.t('validate.desc.len');
   return null;
 }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,24 +32,29 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-link">
           <span class="nav-link-icon">🏠</span>
-          Главная
+          <span data-i18n="nav.home">Главная</span>
         </a>
         <a href="create.html" class="nav-link">
           <span class="nav-link-icon">➕</span>
-          Создать
+          <span data-i18n="nav.create">Создать</span>
         </a>
         <a href="favorites.html" class="nav-link active">
           <span class="nav-link-icon">♥</span>
-          Избранное <span class="fav-count-badge" id="fav-count-nav">0</span>
+          <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge" id="fav-count-nav">0</span>
         </a>
         <a href="profile.html" class="nav-link profile-nav-link">
           <span class="nav-link-icon">👤</span>
-          Профиль
+          <span data-i18n="nav.profile">Профиль</span>
         </a>
       </nav>
 
       <div class="header-actions">
         <button class="theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+        <select class="lang-select" id="lang-select" title="Язык">
+          <option value="ru">🇷🇺</option>
+          <option value="kg">🇰🇬</option>
+          <option value="en">🇺🇸</option>
+        </select>
         <button class="btn btn-primary btn-sm" id="login-btn">👤 Войти</button>
         <div class="user-display" id="user-display" style="display:none;">
           <div class="user-avatar" id="user-avatar">U</div>
@@ -67,22 +72,27 @@
   <div class="mobile-overlay" id="mobile-overlay"></div>
   <div class="mobile-menu" id="mobile-menu">
     <nav class="mobile-menu-nav">
-      <a href="index.html" class="mobile-menu-link">🏠 Главная</a>
-      <a href="create.html" class="mobile-menu-link">➕ Создать</a>
-      <a href="favorites.html" class="mobile-menu-link active">♥ Избранное <span class="fav-count-badge">0</span></a>
-      <a href="profile.html" class="mobile-menu-link profile-nav-link-mobile">👤 Профиль</a>
+      <a href="index.html" class="mobile-menu-link">🏠 <span data-i18n="nav.home">Главная</span></a>
+      <a href="create.html" class="mobile-menu-link">➕ <span data-i18n="nav.create">Создать</span></a>
+      <a href="favorites.html" class="mobile-menu-link active">♥ <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge">0</span></a>
+      <a href="profile.html" class="mobile-menu-link profile-nav-link-mobile">👤 <span data-i18n="nav.profile">Профиль</span></a>
       <button class="theme-toggle mobile-theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+      <select class="lang-select mobile-lang-select" id="lang-select-mobile">
+        <option value="ru">🇷🇺</option>
+        <option value="kg">🇰🇬</option>
+        <option value="en">🇺🇸</option>
+      </select>
     </nav>
   </div>
 
   <main>
     <div class="container" style="padding-top: 32px;">
-      <h1 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 8px;">♥ Избранное</h1>
-      <p style="color: var(--text-secondary); margin-bottom: 24px;" id="fav-subtitle">Ваши сохранённые объявления</p>
+      <h1 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 8px;" data-i18n="nav.favorites">♥ Избранное</h1>
+      <p style="color: var(--text-secondary); margin-bottom: 24px;" id="fav-subtitle" data-i18n="favorites.subtitle">Ваши сохранённые объявления</p>
 
       <div class="loading-container" id="loading">
         <div class="loading-spinner"></div>
-        <p class="loading-text">Загрузка...</p>
+        <p class="loading-text" data-i18n="items.loading">Загрузка...</p>
       </div>
 
       <div class="skeleton-grid" id="fav-skeleton" style="display:none;">
@@ -93,9 +103,9 @@
 
       <div class="empty-state" id="empty-state" style="display:none;">
         <div class="empty-state-icon">💔</div>
-        <h2 class="empty-state-title">Избранного пока нет</h2>
-        <p class="empty-state-text">Добавляйте объявления в избранное, чтобы не потерять</p>
-        <a href="index.html" class="btn btn-primary">← На главную</a>
+        <h2 class="empty-state-title" data-i18n="favorites.empty.title">Избранного пока нет</h2>
+        <p class="empty-state-text" data-i18n="favorites.empty.text">Добавляйте объявления в избранное, чтобы не потерять</p>
+        <a href="index.html" class="btn btn-primary"><span data-i18n="nav.home">← На главную</span></a>
       </div>
 
       <div class="items-grid" id="items-grid" style="display:none;"></div>
@@ -104,8 +114,8 @@
 
   <footer class="footer">
     <div class="container footer-inner">
-      <p class="footer-text">🎒 School Shop © 2026 — Создано с ❤️</p>
-      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" title="Скачать резервную копию">💾 Экспорт</button>
+      <p class="footer-text">🎒 School Shop © 2026 — <span data-i18n="footer.made">Создано с ❤️</span></p>
+      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" data-i18n-title="footer.export">💾 <span data-i18n="footer.export">Экспорт</span></button>
     </div>
   </footer>
 
@@ -115,36 +125,36 @@
     <div class="modal">
       <div class="modal-header">
         <div class="modal-icon">👋</div>
-        <h2 class="modal-title">Добро пожаловать!</h2>
-        <p class="modal-subtitle">Войдите или создайте аккаунт</p>
+        <h2 class="modal-title" data-i18n="auth.welcome">Добро пожаловать!</h2>
+        <p class="modal-subtitle" data-i18n="auth.subtitle">Войдите или создайте аккаунт</p>
       </div>
 
       <div class="auth-tabs">
-        <button class="auth-tab active" id="auth-login-tab">Войти</button>
-        <button class="auth-tab" id="auth-register-tab">Регистрация</button>
+        <button class="auth-tab active" id="auth-login-tab" data-i18n="auth.login">Войти</button>
+        <button class="auth-tab" id="auth-register-tab" data-i18n="auth.register">Регистрация</button>
       </div>
 
       <div class="modal-body">
         <!-- Login -->
         <div id="auth-login-form">
-          <input type="text" class="form-input" id="auth-login-input" placeholder="Никнейм" maxlength="20" autocomplete="off">
+          <input type="text" class="form-input" id="auth-login-input" placeholder="Никнейм" maxlength="20" autocomplete="off" data-i18n-placeholder="auth.username">
           <div class="password-wrapper">
-            <input type="password" class="form-input" id="auth-login-pass" placeholder="Пароль" autocomplete="off">
+            <input type="password" class="form-input" id="auth-login-pass" placeholder="Пароль" autocomplete="off" data-i18n-placeholder="auth.password">
             <button class="password-toggle" id="auth-login-toggle" type="button" tabindex="-1"></button>
           </div>
         </div>
 
         <!-- Register -->
         <div id="auth-register-form" style="display:none">
-          <input type="text" class="form-input" id="auth-reg-input" placeholder="Никнейм" maxlength="20" autocomplete="off">
+          <input type="text" class="form-input" id="auth-reg-input" placeholder="Никнейм" maxlength="20" autocomplete="off" data-i18n-placeholder="auth.username">
           <div class="password-wrapper">
-            <input type="password" class="form-input" id="auth-reg-pass" placeholder="Пароль" autocomplete="off">
+            <input type="password" class="form-input" id="auth-reg-pass" placeholder="Пароль" autocomplete="off" data-i18n-placeholder="auth.password">
             <button class="password-toggle" id="auth-reg-toggle" type="button" tabindex="-1"></button>
           </div>
           <div class="strength-bar"><div class="strength-bar-fill" id="auth-strength-bar"></div></div>
           <div class="strength-text" id="auth-strength-text"></div>
           <div class="password-wrapper">
-            <input type="password" class="form-input" id="auth-reg-confirm" placeholder="Повторите пароль" autocomplete="off">
+            <input type="password" class="form-input" id="auth-reg-confirm" placeholder="Повторите пароль" autocomplete="off" data-i18n-placeholder="auth.password.confirm">
             <button class="password-toggle" id="auth-reg-confirm-toggle" type="button" tabindex="-1"></button>
           </div>
         </div>
@@ -153,8 +163,8 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-primary" id="auth-login-btn">Войти 🚀</button>
-        <button class="btn btn-primary" id="auth-register-btn" style="display:none">Зарегистрироваться 🚀</button>
+        <button class="btn btn-primary" id="auth-login-btn" data-i18n="auth.login.btn">Войти 🚀</button>
+        <button class="btn btn-primary" id="auth-register-btn" style="display:none" data-i18n="auth.register.btn">Зарегистрироваться 🚀</button>
       </div>
     </div>
   </div>
@@ -162,8 +172,9 @@
   <div id="toast-container"></div>
 
   <!-- Scroll to Top -->
-  <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
+  <button class="scroll-top" id="scroll-top" data-i18n-title="scroll.top">↑</button>
 
+  <script src="lang.js"></script>
   <script src="theme.js"></script>
   <script src="config.js"></script>
   <script src="api.js"></script>

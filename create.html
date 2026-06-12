@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,24 +33,29 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-link">
           <span class="nav-link-icon">🏠</span>
-          Главная
+          <span data-i18n="nav.home">Главная</span>
         </a>
         <a href="create.html" class="nav-link active">
           <span class="nav-link-icon">➕</span>
-          Создать
+          <span data-i18n="nav.create">Создать</span>
         </a>
         <a href="favorites.html" class="nav-link">
           <span class="nav-link-icon">♥</span>
-          Избранное <span class="fav-count-badge" id="fav-count-nav">0</span>
+          <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge" id="fav-count-nav">0</span>
         </a>
         <a href="profile.html" class="nav-link profile-nav-link">
           <span class="nav-link-icon">👤</span>
-          Профиль
+          <span data-i18n="nav.profile">Профиль</span>
         </a>
       </nav>
 
       <div class="header-actions">
         <button class="theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+        <select class="lang-select" id="lang-select" title="Язык">
+          <option value="ru">🇷🇺</option>
+          <option value="kg">🇰🇬</option>
+          <option value="en">🇺🇸</option>
+        </select>
         <button class="btn btn-primary btn-sm" id="login-btn">
           👤 Войти
         </button>
@@ -70,11 +75,16 @@
   <div class="mobile-overlay" id="mobile-overlay"></div>
   <div class="mobile-menu" id="mobile-menu">
     <nav class="mobile-menu-nav">
-      <a href="index.html" class="mobile-menu-link">🏠 Главная</a>
-      <a href="create.html" class="mobile-menu-link active">➕ Создать</a>
-      <a href="favorites.html" class="mobile-menu-link">♥ Избранное <span class="fav-count-badge">0</span></a>
-      <a href="profile.html" class="mobile-menu-link profile-nav-link-mobile">👤 Профиль</a>
+      <a href="index.html" class="mobile-menu-link">🏠 <span data-i18n="nav.home">Главная</span></a>
+      <a href="create.html" class="mobile-menu-link active">➕ <span data-i18n="nav.create">Создать</span></a>
+      <a href="favorites.html" class="mobile-menu-link">♥ <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge">0</span></a>
+      <a href="profile.html" class="mobile-menu-link profile-nav-link-mobile">👤 <span data-i18n="nav.profile">Профиль</span></a>
       <button class="theme-toggle mobile-theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+      <select class="lang-select mobile-lang-select" id="lang-select-mobile">
+        <option value="ru">🇷🇺</option>
+        <option value="kg">🇰🇬</option>
+        <option value="en">🇺🇸</option>
+      </select>
     </nav>
   </div>
 
@@ -82,25 +92,25 @@
   <main class="form-page" style="position: relative; z-index: 1;">
     <div class="form-page-header animate-fade-in-up">
       <div class="breadcrumb">
-        <a href="index.html">Главная</a>
+        <a href="index.html"><span data-i18n="nav.home">Главная</span></a>
         <span class="breadcrumb-sep">›</span>
-        <span id="breadcrumb-current">Новое объявление</span>
+        <span id="breadcrumb-current" data-i18n="create.new">Новое объявление</span>
       </div>
-      <h1 class="form-page-title" id="page-title">✨ Новое объявление</h1>
-      <p class="form-page-subtitle" id="page-subtitle">Заполните форму, чтобы разместить товар</p>
+      <h1 class="form-page-title" id="page-title" data-i18n="create.title.new">✨ Новое объявление</h1>
+      <p class="form-page-subtitle" id="page-subtitle" data-i18n="create.sub.new">Заполните форму, чтобы разместить товар</p>
     </div>
 
     <form class="form-card animate-fade-in-up" id="create-form" novalidate>
       <!-- Image Upload -->
       <div class="form-group">
-        <label class="form-label">📷 Фото товара</label>
+        <label class="form-label" data-i18n="create.photo.label">📷 Фото товара</label>
         <div class="image-upload">
           <div class="image-upload-area" id="upload-area">
             <div class="image-upload-icon">📸</div>
             <p class="image-upload-text">
-              <strong>Нажмите</strong> или перетащите фото
+              <strong data-i18n="create.photo.click">Нажмите</strong> <span data-i18n="create.photo.drag">или перетащите фото</span>
             </p>
-            <p class="image-upload-hint">JPG, PNG до 2 MB</p>
+            <p class="image-upload-hint" data-i18n="create.photo.hint">JPG, PNG до 2 MB</p>
             <img id="image-preview" alt="Preview">
             <input
               type="file"
@@ -108,87 +118,87 @@
               accept="image/jpeg,image/png,image/webp"
             >
           </div>
-          <button type="button" class="image-remove-btn" id="image-remove" title="Удалить фото">✕</button>
+          <button type="button" class="image-remove-btn" id="image-remove" data-i18n-title="create.photo.remove">✕</button>
         </div>
       </div>
 
       <!-- Title -->
       <div class="form-group" id="title-group">
         <label class="form-label" for="title-input">
-          Название <span class="required">*</span>
+          <span data-i18n="create.title.label">Название</span> <span class="required">*</span>
         </label>
         <input
           type="text"
           class="form-input"
           id="title-input"
-          placeholder="Например: iPhone 12 чехол"
+          data-i18n-placeholder="create.title.placeholder"
           maxlength="100"
           required
         >
-        <p class="form-error-text">Введите название товара</p>
-        <p class="form-hint">До 100 символов</p>
+        <p class="form-error-text" data-i18n="create.title.error">Введите название товара</p>
+        <p class="form-hint" data-i18n="create.title.hint">До 100 символов</p>
       </div>
 
       <!-- Description -->
       <div class="form-group" id="description-group">
         <label class="form-label" for="description-input">
-          Описание <span class="required">*</span>
+          <span data-i18n="create.desc.label">Описание</span> <span class="required">*</span>
         </label>
         <textarea
           class="form-textarea"
           id="description-input"
-          placeholder="Опишите товар подробнее: состояние, размер, цвет..."
+          data-i18n-placeholder="create.desc.placeholder"
           maxlength="5000"
           required
         ></textarea>
-        <p class="form-error-text">Добавьте описание</p>
-        <p class="form-hint">До 5000 символов <span class="char-counter" id="desc-counter">0 / 5000</span></p>
+        <p class="form-error-text" data-i18n="create.desc.error">Добавьте описание</p>
+        <p class="form-hint" data-i18n="create.desc.hint">До 5000 символов <span class="char-counter" id="desc-counter">0 / 5000</span></p>
       </div>
 
       <!-- Price -->
       <div class="form-group" id="price-group">
         <label class="form-label" for="price-input">
-          Сомы <span class="required">*</span>
+          <span data-i18n="create.price.label">Сомы</span> <span class="required">*</span>
         </label>
         <input
           type="number"
           class="form-input"
           id="price-input"
-          placeholder="0 = бесплатно"
+          data-i18n-placeholder="create.price.placeholder"
           min="0"
           max="999999"
           required
         >
-        <p class="form-error-text">Укажите цену</p>
-        <p class="form-hint">Введите 0, если отдаёте бесплатно</p>
+        <p class="form-error-text" data-i18n="create.price.error">Укажите цену</p>
+        <p class="form-hint" data-i18n="create.price.hint">Введите 0, если отдаёте бесплатно</p>
       </div>
 
       <!-- Category -->
       <div class="form-group" id="category-group">
         <label class="form-label" for="category-select">
-          Категория <span class="required">*</span>
+          <span data-i18n="create.cat.label">Категория</span> <span class="required">*</span>
         </label>
         <select class="form-select" id="category-select" required>
-          <option value="">Выберите категорию</option>
+          <option value="" data-i18n="create.cat.placeholder">Выберите категорию</option>
           <!-- Категории добавляются через JS -->
         </select>
-        <p class="form-error-text">Выберите категорию</p>
+        <p class="form-error-text" data-i18n="create.cat.error">Выберите категорию</p>
       </div>
 
       <!-- Contact -->
       <div class="form-group" id="contact-group">
         <label class="form-label" for="contact-input">
-          Контакт <span class="required">*</span>
+          <span data-i18n="create.contact.label">Контакт</span> <span class="required">*</span>
         </label>
         <input
           type="text"
           class="form-input"
           id="contact-input"
-          placeholder="Telegram, WhatsApp или номер телефона"
+          data-i18n-placeholder="create.contact.placeholder"
           maxlength="100"
           required
         >
-        <p class="form-error-text">Укажите контакт для связи</p>
+        <p class="form-error-text" data-i18n="create.contact.error">Укажите контакт для связи</p>
       </div>
 
       <!-- Form Error -->
@@ -196,8 +206,8 @@
 
       <!-- Actions -->
       <div class="form-actions">
-        <a href="index.html" class="btn btn-secondary">← Назад</a>
-        <button type="submit" class="btn btn-primary" id="submit-btn">
+        <a href="index.html" class="btn btn-secondary"><span data-i18n="nav.back">← Назад</span></a>
+        <button type="submit" class="btn btn-primary" id="submit-btn" data-i18n="create.btn.submit">
           🚀 Опубликовать
         </button>
       </div>
@@ -208,9 +218,9 @@
   <footer class="footer">
     <div class="container footer-inner">
       <p class="footer-text">
-        🎒 School Shop © 2026 — Создано с ❤️
+        🎒 School Shop © 2026 — <span data-i18n="footer.made">Создано с ❤️</span>
       </p>
-      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" title="Скачать резервную копию">💾 Экспорт</button>
+      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" data-i18n-title="footer.export">💾 <span data-i18n="footer.export">Экспорт</span></button>
     </div>
   </footer>
 
@@ -220,36 +230,36 @@
     <div class="modal">
       <div class="modal-header">
         <div class="modal-icon">👋</div>
-        <h2 class="modal-title">Добро пожаловать!</h2>
-        <p class="modal-subtitle">Войдите или создайте аккаунт</p>
+        <h2 class="modal-title" data-i18n="auth.welcome">Добро пожаловать!</h2>
+        <p class="modal-subtitle" data-i18n="auth.subtitle">Войдите или создайте аккаунт</p>
       </div>
 
       <div class="auth-tabs">
-        <button class="auth-tab active" id="auth-login-tab">Войти</button>
-        <button class="auth-tab" id="auth-register-tab">Регистрация</button>
+        <button class="auth-tab active" id="auth-login-tab" data-i18n="auth.login">Войти</button>
+        <button class="auth-tab" id="auth-register-tab" data-i18n="auth.register">Регистрация</button>
       </div>
 
       <div class="modal-body">
         <!-- Login -->
         <div id="auth-login-form">
-          <input type="text" class="form-input" id="auth-login-input" placeholder="Никнейм" maxlength="20" autocomplete="off">
+          <input type="text" class="form-input" id="auth-login-input" data-i18n-placeholder="auth.username" maxlength="20" autocomplete="off">
           <div class="password-wrapper">
-            <input type="password" class="form-input" id="auth-login-pass" placeholder="Пароль" autocomplete="off">
+            <input type="password" class="form-input" id="auth-login-pass" data-i18n-placeholder="auth.password" autocomplete="off">
             <button class="password-toggle" id="auth-login-toggle" type="button" tabindex="-1"></button>
           </div>
         </div>
 
         <!-- Register -->
         <div id="auth-register-form" style="display:none">
-          <input type="text" class="form-input" id="auth-reg-input" placeholder="Никнейм" maxlength="20" autocomplete="off">
+          <input type="text" class="form-input" id="auth-reg-input" data-i18n-placeholder="auth.username" maxlength="20" autocomplete="off">
           <div class="password-wrapper">
-            <input type="password" class="form-input" id="auth-reg-pass" placeholder="Пароль" autocomplete="off">
+            <input type="password" class="form-input" id="auth-reg-pass" data-i18n-placeholder="auth.password" autocomplete="off">
             <button class="password-toggle" id="auth-reg-toggle" type="button" tabindex="-1"></button>
           </div>
           <div class="strength-bar"><div class="strength-bar-fill" id="auth-strength-bar"></div></div>
           <div class="strength-text" id="auth-strength-text"></div>
           <div class="password-wrapper">
-            <input type="password" class="form-input" id="auth-reg-confirm" placeholder="Повторите пароль" autocomplete="off">
+            <input type="password" class="form-input" id="auth-reg-confirm" data-i18n-placeholder="auth.password.confirm" autocomplete="off">
             <button class="password-toggle" id="auth-reg-confirm-toggle" type="button" tabindex="-1"></button>
           </div>
         </div>
@@ -258,8 +268,8 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-primary" id="auth-login-btn">Войти 🚀</button>
-        <button class="btn btn-primary" id="auth-register-btn" style="display:none">Зарегистрироваться 🚀</button>
+        <button class="btn btn-primary" id="auth-login-btn" data-i18n="auth.login.btn">Войти 🚀</button>
+        <button class="btn btn-primary" id="auth-register-btn" style="display:none" data-i18n="auth.register.btn">Зарегистрироваться 🚀</button>
       </div>
     </div>
   </div>
@@ -268,9 +278,10 @@
   <div id="toast-container"></div>
 
   <!-- Scroll to Top -->
-  <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
+  <button class="scroll-top" id="scroll-top" data-i18n-title="scroll.top">↑</button>
 
   <!-- Scripts -->
+  <script src="lang.js"></script>
   <script src="theme.js"></script>
   <script src="config.js"></script>
   <script src="api.js"></script>

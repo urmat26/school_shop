@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,24 +33,29 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-link">
           <span class="nav-link-icon">🏠</span>
-          Главная
+          <span data-i18n="nav.home">Главная</span>
         </a>
         <a href="create.html" class="nav-link">
           <span class="nav-link-icon">➕</span>
-          Создать
+          <span data-i18n="nav.create">Создать</span>
         </a>
         <a href="favorites.html" class="nav-link" id="favorites-nav-link">
           <span class="nav-link-icon">♥</span>
-          Избранное <span class="fav-count-badge" id="fav-count-nav">0</span>
+          <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge" id="fav-count-nav">0</span>
         </a>
         <a href="profile.html" class="nav-link active profile-nav-link">
           <span class="nav-link-icon">👤</span>
-          Профиль
+          <span data-i18n="nav.profile">Профиль</span>
         </a>
       </nav>
 
       <div class="header-actions">
         <button class="theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+        <select class="lang-select" id="lang-select" title="Язык">
+          <option value="ru">🇷🇺</option>
+          <option value="kg">🇰🇬</option>
+          <option value="en">🇺🇸</option>
+        </select>
         <div class="user-display" id="user-display" style="display:none;">
           <div class="user-avatar" id="user-avatar">U</div>
           <span class="user-nickname" id="user-nickname"></span>
@@ -67,11 +72,16 @@
   <div class="mobile-overlay" id="mobile-overlay"></div>
   <div class="mobile-menu" id="mobile-menu">
     <nav class="mobile-menu-nav">
-      <a href="index.html" class="mobile-menu-link">🏠 Главная</a>
-      <a href="create.html" class="mobile-menu-link">➕ Создать</a>
-      <a href="favorites.html" class="mobile-menu-link">♥ Избранное <span class="fav-count-badge">0</span></a>
-      <a href="profile.html" class="mobile-menu-link active profile-nav-link-mobile">👤 Профиль</a>
+      <a href="index.html" class="mobile-menu-link">🏠 <span data-i18n="nav.home">Главная</span></a>
+      <a href="create.html" class="mobile-menu-link">➕ <span data-i18n="nav.create">Создать</span></a>
+      <a href="favorites.html" class="mobile-menu-link">♥ <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge">0</span></a>
+      <a href="profile.html" class="mobile-menu-link active profile-nav-link-mobile">👤 <span data-i18n="nav.profile">Профиль</span></a>
       <button class="theme-toggle mobile-theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+      <select class="lang-select mobile-lang-select" id="lang-select-mobile">
+        <option value="ru">🇷🇺</option>
+        <option value="kg">🇰🇬</option>
+        <option value="en">🇺🇸</option>
+      </select>
     </nav>
   </div>
 
@@ -91,8 +101,8 @@
             <div class="profile-location" id="profile-location"></div>
             <div class="profile-since" id="profile-since"></div>
             <div class="profile-actions">
-              <button class="btn btn-primary w-full" id="profile-edit">✏️ Редактировать</button>
-              <button class="btn btn-danger w-full" id="profile-logout">🚪 Выйти</button>
+              <button class="btn btn-primary w-full" id="profile-edit" data-i18n="profile.edit">✏️ Редактировать</button>
+              <button class="btn btn-danger w-full" id="profile-logout" data-i18n="nav.logout">🚪 Выйти</button>
             </div>
           </div>
         </aside>
@@ -100,13 +110,13 @@
         <!-- Main -->
         <section class="profile-main">
           <div class="profile-section-header">
-            <h2 class="profile-section-title">Мои объявления</h2>
+            <h2 class="profile-section-title" data-i18n="profile.myitems">Мои объявления</h2>
             <span class="profile-section-count" id="profile-items-count"></span>
           </div>
           <div id="profile-items">
             <div class="loading-container" id="profile-loading">
               <div class="loading-spinner"></div>
-              <div class="loading-text">Загрузка объявлений…</div>
+              <div class="loading-text" data-i18n="items.loading">Загрузка объявлений…</div>
             </div>
           </div>
         </section>
@@ -119,9 +129,9 @@
   <footer class="footer">
     <div class="container footer-inner">
       <p class="footer-text">
-        🎒 School Shop © 2026 — Создано с ❤️
+        🎒 School Shop © 2026 — <span data-i18n="footer.made">Создано с ❤️</span>
       </p>
-      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" title="Скачать резервную копию">💾 Экспорт</button>
+      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" data-i18n-title="footer.export" title="Скачать резервную копию">💾 <span data-i18n="footer.export">Экспорт</span></button>
     </div>
   </footer>
 
@@ -131,19 +141,19 @@
     <div class="modal modal-lg">
       <div class="modal-header">
         <div class="modal-icon">✏️</div>
-        <h2 class="modal-title">Редактировать профиль</h2>
-        <p class="modal-subtitle">Заполните информацию о себе</p>
+        <h2 class="modal-title" data-i18n="profile.edit.title">Редактировать профиль</h2>
+        <p class="modal-subtitle" data-i18n="profile.edit.sub">Заполните информацию о себе</p>
       </div>
       <div class="modal-body">
 
         <!-- Avatar -->
         <div class="form-group">
-          <label class="form-label">Фото профиля</label>
+          <label class="form-label" data-i18n="profile.edit.avatar">Фото профиля</label>
           <div class="profile-avatar-upload">
             <div class="profile-avatar-preview" id="edit-avatar-preview">U</div>
             <div class="profile-avatar-actions">
-              <button class="btn btn-secondary btn-sm" id="edit-avatar-btn">📷 Загрузить</button>
-              <button class="btn btn-ghost btn-sm" id="edit-avatar-remove" style="display:none">✕ Удалить</button>
+              <button class="btn btn-secondary btn-sm" id="edit-avatar-btn" data-i18n="profile.edit.upload">📷 Загрузить</button>
+              <button class="btn btn-ghost btn-sm" id="edit-avatar-remove" style="display:none" data-i18n="profile.edit.remove">✕ Удалить</button>
               <input type="file" id="edit-avatar-input" accept="image/jpeg,image/png,image/webp" hidden>
             </div>
           </div>
@@ -157,33 +167,33 @@
 
         <!-- Display Name -->
         <div class="form-group">
-          <label class="form-label">Имя</label>
-          <input type="text" class="form-input" id="edit-name" placeholder="Иван Иванов" maxlength="60">
+          <label class="form-label" data-i18n="profile.edit.name">Имя</label>
+          <input type="text" class="form-input" id="edit-name" data-i18n-placeholder="profile.edit.name.placeholder" placeholder="Иван Иванов" maxlength="60">
         </div>
 
         <!-- Email -->
         <div class="form-group">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-input" id="edit-email" placeholder="your@school.edu">
+          <label class="form-label" data-i18n="profile.edit.email">Email</label>
+          <input type="email" class="form-input" id="edit-email" data-i18n-placeholder="profile.edit.email.placeholder" placeholder="your@school.edu">
         </div>
 
         <!-- Bio -->
         <div class="form-group">
-          <label class="form-label">О себе</label>
-          <textarea class="form-textarea form-textarea-sm" id="edit-bio" placeholder="Расскажите о себе, увлечениях, контактах…" maxlength="500"></textarea>
+          <label class="form-label" data-i18n="profile.edit.bio">О себе</label>
+          <textarea class="form-textarea form-textarea-sm" id="edit-bio" data-i18n-placeholder="profile.edit.bio.placeholder" placeholder="Расскажите о себе, увлечениях, контактах…" maxlength="500"></textarea>
         </div>
 
         <!-- Location -->
         <div class="form-group">
-          <label class="form-label">Город / Школа</label>
-          <input type="text" class="form-input" id="edit-location" placeholder="Например: Бишкек, Школа №70" maxlength="80">
+          <label class="form-label" data-i18n="profile.edit.location">Город / Школа</label>
+          <input type="text" class="form-input" id="edit-location" data-i18n-placeholder="profile.edit.location.placeholder" placeholder="Например: Бишкек, Школа №70" maxlength="80">
         </div>
 
         <div id="edit-error"></div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" id="edit-cancel">Отмена</button>
-        <button class="btn btn-primary" id="edit-save">💾 Сохранить</button>
+        <button class="btn btn-secondary" id="edit-cancel" data-i18n="auth.logout.confirm.cancel">Отмена</button>
+        <button class="btn btn-primary" id="edit-save" data-i18n="profile.edit.save">💾 Сохранить</button>
       </div>
     </div>
   </div>
@@ -192,9 +202,10 @@
   <div id="toast-container"></div>
 
   <!-- Scroll to Top -->
-  <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
+  <button class="scroll-top" id="scroll-top" data-i18n-title="scroll.top" title="Наверх">↑</button>
 
   <!-- Scripts -->
+  <script src="lang.js"></script>
   <script src="theme.js"></script>
   <script src="config.js"></script>
   <script src="api.js"></script>

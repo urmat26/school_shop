@@ -45,7 +45,7 @@ function buildCategoryFilters() {
     const pill = document.createElement('button');
     pill.className = 'filter-pill';
     pill.dataset.category = cat.id;
-    pill.innerHTML = `<span class="filter-pill-icon">${cat.icon}</span> ${cat.label}`;
+    pill.innerHTML = `<span class="filter-pill-icon">${cat.icon}</span> ${Lang.t('cat.' + cat.id)}`;
     categoryFilters.appendChild(pill);
   });
 }
@@ -196,7 +196,7 @@ function applyFilters() {
   if (total === 0) {
     resultsCount.innerHTML = '';
   } else {
-    resultsCount.innerHTML = `Найдено: <strong>${total}</strong> ${pluralize(total, 'объявление', 'объявления', 'объявлений')}`;
+    resultsCount.innerHTML = `${Lang.t('items.found')}: <strong>${total}</strong> ${pluralize(total, 'объявление', 'объявления', 'объявлений')}`;
   }
 
   // Paginate
@@ -218,11 +218,11 @@ function renderItems(items) {
     const emptyTitle = emptyState.querySelector('.empty-state-title');
     const emptyText = emptyState.querySelector('.empty-state-text');
     if (searchQuery) {
-      if (emptyTitle) emptyTitle.textContent = 'Ничего не найдено';
+      if (emptyTitle) emptyTitle.textContent = Lang.t('empty.notfound');
       if (emptyText) emptyText.textContent = `По запросу «${escapeHtml(searchQuery)}» нет объявлений`;
     } else {
-      if (emptyTitle) emptyTitle.textContent = 'Объявлений пока нет';
-      if (emptyText) emptyText.textContent = 'Будьте первым, кто разместит объявление!';
+      if (emptyTitle) emptyTitle.textContent = Lang.t('empty.noitems');
+      if (emptyText) emptyText.textContent = Lang.t('empty.noitems.text');
     }
     return;
   }

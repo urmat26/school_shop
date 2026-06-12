@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   editId = getUrlParam('id');
   if (editId) {
     isEditMode = true;
-    pageTitle.textContent = '✏️ Редактирование';
-    pageSubtitle.textContent = 'Измените данные объявления';
-    breadcrumbCurrent.textContent = 'Редактирование';
-    submitBtn.textContent = '💾 Сохранить изменения';
+    pageTitle.textContent = Lang.t('create.title.edit');
+    pageSubtitle.textContent = Lang.t('create.sub.edit');
+    breadcrumbCurrent.textContent = Lang.t('create.breadcrumb.edit');
+    submitBtn.textContent = Lang.t('create.btn.save');
     document.title = 'Редактировать — Маркетплейс';
     await loadItemForEdit(editId);
   }
@@ -48,7 +48,7 @@ function buildCategoryOptions() {
   CONFIG.CATEGORIES.forEach(cat => {
     const option = document.createElement('option');
     option.value = cat.id;
-    option.textContent = `${cat.icon} ${cat.label}`;
+    option.textContent = `${cat.icon} ${Lang.t('cat.' + cat.id)}`;
     categorySelect.appendChild(option);
   });
 }
@@ -142,12 +142,12 @@ function handleImageUpload(e) {
   if (!file) return;
 
   if (!file.type.startsWith('image/')) {
-    showToast('Выберите изображение (JPG, PNG)', 'error');
+    showToast(Lang.t('create.error.image'), 'error');
     return;
   }
 
   if (file.size > 2 * 1024 * 1024) {
-    showToast('Файл слишком большой (макс. 2 MB)', 'error');
+    showToast(Lang.t('create.error.filesize'), 'error');
     return;
   }
 
@@ -194,13 +194,13 @@ async function loadItemForEdit(id) {
   try {
     const item = await getItemById(id);
     if (!item) {
-      showToast('Объявление не найдено', 'error');
+      showToast(Lang.t('create.error.notfound'), 'error');
       setTimeout(() => window.location.href = 'index.html', 1500);
       return;
     }
 
     if (!Auth.canEdit(item)) {
-      showToast('Вы не можете редактировать это объявление', 'error');
+      showToast(Lang.t('create.error.permission'), 'error');
       setTimeout(() => window.location.href = `item.html?id=${id}`, 1500);
       return;
     }
@@ -228,7 +228,7 @@ async function loadItemForEdit(id) {
     }
   } catch (error) {
     console.error('Load error:', error);
-    showToast('Ошибка загрузки', 'error');
+    showToast(Lang.t('toast.load.error'), 'error');
   }
 }
 
@@ -307,11 +307,11 @@ async function handleSubmit(e) {
     // Upload image to ImgBB if new image was selected
     let imageUrl = imageData || '';
     if (imageData && imageData.startsWith('data:image')) {
-      submitBtn.textContent = '⏳ Загрузка фото...';
+      submitBtn.textContent = Lang.t('create.loading.photo');
       imageUrl = await uploadImage(imageData);
     }
 
-    submitBtn.textContent = '⏳ Сохранение...';
+    submitBtn.textContent = Lang.t('create.loading.save');
 
     const itemData = {
       title: titleInput.value.trim(),
@@ -324,20 +324,20 @@ async function handleSubmit(e) {
 
     if (isEditMode) {
       await updateItem(editId, itemData);
-      showToast('Объявление обновлено! ✅', 'success');
+      showToast(Lang.t('create.success.update'), 'success');
       setTimeout(() => {
         window.location.href = `item.html?id=${editId}`;
       }, 1000);
     } else {
       const newItem = await createItem(itemData);
-      showToast('Объявление создано! 🎉', 'success');
+      showToast(Lang.t('create.success.create'), 'success');
       setTimeout(() => {
         window.location.href = `item.html?id=${newItem.id}`;
       }, 1000);
     }
   } catch (error) {
     console.error('Submit error:', error);
-    showToast(error.message || 'Ошибка сохранения', 'error');
+    showToast(error.message || Lang.t('create.error.save'), 'error');
     submitBtn.disabled = false;
     submitBtn.classList.remove('loading');
     submitBtn.textContent = originalText;

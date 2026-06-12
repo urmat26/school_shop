@@ -94,7 +94,7 @@ function loadProfileData(username, els) {
   }
 
   if (els.email) {
-    els.email.textContent = renderEmail || 'Email не указан';
+    els.email.textContent = renderEmail || Lang.t('profile.no.email');
     els.email.style.display = renderEmail ? '' : 'none';
   }
 
@@ -104,7 +104,7 @@ function loadProfileData(username, els) {
   }
 
   if (els.since) {
-    els.since.textContent = 'Участник с 2026 года';
+    els.since.textContent = Lang.t('profile.member.since');
   }
 }
 
@@ -136,9 +136,9 @@ async function loadUserItems(username) {
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-icon">📭</div>
-        <h2 class="empty-state-title">У вас пока нет объявлений</h2>
-        <p class="empty-state-text">Создайте своё первое объявление</p>
-        <a href="create.html" class="btn btn-primary">Создать объявление</a>
+        <h2 class="empty-state-title">${Lang.t('profile.empty.title')}</h2>
+        <p class="empty-state-text">${Lang.t('profile.empty.text')}</p>
+        <a href="create.html" class="btn btn-primary">${Lang.t('profile.empty.btn')}</a>
       </div>
     `;
     return;
@@ -204,7 +204,7 @@ function openEditModal(username, els) {
       const file = fields.avatarInput.files[0];
       if (!file) return;
       if (file.size > 2 * 1024 * 1024) {
-        if (errorEl) errorEl.textContent = 'Фото не больше 2 MB';
+        if (errorEl) errorEl.textContent = Lang.t('profile.avatar.error');
         return;
       }
       const reader = new FileReader();
@@ -255,7 +255,7 @@ function openEditModal(username, els) {
 
       saveProfile(data);
       close();
-      showToast('Профиль обновлён', 'success');
+      showToast(Lang.t('profile.saved'), 'success');
       loadProfileData(username, els);
     } catch (e) {
       if (errorEl) errorEl.textContent = e.message;

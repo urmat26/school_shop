@@ -20,12 +20,12 @@ const Auth = {
       <div class="modal modal-sm">
         <div class="modal-header">
           <div class="modal-icon">🚪</div>
-          <h2 class="modal-title">Выйти из аккаунта?</h2>
-          <p class="modal-subtitle">Вы уверены, что хотите выйти?</p>
+          <h2 class="modal-title">${Lang.t('auth.logout.confirm.title')}</h2>
+          <p class="modal-subtitle">${Lang.t('auth.logout.confirm.sub')}</p>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-secondary" id="confirm-cancel">Отмена</button>
-          <button class="btn btn-danger" id="confirm-ok">🚪 Выйти</button>
+          <button class="btn btn-secondary" id="confirm-cancel">${Lang.t('auth.logout.confirm.cancel')}</button>
+          <button class="btn btn-danger" id="confirm-ok">${Lang.t('auth.logout.confirm.ok')}</button>
         </div>
       </div>`;
     document.body.appendChild(overlay);
@@ -62,14 +62,14 @@ const Auth = {
 
   logout() {
     this._showConfirm(
-      'Выйти из аккаунта?',
-      'Вы уверены, что хотите выйти?',
-      '🚪 Выйти',
+      Lang.t('auth.logout.confirm.title'),
+      Lang.t('auth.logout.confirm.sub'),
+      Lang.t('auth.logout.confirm.ok'),
       'btn-danger',
       () => {
         localStorage.removeItem(this.STORAGE_KEY);
         this.updateUI();
-        showToast('Вы вышли из аккаунта', 'info');
+        showToast(Lang.t('auth.loggedout'), 'info');
       }
     );
   },
@@ -93,14 +93,14 @@ const Auth = {
   async register(username, password) {
     const users = await this.getUsers();
     if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-      throw new Error('Этот никнейм уже занят');
+      throw new Error(Lang.t('auth.taken'));
     }
     const passwordHash = await this.hashPassword(password);
     const data = await fetchAll(true);
     if (!data.users) data.users = [];
     data.users.push({ username, passwordHash, createdAt: new Date().toISOString() });
     const ok = await saveAll(data);
-    if (!ok) throw new Error('Ошибка регистрации');
+    if (!ok) throw new Error(Lang.t('auth.register.error'));
     this.setUser(username);
     this.updateUI();
   },
@@ -108,9 +108,9 @@ const Auth = {
   async login(username, password) {
     const users = await this.getUsers();
     const user = users.find(u => u.username === username);
-    if (!user) throw new Error('Пользователь не найден');
+    if (!user) throw new Error(Lang.t('auth.notfound'));
     const hash = await this.hashPassword(password);
-    if (hash !== user.passwordHash) throw new Error('Неверный пароль');
+    if (hash !== user.passwordHash) throw new Error(Lang.t('auth.wrongpass'));
     this.setUser(username);
     this.updateUI();
   },
@@ -207,7 +207,7 @@ const Auth = {
       const username = loginInput.value.trim();
       const password = loginPass.value;
       if (!username || !password) {
-        errorEl.textContent = 'Заполните все поля';
+        errorEl.textContent = Lang.t('auth.fill.all');
         return;
       }
       try {
@@ -254,13 +254,13 @@ const Auth = {
       strengthBar.style.width = pct + '%';
       if (score <= 1) {
         strengthBar.className = 'strength-bar-fill weak';
-        strengthText.textContent = 'Слабый';
+        strengthText.textContent = Lang.t('auth.strength.weak');
       } else if (score <= 3) {
         strengthBar.className = 'strength-bar-fill medium';
-        strengthText.textContent = 'Средний';
+        strengthText.textContent = Lang.t('auth.strength.medium');
       } else {
         strengthBar.className = 'strength-bar-fill strong';
-        strengthText.textContent = 'Надёжный';
+        strengthText.textContent = Lang.t('auth.strength.strong');
       }
     };
     regPass.oninput = updateStrength;
@@ -270,19 +270,19 @@ const Auth = {
       const password = regPass.value;
       const confirm = regConfirm.value;
       if (!username || !password || !confirm) {
-        errorEl.textContent = 'Заполните все поля';
+        errorEl.textContent = Lang.t('auth.fill.all');
         return;
       }
       if (username.length < 2 || username.length > 20) {
-        errorEl.textContent = 'Никнейм от 2 до 20 символов';
+        errorEl.textContent = Lang.t('auth.username.len');
         return;
       }
       if (password.length < 6) {
-        errorEl.textContent = 'Пароль минимум 6 символов';
+        errorEl.textContent = Lang.t('auth.password.len');
         return;
       }
       if (password !== confirm) {
-        errorEl.textContent = 'Пароли не совпадают';
+        errorEl.textContent = Lang.t('auth.password.match');
         return;
       }
       try {

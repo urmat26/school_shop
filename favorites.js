@@ -38,14 +38,14 @@ async function loadFavorites() {
   if (filteredItems.length === 0) {
     itemsGrid.style.display = 'none';
     emptyState.style.display = 'block';
-    favSubtitle.textContent = 'Нет сохранённых объявлений';
+    favSubtitle.textContent = Lang.t('items.loading');
     return;
   }
 
   emptyState.style.display = 'none';
   itemsGrid.style.display = 'grid';
   itemsGrid.innerHTML = filteredItems
-    .map(item => createCardHTML(item, { favTitle: 'Убрать из избранного' }))
+    .map(item => createCardHTML(item, { favTitle: Lang.t('item.fav.remove.title') }))
     .join('');
 
   favSubtitle.textContent = `${filteredItems.length} ${pluralize(filteredItems.length, 'объявление', 'объявления', 'объявлений')}`;

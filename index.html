@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,31 +33,36 @@
       <nav class="nav-links">
         <a href="index.html" class="nav-link active">
           <span class="nav-link-icon">🏠</span>
-          Главная
+          <span data-i18n="nav.home">Главная</span>
         </a>
         <a href="create.html" class="nav-link">
           <span class="nav-link-icon">➕</span>
-          Создать
+          <span data-i18n="nav.create">Создать</span>
         </a>
         <a href="favorites.html" class="nav-link" id="favorites-nav-link">
           <span class="nav-link-icon">♥</span>
-          Избранное <span class="fav-count-badge" id="fav-count-nav">0</span>
+          <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge" id="fav-count-nav">0</span>
         </a>
         <a href="profile.html" class="nav-link profile-nav-link">
           <span class="nav-link-icon">👤</span>
-          Профиль
+          <span data-i18n="nav.profile">Профиль</span>
         </a>
       </nav>
 
       <div class="header-actions">
         <button class="theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+        <select class="lang-select" id="lang-select" title="Язык">
+          <option value="ru">🇷🇺</option>
+          <option value="kg">🇰🇬</option>
+          <option value="en">🇺🇸</option>
+        </select>
         <button class="btn btn-primary btn-sm" id="login-btn">
           👤 Войти
         </button>
         <div class="user-display" id="user-display" style="display:none;">
           <div class="user-avatar" id="user-avatar">U</div>
           <span class="user-nickname" id="user-nickname"></span>
-          <button id="logout-btn">Выйти</button>
+          <button id="logout-btn" data-i18n="nav.logout">Выйти</button>
         </div>
         <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Меню">
           <span></span><span></span><span></span>
@@ -70,11 +75,16 @@
   <div class="mobile-overlay" id="mobile-overlay"></div>
   <div class="mobile-menu" id="mobile-menu">
     <nav class="mobile-menu-nav">
-      <a href="index.html" class="mobile-menu-link active">🏠 Главная</a>
-      <a href="create.html" class="mobile-menu-link">➕ Создать</a>
-      <a href="favorites.html" class="mobile-menu-link">♥ Избранное <span class="fav-count-badge">0</span></a>
-      <a href="profile.html" class="mobile-menu-link profile-nav-link-mobile">👤 Профиль</a>
+      <a href="index.html" class="mobile-menu-link active">🏠 <span data-i18n="nav.home">Главная</span></a>
+      <a href="create.html" class="mobile-menu-link">➕ <span data-i18n="nav.create">Создать</span></a>
+      <a href="favorites.html" class="mobile-menu-link">♥ <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge">0</span></a>
+      <a href="profile.html" class="mobile-menu-link profile-nav-link-mobile">👤 <span data-i18n="nav.profile">Профиль</span></a>
       <button class="theme-toggle mobile-theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+      <select class="lang-select mobile-lang-select" id="lang-select-mobile">
+        <option value="ru">🇷🇺</option>
+        <option value="kg">🇰🇬</option>
+        <option value="en">🇺🇸</option>
+      </select>
     </nav>
   </div>
 
@@ -82,14 +92,14 @@
   <section class="hero">
     <div class="container">
       <h1 class="hero-title">
-        Добро пожаловать в <span class="gradient-text">School Shop</span>
+        <span data-i18n="hero.welcome">Добро пожаловать в</span> <span class="gradient-text">School Shop</span>
       </h1>
-      <p class="hero-subtitle">
+      <p class="hero-subtitle" data-i18n="hero.subtitle">
         Покупай, продавай и обменивай вещи с одноклассниками.
         Учебники, гаджеты, одежда и многое другое!
       </p>
       <a href="create.html" class="btn btn-primary btn-lg">
-        ✨ Разместить объявление
+        ✨ <span data-i18n="hero.cta">Разместить объявление</span>
       </a>
     </div>
   </section>
@@ -104,29 +114,29 @@
           type="text"
           class="search-input"
           id="search-input"
-          placeholder="Искать объявления..."
+          data-i18n-placeholder="search.placeholder" placeholder="Искать объявления..."
           autocomplete="off"
         >
-        <button class="search-clear" id="search-clear" title="Очистить">✕</button>
+        <button class="search-clear" id="search-clear" data-i18n-title="search.clear" title="Очистить">✕</button>
       </div>
 
       <!-- Filters Row -->
       <div class="filters-row">
         <div class="filter-pills" id="category-filters">
           <button class="filter-pill active" data-category="all">
-            <span class="filter-pill-icon">🔥</span> Все
+            <span class="filter-pill-icon">🔥</span> <span data-i18n="filter.all">Все</span>
           </button>
           <!-- Категории добавляются через JS -->
         </div>
 
         <div class="sort-controls">
-          <span class="sort-label">Сортировка:</span>
+          <span class="sort-label"><span data-i18n="filter.sort">Сортировка:</span></span>
           <select class="sort-select" id="sort-select">
-            <option value="date-desc">Сначала новые</option>
-            <option value="date-asc">Сначала старые</option>
-            <option value="price-asc">Цена ↑</option>
-            <option value="price-desc">Цена ↓</option>
-            <option value="views-desc">По просмотрам</option>
+            <option value="date-desc" data-i18n="sort.newest">Сначала новые</option>
+            <option value="date-asc" data-i18n="sort.oldest">Сначала старые</option>
+            <option value="price-asc" data-i18n="sort.price.asc">Цена ↑</option>
+            <option value="price-desc" data-i18n="sort.price.desc">Цена ↓</option>
+            <option value="views-desc" data-i18n="sort.views">По просмотрам</option>
           </select>
         </div>
       </div>
@@ -134,15 +144,15 @@
       <!-- Extended Filters -->
       <div class="filters-row-extended" id="extended-filters">
         <button class="filter-btn" id="my-ads-btn" title="Показать только мои объявления">
-          👤 Мои
+          👤 <span data-i18n="filter.myads">Мои</span>
         </button>
         <div class="price-range">
-          <input type="number" id="price-min" placeholder="Цена от" min="0">
+          <input type="number" id="price-min" data-i18n-placeholder="filter.price.from" placeholder="Цена от" min="0">
           <span class="price-range-sep">—</span>
-          <input type="number" id="price-max" placeholder="Цена до" min="0">
+          <input type="number" id="price-max" data-i18n-placeholder="filter.price.to" placeholder="Цена до" min="0">
         </div>
         <button class="filter-btn filter-btn-danger" id="clear-filters-btn" title="Сбросить все фильтры">
-          ✕ Сбросить
+          ✕ <span data-i18n="filter.reset">Сбросить</span>
         </button>
       </div>
 
@@ -171,9 +181,9 @@
       <!-- Empty State -->
       <div class="empty-state" id="empty-state" style="display:none;">
         <div class="empty-state-icon">📭</div>
-        <h2 class="empty-state-title">Ничего не найдено</h2>
-        <p class="empty-state-text">Попробуйте изменить поиск или фильтры</p>
-        <a href="create.html" class="btn btn-primary">Создать объявление</a>
+        <h2 class="empty-state-title" data-i18n="empty.notfound">Ничего не найдено</h2>
+        <p class="empty-state-text" data-i18n="empty.notfound.text">Попробуйте изменить поиск или фильтры</p>
+        <a href="create.html" class="btn btn-primary" data-i18n="hero.cta">Создать объявление</a>
       </div>
 
       <!-- Items Grid -->
@@ -188,9 +198,9 @@
   <footer class="footer">
     <div class="container footer-inner">
       <p class="footer-text">
-        🎒 School Shop © 2026 — Создано с ❤️
+        🎒 School Shop © 2026 — <span data-i18n="footer.made">Создано с ❤️</span>
       </p>
-      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" title="Скачать резервную копию">💾 Экспорт</button>
+      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" data-i18n-title="footer.export" title="Скачать резервную копию">💾 <span data-i18n="footer.export">Экспорт</span></button>
     </div>
   </footer>
 
@@ -200,36 +210,36 @@
     <div class="modal">
       <div class="modal-header">
         <div class="modal-icon">👋</div>
-        <h2 class="modal-title">Добро пожаловать!</h2>
-        <p class="modal-subtitle">Войдите или создайте аккаунт</p>
+        <h2 class="modal-title" data-i18n="auth.welcome">Добро пожаловать!</h2>
+        <p class="modal-subtitle" data-i18n="auth.subtitle">Войдите или создайте аккаунт</p>
       </div>
 
       <div class="auth-tabs">
-        <button class="auth-tab active" id="auth-login-tab">Войти</button>
-        <button class="auth-tab" id="auth-register-tab">Регистрация</button>
+        <button class="auth-tab active" id="auth-login-tab" data-i18n="auth.login">Войти</button>
+        <button class="auth-tab" id="auth-register-tab" data-i18n="auth.register">Регистрация</button>
       </div>
 
       <div class="modal-body">
         <!-- Login -->
         <div id="auth-login-form">
-          <input type="text" class="form-input" id="auth-login-input" placeholder="Никнейм" maxlength="20" autocomplete="off">
+          <input type="text" class="form-input" id="auth-login-input" data-i18n-placeholder="auth.username" placeholder="Никнейм" maxlength="20" autocomplete="off">
           <div class="password-wrapper">
-            <input type="password" class="form-input" id="auth-login-pass" placeholder="Пароль" autocomplete="off">
+            <input type="password" class="form-input" id="auth-login-pass" data-i18n-placeholder="auth.password" placeholder="Пароль" autocomplete="off">
             <button class="password-toggle" id="auth-login-toggle" type="button" tabindex="-1"></button>
           </div>
         </div>
 
         <!-- Register -->
         <div id="auth-register-form" style="display:none">
-          <input type="text" class="form-input" id="auth-reg-input" placeholder="Никнейм" maxlength="20" autocomplete="off">
+          <input type="text" class="form-input" id="auth-reg-input" data-i18n-placeholder="auth.username" placeholder="Никнейм" maxlength="20" autocomplete="off">
           <div class="password-wrapper">
-            <input type="password" class="form-input" id="auth-reg-pass" placeholder="Пароль" autocomplete="off">
+            <input type="password" class="form-input" id="auth-reg-pass" data-i18n-placeholder="auth.password" placeholder="Пароль" autocomplete="off">
             <button class="password-toggle" id="auth-reg-toggle" type="button" tabindex="-1"></button>
           </div>
           <div class="strength-bar"><div class="strength-bar-fill" id="auth-strength-bar"></div></div>
           <div class="strength-text" id="auth-strength-text"></div>
           <div class="password-wrapper">
-            <input type="password" class="form-input" id="auth-reg-confirm" placeholder="Повторите пароль" autocomplete="off">
+            <input type="password" class="form-input" id="auth-reg-confirm" data-i18n-placeholder="auth.password.confirm" placeholder="Повторите пароль" autocomplete="off">
             <button class="password-toggle" id="auth-reg-confirm-toggle" type="button" tabindex="-1"></button>
           </div>
         </div>
@@ -238,8 +248,8 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn btn-primary" id="auth-login-btn">Войти 🚀</button>
-        <button class="btn btn-primary" id="auth-register-btn" style="display:none">Зарегистрироваться 🚀</button>
+        <button class="btn btn-primary" id="auth-login-btn" data-i18n="auth.login.btn">Войти 🚀</button>
+        <button class="btn btn-primary" id="auth-register-btn" style="display:none" data-i18n="auth.register.btn">Зарегистрироваться 🚀</button>
       </div>
     </div>
   </div>
@@ -248,9 +258,10 @@
   <div id="toast-container"></div>
 
   <!-- Scroll to Top -->
-  <button class="scroll-top" id="scroll-top" title="Наверх">↑</button>
+  <button class="scroll-top" id="scroll-top" data-i18n-title="scroll.top" title="Наверх">↑</button>
 
   <!-- Scripts -->
+  <script src="lang.js"></script>
   <script src="theme.js"></script>
   <script src="config.js"></script>
   <script src="api.js"></script>
