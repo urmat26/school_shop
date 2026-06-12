@@ -150,7 +150,7 @@ function renderItem(item) {
   if (authorLink) authorLink.href = `user.html?name=${encodeURIComponent(item.author)}`;
 
   // Contact
-  itemContact.textContent = item.contact || Lang.t('item.no.contact');
+  itemContact.textContent = item.contact || '';
 
   // Date & Views
   itemDate.textContent = formatDate(item.created);
