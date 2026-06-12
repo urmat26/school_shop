@@ -106,6 +106,12 @@
               <div class="loading-spinner"></div>
               <div class="loading-text" data-i18n="chat.loading">Загрузка...</div>
             </div>
+            <div class="skeleton-grid" id="conv-skeleton" style="display:none">
+              <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+              <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+              <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+              <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+            </div>
           </div>
         </aside>
 
@@ -117,6 +123,14 @@
               <h2 class="empty-state-title" data-i18n="chat.select">Выберите чат</h2>
               <p class="empty-state-text" data-i18n="chat.select.text">Нажмите на диалог слева, чтобы просмотреть сообщения</p>
             </div>
+          </div>
+          <div class="skeleton-mini" id="msg-skeleton" style="display:none">
+            <div class="skeleton-mini-card"></div>
+            <div class="skeleton-mini-card"></div>
+            <div class="skeleton-mini-card"></div>
+            <div class="skeleton-mini-card"></div>
+            <div class="skeleton-mini-card"></div>
+            <div class="skeleton-mini-card"></div>
           </div>
           <div class="chat-thread" id="chat-thread" style="display:none">
             <div class="chat-thread-header" id="chat-thread-header">

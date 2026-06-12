@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   Auth.init();
   updateFavCount();
 
+  const skeleton = $('history-skeleton');
+  if (skeleton) skeleton.style.display = '';
   const data = await fetchAll();
+  if (skeleton) skeleton.style.display = 'none';
 
   const HISTORY_KEY = 'marketplace_recently';
   let recentIds = [];

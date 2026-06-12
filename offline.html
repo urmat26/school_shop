@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru" data-lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <title>Нет соединения — School Shop</title>
+  <script>
+    (function () {
+      var t = localStorage.getItem('marketplace_theme');
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.style.colorScheme = t;
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+  <main class="form-page" style="min-height:100vh;display:flex;align-items:center;justify-content:center;">
+    <div class="text-center animate-fade-in-up" style="max-width:400px;padding:32px;">
+      <div style="font-size:5rem;margin-bottom:16px;">📡</div>
+      <h1 class="form-page-title">Нет соединения</h1>
+      <p class="form-page-subtitle">Проверьте подключение к интернету и попробуйте снова</p>
+      <button class="btn btn-primary" onclick="window.location.reload()" style="margin-top:24px;">🔄 Попробовать снова</button>
+      <a href="index.html" class="btn btn-secondary" style="margin-top:12px;">🏠 На главную</a>
+    </div>
+  </main>
+</body>
+</html>

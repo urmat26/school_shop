@@ -59,7 +59,16 @@
         <h2 class="profile-section-title" data-i18n="history.title">История просмотров</h2>
         <button class="btn btn-ghost btn-sm" id="history-clear" data-i18n="history.clear">Очистить</button>
       </div>
-      <div id="history-items"></div>
+      <div id="history-items">
+        <div class="skeleton-grid" id="history-skeleton" style="display:none">
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card-image"></div><div class="skeleton-card-body"><div class="skeleton-line"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div></div>
+        </div>
+      </div>
       <div id="history-empty" class="empty-state" style="display:none">
         <div class="empty-state-icon">🕐</div>
         <h2 class="empty-state-title" data-i18n="history.empty">Нет просмотров</h2>

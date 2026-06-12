@@ -1153,9 +1153,54 @@ ul, ol {
   text-align: center;
 }
 
-.image-upload-area:hover {
+.image-upload-area:hover,
+.image-upload-area.drag-over {
   border-color: var(--accent);
   background: var(--accent-glow);
+}
+
+.image-upload-area.drag-over {
+  border-color: var(--accent-light);
+  box-shadow: 0 0 20px var(--accent-glow);
+  transform: scale(1.02);
+}
+
+/* ─── Full-page Drop Overlay ─── */
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.drop-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drop-overlay-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 48px;
+  border: 3px dashed var(--accent);
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.drop-overlay-icon {
+  font-size: 4rem;
 }
 
 .image-upload-area.has-image {
@@ -1508,6 +1553,35 @@ ul, ol {
   color: var(--text-muted);
   padding: 0 4px;
   font-size: 0.9rem;
+}
+
+/* ─── Infinite Scroll ─── */
+.infinite-scroll-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0 48px;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.infinite-scroll-end {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 24px 0 48px;
+  margin: 0;
 }
 
 /* ───────────────────── Modal ───────────────────── */
@@ -1971,13 +2045,35 @@ ul, ol {
 /* Heart bounce */
 @keyframes heartBounce {
   0%   { transform: scale(1); }
-  30%  { transform: scale(1.35); }
-  60%  { transform: scale(0.9); }
+  25%  { transform: scale(1.4); }
+  50%  { transform: scale(0.85); }
+  75%  { transform: scale(1.1); }
   100% { transform: scale(1); }
 }
 
 .heart-bounce {
-  animation: heartBounce 0.4s ease;
+  animation: heartBounce 0.5s ease;
+}
+
+/* ─── Fav Particle Burst ─── */
+.fav-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes favParticle {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0);
+  }
 }
 
 /* ───────────────────── Responsive ───────────────────── */

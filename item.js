@@ -221,8 +221,16 @@ function renderItem(item) {
   const url = encodeURIComponent(window.location.href);
   const text = encodeURIComponent(`${item.title} — School Shop`);
   document.getElementById('share-btn')?.addEventListener('click', () => {
-    navigator.clipboard.writeText(window.location.href);
-    showToast(Lang.t('toast.copied'), 'success');
+    if (navigator.share) {
+      navigator.share({
+        title: item.title,
+        text: `${item.title} — School Shop`,
+        url: window.location.href,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      showToast(Lang.t('toast.copied'), 'success');
+    }
   });
   document.getElementById('share-tg')?.addEventListener('click', (e) => {
     e.preventDefault();
@@ -255,7 +263,8 @@ function handleFavorite() {
 
   if (isFav) {
     favoriteBtn.classList.add('heart-bounce');
-    setTimeout(() => favoriteBtn.classList.remove('heart-bounce'), 400);
+    spawnFavParticles(favoriteBtn);
+    setTimeout(() => favoriteBtn.classList.remove('heart-bounce'), 500);
     showToast(Lang.t('item.fav.add') + ' ❤️', 'success');
   } else {
     showToast(Lang.t('item.fav.remove'), 'info');

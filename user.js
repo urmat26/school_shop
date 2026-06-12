@@ -11,7 +11,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  const skeleton = $('user-skeleton');
+  if (skeleton) skeleton.style.display = '';
   const data = await fetchAll();
+  if (skeleton) skeleton.style.display = 'none';
   const userData = data.users.find(u => u.username === username);
 
   // Profile

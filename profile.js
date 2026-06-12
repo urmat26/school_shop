@@ -137,7 +137,10 @@ function loadProfileData(username, els) {
 }
 
 async function loadUserItems(username, status) {
+  const skeleton = $('profile-skeleton');
+  if (skeleton) skeleton.style.display = '';
   const data = await fetchAll();
+  if (skeleton) skeleton.style.display = 'none';
   const userItems = data.items.filter(
     i => i.author === username && i.status === status
   );

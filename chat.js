@@ -53,7 +53,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function loadConversations() {
+  const convSkeleton = $('conv-skeleton');
+  if (convSkeleton) convSkeleton.style.display = '';
   allData = await fetchAll(true);
+  if (convSkeleton) convSkeleton.style.display = 'none';
   const convos = getConversations(allData);
   const container = $('chat-conversations');
   const loading = $('chat-loading');
@@ -106,12 +109,16 @@ async function openConversation(itemId, otherUser) {
   const item = allData.items.find(i => i.id === itemId);
   $('chat-thread-item').textContent = item ? item.title : '';
 
+  const msgSkeleton = $('msg-skeleton');
+  if (msgSkeleton) msgSkeleton.style.display = '';
+
   // Mark as read
   await markConversationRead(itemId, otherUser);
 
   // Re-fetch to get latest
   allData = await fetchAll(true);
   renderMessages();
+  if (msgSkeleton) msgSkeleton.style.display = 'none';
   loadConversations();
   updateUnreadBadge();
 }
@@ -162,15 +169,19 @@ async function handleSend() {
 }
 
 async function refreshMessages() {
+  const msgSkeleton = $('msg-skeleton');
   if (!currentItemId || !currentOtherUser) {
-    // Just update unread count
+    if (msgSkeleton) msgSkeleton.style.display = '';
     allData = await fetchAll(true);
+    if (msgSkeleton) msgSkeleton.style.display = 'none';
     loadConversations();
     updateUnreadBadge();
     return;
   }
+  if (msgSkeleton) msgSkeleton.style.display = '';
   allData = await fetchAll(true);
   renderMessages();
+  if (msgSkeleton) msgSkeleton.style.display = 'none';
   loadConversations();
   updateUnreadBadge();
 }

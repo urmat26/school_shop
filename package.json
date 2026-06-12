@@ -1,0 +1,23 @@
+{
+  "name": "school_shop",
+  "version": "1.0.0",
+  "description": "Школьный маркетплейс — площадка для покупки, продажи и обмена вещами между учениками.",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/urmat26/school_shop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/urmat26/school_shop/issues"
+  },
+  "homepage": "https://github.com/urmat26/school_shop#readme",
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,4 +1,4 @@
-const CACHE = 'school-shop-v2';
+const CACHE = 'school-shop-v3';
 const STATIC = [
   '/',
   '/index.html',
@@ -6,15 +6,25 @@ const STATIC = [
   '/item.html',
   '/favorites.html',
   '/profile.html',
+  '/chat.html',
+  '/history.html',
+  '/user.html',
+  '/about.html',
+  '/offline.html',
   '/style.css',
+  '/lang.js',
   '/theme.js',
   '/config.js',
   '/api.js',
   '/auth.js',
+  '/app.js',
   '/create.js',
   '/item.js',
   '/favorites.js',
   '/profile.js',
+  '/chat.js',
+  '/history.js',
+  '/user.js',
   '/favicon.svg',
   '/logo.png',
   '/manifest.json'
@@ -41,6 +51,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    caches.match(event.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(event.request).catch(() => {
+        if (event.request.mode === 'navigate') {
+          return caches.match('/offline.html');
+        }
+        return new Response('', { status: 408 });
+      });
+    })
   );
 });

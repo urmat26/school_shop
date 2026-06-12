@@ -72,19 +72,50 @@ function attachEvents() {
   // Drag & drop
   uploadArea.addEventListener('dragover', (e) => {
     e.preventDefault();
-    uploadArea.style.borderColor = 'var(--accent)';
-    uploadArea.style.background = 'var(--accent-glow)';
+    uploadArea.classList.add('drag-over');
   });
 
   uploadArea.addEventListener('dragleave', () => {
-    uploadArea.style.borderColor = '';
-    uploadArea.style.background = '';
+    uploadArea.classList.remove('drag-over');
   });
 
   uploadArea.addEventListener('drop', (e) => {
     e.preventDefault();
-    uploadArea.style.borderColor = '';
-    uploadArea.style.background = '';
+    uploadArea.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      processImage(file);
+    }
+  });
+
+  // Global drag events for full-page overlay
+  const dropOverlay = document.getElementById('drop-overlay');
+  let dragCounter = 0;
+
+  document.addEventListener('dragenter', (e) => {
+    e.preventDefault();
+    dragCounter++;
+    if (dragCounter === 1 && dropOverlay) {
+      dropOverlay.classList.add('visible');
+    }
+  });
+
+  document.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    dragCounter--;
+    if (dragCounter === 0 && dropOverlay) {
+      dropOverlay.classList.remove('visible');
+    }
+  });
+
+  document.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+
+  document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dragCounter = 0;
+    if (dropOverlay) dropOverlay.classList.remove('visible');
     const file = e.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
       processImage(file);
