@@ -182,6 +182,15 @@ function renderItem(item) {
     soldToggleBtn.addEventListener('click', handleSoldToggle);
   }
 
+  // Chat button (for non-owners, logged in)
+  const chatCard = document.getElementById('item-chat-card');
+  const chatBtn = document.getElementById('item-chat-btn');
+  const currentUser = Auth.getUser();
+  if (chatBtn && chatCard && currentUser && item.author !== currentUser) {
+    chatCard.style.display = '';
+    chatBtn.href = `chat.html?item=${encodeURIComponent(item.id)}&user=${encodeURIComponent(item.author)}`;
+  }
+
   // Recently viewed & similar items (show skeleton while loading)
   if (recentlySkeleton) recentlySkeleton.style.display = 'grid';
   if (similarSkeleton) similarSkeleton.style.display = 'grid';

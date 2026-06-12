@@ -10,6 +10,7 @@ const LANGS = {
     'nav.home': 'Главная',
     'nav.create': 'Создать',
     'nav.favorites': 'Избранное',
+    'nav.chat': 'Чаты',
     'nav.profile': 'Профиль',
 
     // ─── Theme ───
@@ -171,6 +172,17 @@ const LANGS = {
     'profile.avatar.error': 'Фото не больше 2 MB',
     'profile.saved': 'Профиль обновлён',
 
+    // ─── Chat ───
+    'chat.title': 'Сообщения',
+    'chat.loading': 'Загрузка...',
+    'chat.select': 'Выберите чат',
+    'chat.select.text': 'Нажмите на диалог слева, чтобы просмотреть сообщения',
+    'chat.no.conversations': 'Нет диалогов',
+    'chat.no.messages': 'Нет сообщений',
+    'chat.input.placeholder': 'Напишите сообщение...',
+    'chat.send': 'Отправить',
+    'detail.chat': '💬 Написать в чат',
+
     // ─── Favorites ───
     'fav.title': '♥ Избранное',
     'fav.subtitle': 'Ваши сохранённые объявления',
@@ -320,6 +332,7 @@ const LANGS = {
     'nav.home': 'Башкы',
     'nav.create': 'Жарыялоо',
     'nav.favorites': 'Тандалгандар',
+    'nav.chat': 'Чаттар',
     'nav.profile': 'Профиль',
 
     'theme.light': 'Жарык тема',
@@ -474,6 +487,17 @@ const LANGS = {
     'profile.avatar.error': 'Сүрөт 2 MB ашпоого тийиш',
     'profile.saved': 'Профиль жаңыртылды',
 
+    // ─── Chat ───
+    'chat.title': 'Билдирүүлөр',
+    'chat.loading': 'Жүктөлүүдө...',
+    'chat.select': 'Чатты тандаңыз',
+    'chat.select.text': 'Билдирүүлөрдү көрүү үчүн сол жактагы диалогду басыңыз',
+    'chat.no.conversations': 'Диалогдор жок',
+    'chat.no.messages': 'Билдирүүлөр жок',
+    'chat.input.placeholder': 'Билдирүү жазыңыз...',
+    'chat.send': 'Жиберүү',
+    'detail.chat': '💬 Чатка жазуу',
+
     'fav.title': '♥ Тандалгандар',
     'fav.subtitle': 'Сакталган жарыяларыңыз',
     'fav.empty.title': 'Тандалгандар жок',
@@ -547,6 +571,7 @@ const LANGS = {
     'nav.home': 'Home',
     'nav.create': 'Create',
     'nav.favorites': 'Favorites',
+    'nav.chat': 'Chats',
     'nav.profile': 'Profile',
 
     'theme.light': 'Light theme',
@@ -700,6 +725,17 @@ const LANGS = {
     'profile.empty.deleted.text': 'Deleted listings will appear here',
     'profile.avatar.error': 'Photo must be under 2 MB',
     'profile.saved': 'Profile updated',
+
+    // ─── Chat ───
+    'chat.title': 'Messages',
+    'chat.loading': 'Loading...',
+    'chat.select': 'Select a chat',
+    'chat.select.text': 'Click a conversation on the left to view messages',
+    'chat.no.conversations': 'No conversations',
+    'chat.no.messages': 'No messages',
+    'chat.input.placeholder': 'Write a message...',
+    'chat.send': 'Send',
+    'detail.chat': '💬 Write in chat',
 
     'fav.title': '♥ Favorites',
     'fav.subtitle': 'Your saved listings',

@@ -323,6 +323,9 @@ const Auth = {
     const userAvatar = document.getElementById('user-avatar');
     const profileLinks = document.querySelectorAll('.profile-nav-link');
     const profileMobileLinks = document.querySelectorAll('.profile-nav-link-mobile');
+    const chatLinks = document.querySelectorAll('#chat-nav-link');
+    const chatMobileLinks = document.querySelectorAll('.mobile-menu-link[href="chat.html"]');
+    const unreadBadges = document.querySelectorAll('.chat-unread-badge');
 
     if (!loginBtn || !userDisplay) return;
 
@@ -333,11 +336,17 @@ const Auth = {
       if (userAvatar) userAvatar.textContent = user.charAt(0).toUpperCase();
       profileLinks.forEach(el => el.style.display = 'flex');
       profileMobileLinks.forEach(el => el.style.display = 'flex');
+      chatLinks.forEach(el => el.style.display = 'flex');
+      chatMobileLinks.forEach(el => el.style.display = 'flex');
+      unreadBadges.forEach(el => el.style.display = 'none');
     } else {
       loginBtn.style.display = 'flex';
       userDisplay.style.display = 'none';
       profileLinks.forEach(el => el.style.display = 'none');
       profileMobileLinks.forEach(el => el.style.display = 'none');
+      chatLinks.forEach(el => el.style.display = 'none');
+      chatMobileLinks.forEach(el => el.style.display = 'none');
+      unreadBadges.forEach(el => el.style.display = 'none');
     }
   },
 

@@ -528,6 +528,75 @@ async function getItemById(id) {
   return item || null;
 }
 
+// ───────────────────── Сообщения / Чат ─────────────────────
+
+async function sendMessage(itemId, itemTitle, to, text) {
+  const from = Auth.getUser();
+  if (!from) throw new Error('Not logged in');
+  const data = await fetchAll(true);
+  if (!data.messages) data.messages = [];
+  const msg = {
+    id: 'msg_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+    itemId,
+    itemTitle,
+    from,
+    to,
+    text,
+    createdAt: new Date().toISOString(),
+    read: false
+  };
+  data.messages.push(msg);
+  const ok = await saveAll(data);
+  if (!ok) throw new Error(Lang.t('toast.send.error'));
+  return msg;
+}
+
+function getConversations(data) {
+  const user = Auth.getUser();
+  if (!user || !data.messages) return [];
+  const seen = {};
+  data.messages.forEach(m => {
+    if (m.from !== user && m.to !== user) return;
+    const other = m.from === user ? m.to : m.from;
+    const key = m.itemId + '|' + other;
+    if (!seen[key] || new Date(m.createdAt) > new Date(seen[key].createdAt)) {
+      seen[key] = m;
+    }
+  });
+  return Object.values(seen)
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+}
+
+function getMessages(data, itemId, otherUser) {
+  const user = Auth.getUser();
+  if (!user || !data.messages) return [];
+  return data.messages.filter(m =>
+    m.itemId === itemId &&
+    ((m.from === user && m.to === otherUser) || (m.from === otherUser && m.to === user))
+  ).sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+}
+
+function getUnreadCount(data) {
+  const user = Auth.getUser();
+  if (!user || !data.messages) return 0;
+  return data.messages.filter(m => m.to === user && !m.read).length;
+}
+
+async function markConversationRead(itemId, otherUser) {
+  const user = Auth.getUser();
+  if (!user) return;
+  const data = await fetchAll(true);
+  if (!data.messages) return;
+  let changed = false;
+  data.messages.forEach(m => {
+    if (m.itemId === itemId && m.to === user && !m.read) {
+      m.read = true;
+      changed = true;
+    }
+  });
+  if (changed) await saveAll(data);
+}
+
 // ───────────────────── Mobile Menu ─────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {

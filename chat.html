@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru" data-lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Чаты School Shop">
+  <meta name="color-scheme" content="dark light">
+  <title>Чаты — School Shop</title>
+  <script>
+    (function () {
+      var t = localStorage.getItem('marketplace_theme');
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.style.colorScheme = t;
+    })();
+  </script>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+
+  <!-- ═══════════ Header ═══════════ -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <img src="logo.png" alt="School Shop Logo" class="logo-img">
+        <div class="logo-text"><span>School</span> Shop</div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link">
+          <span class="nav-link-icon">🏠</span>
+          <span data-i18n="nav.home">Главная</span>
+        </a>
+        <a href="create.html" class="nav-link">
+          <span class="nav-link-icon">➕</span>
+          <span data-i18n="nav.create">Создать</span>
+        </a>
+        <a href="favorites.html" class="nav-link" id="favorites-nav-link">
+          <span class="nav-link-icon">♥</span>
+          <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge" id="fav-count-nav">0</span>
+        </a>
+        <a href="chat.html" class="nav-link active">
+          <span class="nav-link-icon">💬</span>
+          <span data-i18n="nav.chat">Чаты</span>
+          <span class="fav-count-badge chat-unread-badge" id="chat-unread-nav" style="display:none">0</span>
+        </a>
+        <a href="profile.html" class="nav-link profile-nav-link">
+          <span class="nav-link-icon">👤</span>
+          <span data-i18n="nav.profile">Профиль</span>
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+        <select class="lang-select" id="lang-select" title="Язык">
+          <option value="ru">🇷🇺</option>
+          <option value="kg">🇰🇬</option>
+          <option value="en">🇺🇸</option>
+        </select>
+        <div class="user-display" id="user-display" style="display:none;">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <span class="user-nickname" id="user-nickname"></span>
+          <button id="logout-btn">Выйти</button>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Меню">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-menu-nav">
+      <a href="index.html" class="mobile-menu-link">🏠 <span data-i18n="nav.home">Главная</span></a>
+      <a href="create.html" class="mobile-menu-link">➕ <span data-i18n="nav.create">Создать</span></a>
+      <a href="favorites.html" class="mobile-menu-link">♥ <span data-i18n="nav.favorites">Избранное</span> <span class="fav-count-badge">0</span></a>
+      <a href="chat.html" class="mobile-menu-link active">💬 <span data-i18n="nav.chat">Чаты</span></a>
+      <a href="profile.html" class="mobile-menu-link profile-nav-link-mobile">👤 <span data-i18n="nav.profile">Профиль</span></a>
+      <button class="theme-toggle mobile-theme-toggle" type="button" aria-label="Включить светлую тему" title="Светлая тема">☀️</button>
+      <select class="lang-select mobile-lang-select" id="lang-select-mobile">
+        <option value="ru">🇷🇺</option>
+        <option value="kg">🇰🇬</option>
+        <option value="en">🇺🇸</option>
+      </select>
+    </nav>
+  </div>
+
+  <!-- ═══════════ Chat Content ═══════════ -->
+  <main class="chat-page">
+    <div class="container">
+      <div class="chat-layout">
+
+        <!-- Sidebar: Conversation List -->
+        <aside class="chat-sidebar">
+          <div class="chat-sidebar-header">
+            <h2 class="chat-sidebar-title"><span data-i18n="chat.title">Сообщения</span></h2>
+          </div>
+          <div class="chat-conversations" id="chat-conversations">
+            <div class="loading-container" id="chat-loading">
+              <div class="loading-spinner"></div>
+              <div class="loading-text" data-i18n="chat.loading">Загрузка...</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main: Chat Messages -->
+        <section class="chat-main">
+          <div class="chat-placeholder" id="chat-placeholder">
+            <div class="empty-state">
+              <div class="empty-state-icon">💬</div>
+              <h2 class="empty-state-title" data-i18n="chat.select">Выберите чат</h2>
+              <p class="empty-state-text" data-i18n="chat.select.text">Нажмите на диалог слева, чтобы просмотреть сообщения</p>
+            </div>
+          </div>
+          <div class="chat-thread" id="chat-thread" style="display:none">
+            <div class="chat-thread-header" id="chat-thread-header">
+              <button class="chat-back-btn" id="chat-back-btn">←</button>
+              <div class="chat-thread-info">
+                <div class="chat-thread-user" id="chat-thread-user"></div>
+                <div class="chat-thread-item" id="chat-thread-item"></div>
+              </div>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-area">
+              <textarea class="chat-input" id="chat-input" rows="1" data-i18n-placeholder="chat.input.placeholder" placeholder="Напишите сообщение..."></textarea>
+              <button class="btn btn-primary chat-send-btn" id="chat-send-btn" data-i18n="chat.send">Отправить</button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══════════ Footer ═══════════ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="footer-text">
+        🎒 School Shop © 2026 — <span data-i18n="footer.made">Создано с ❤️</span>
+      </p>
+      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" data-i18n-title="footer.export" title="Скачать резервную копию"><span data-i18n="footer.export">Экспорт</span></button>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top" id="scroll-top" data-i18n-title="scroll.top" title="Наверх">↑</button>
+
+  <!-- Scripts -->
+  <script src="lang.js"></script>
+  <script src="theme.js"></script>
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="chat.js"></script>
+</body>
+</html>
