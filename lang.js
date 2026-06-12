@@ -309,6 +309,7 @@ const LANGS = {
     'profile.edit.location': 'Город / Школа',
     'profile.edit.location.placeholder': 'Например: Бишкек, Школа №70',
     'profile.edit.save': '💾 Сохранить',
+    'profile.edit.username': 'Логин',
   },
 
   kg: {
@@ -816,6 +817,7 @@ const LANGS = {
     'profile.edit.location': 'City / School',
     'profile.edit.location.placeholder': 'e.g. Bishkek, School #70',
     'profile.edit.save': '💾 Save',
+    'profile.edit.username': 'Username',
   }
 };
 

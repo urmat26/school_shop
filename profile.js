@@ -64,6 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = 'index.html';
     });
   }
+
+  Lang.onChange(() => {
+    updateProfileItemCount();
+  });
 });
 
 function loadProfileData(username, els) {
@@ -120,13 +124,7 @@ async function loadUserItems(username) {
 
   if (countEl) {
     const c = userItems.length;
-    const d = c % 10, dd = c % 100;
-    let label = 'объявлений';
-    if (dd < 11 || dd > 19) {
-      if (d === 1) label = 'объявление';
-      else if (d >= 2 && d <= 4) label = 'объявления';
-    }
-    countEl.textContent = `${c} ${label}`;
+    countEl.textContent = `${c} ${pluralize(c, Lang.t('items.one'), Lang.t('items.few'), Lang.t('items.many'))}`;
   }
 
   if (loading) loading.remove();
@@ -146,9 +144,18 @@ async function loadUserItems(username) {
 
   const grid = document.createElement('div');
   grid.className = 'items-grid';
+  grid.id = 'profile-items-grid';
   grid.innerHTML = userItems.map(item => createCardHTML(item)).join('');
   container.appendChild(grid);
   attachItemCardEvents(grid);
+}
+
+function updateProfileItemCount() {
+  const countEl = $('profile-items-count');
+  const grid = $('profile-items-grid');
+  if (!countEl || !grid) return;
+  const c = grid.querySelectorAll('.item-card').length;
+  countEl.textContent = `${c} ${pluralize(c, Lang.t('items.one'), Lang.t('items.few'), Lang.t('items.many'))}`;
 }
 
 function openEditModal(username, els) {
