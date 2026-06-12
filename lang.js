@@ -181,7 +181,21 @@ const LANGS = {
     'chat.no.messages': 'Нет сообщений',
     'chat.input.placeholder': 'Напишите сообщение...',
     'chat.send': 'Отправить',
+
+    // ─── History ───
+    'history.title': 'История просмотров',
+    'history.clear': 'Очистить',
+    'history.empty': 'Нет просмотров',
+    'history.empty.text': 'Здесь будут недавно просмотренные объявления',
+    'history.cleared': 'История очищена',
+
+    // ─── User page ───
+    'user.listings': 'Объявления',
     'detail.chat': '💬 Написать в чат',
+
+    // ─── Report ───
+    'detail.report': '🚩 Пожаловаться',
+    'toast.report.sent': 'Жалоба отправлена',
 
     // ─── Favorites ───
     'fav.title': '♥ Избранное',
@@ -209,6 +223,14 @@ const LANGS = {
     'footer.text': '🎒 School Shop © 2026 — Создано с ❤️',
     'footer.export': '💾 Экспорт',
     'footer.export.title': 'Скачать резервную копию',
+    'footer.about': 'О проекте',
+
+    // ─── About page ───
+    'about.title': 'О проекте School Shop',
+    'about.text1': 'School Shop — это торговая площадка для школьников, студентов и учителей. Здесь можно продавать и покупать учебники, школьные принадлежности, электронику, одежду и многое другое.',
+    'about.text2': 'Все объявления проходят модерацию сообществом. Мы за честные и безопасные сделки внутри учебных заведений.',
+    'about.text3': 'Проект создан с ❤️ для удобства учеников и педагогов.',
+    'about.back': '🏠 На главную',
 
     // ─── Scroll ───
     'scroll.top': 'Наверх',
@@ -496,7 +518,21 @@ const LANGS = {
     'chat.no.messages': 'Билдирүүлөр жок',
     'chat.input.placeholder': 'Билдирүү жазыңыз...',
     'chat.send': 'Жиберүү',
+
+    // ─── History ───
+    'history.title': 'Көрүү тарыхы',
+    'history.clear': 'Тазалоо',
+    'history.empty': 'Көрүүлөр жок',
+    'history.empty.text': 'Жакында көрүлгөн жарыялар ушул жерде болот',
+    'history.cleared': 'Тарых тазаланды',
+
+    // ─── User page ───
+    'user.listings': 'Жарыялар',
     'detail.chat': '💬 Чатка жазуу',
+
+    // ─── Report ───
+    'detail.report': '🚩 Арыздануу',
+    'toast.report.sent': 'Арыз жөнөтүлдү',
 
     'fav.title': '♥ Тандалгандар',
     'fav.subtitle': 'Сакталган жарыяларыңыз',
@@ -519,6 +555,14 @@ const LANGS = {
     'footer.text': '🎒 School Shop © 2026 — ❤️ менен жасалды',
     'footer.export': '💾 Экспорт',
     'footer.export.title': 'Резервдик көчүрмөнү жүктөө',
+    'footer.about': 'Долбоор жөнүндө',
+
+    // ─── About page ───
+    'about.title': 'School Shop долбоору жөнүндө',
+    'about.text1': 'School Shop — бул мектеп окуучулары, студенттер жана мугалимдер үчүн соода аянтчасы. Бул жерде окуу китептерин, мектеп буюмдарын, электрониканы, кийимдерди жана башка көп нерселерди сатууга жана сатып алууга болот.',
+    'about.text2': 'Бардык жарыялар коомчулук тарабынан текшерилет. Биз окуу жайлардын ичинде ак ниеттүү жана коопсуз бүтүмдөрдү жактайбыз.',
+    'about.text3': 'Долбоор окуучулардын жана мугалимдердин ыңгайлуулугу үчүн ❤️ менен жасалган.',
+    'about.back': '🏠 Башкы бетке',
 
     'scroll.top': 'Жогору',
 
@@ -735,6 +779,16 @@ const LANGS = {
     'chat.no.messages': 'No messages',
     'chat.input.placeholder': 'Write a message...',
     'chat.send': 'Send',
+
+    // ─── History ───
+    'history.title': 'Viewing History',
+    'history.clear': 'Clear',
+    'history.empty': 'No views',
+    'history.empty.text': 'Recently viewed listings will appear here',
+    'history.cleared': 'History cleared',
+
+    // ─── User page ───
+    'user.listings': 'Listings',
     'detail.chat': '💬 Write in chat',
 
     'fav.title': '♥ Favorites',
@@ -758,6 +812,14 @@ const LANGS = {
     'footer.text': '🎒 School Shop © 2026 — Made with ❤️',
     'footer.export': '💾 Export',
     'footer.export.title': 'Download backup',
+    'footer.about': 'About',
+
+    // ─── About page ───
+    'about.title': 'About School Shop',
+    'about.text1': 'School Shop is a marketplace for students, pupils, and teachers. You can buy and sell textbooks, school supplies, electronics, clothes, and much more.',
+    'about.text2': 'All listings are community-moderated. We stand for fair and safe deals within educational institutions.',
+    'about.text3': 'Made with ❤️ for the convenience of students and educators.',
+    'about.back': '🏠 Back to Home',
 
     'scroll.top': 'Scroll to top',
 

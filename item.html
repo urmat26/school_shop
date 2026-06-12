@@ -162,10 +162,10 @@
           <!-- Author -->
           <div class="author-card">
             <div class="author-avatar" id="author-avatar">U</div>
-            <div class="author-info">
+            <a href="user.html?name=" class="author-info" id="author-link">
               <div class="author-name" id="item-author"></div>
               <div class="author-label" data-i18n="detail.seller">Продавец</div>
-            </div>
+            </a>
           </div>
 
           <!-- Contact -->
@@ -177,6 +177,11 @@
           <!-- Chat -->
           <div class="contact-card" id="item-chat-card" style="display:none;">
             <a class="btn btn-primary w-full" id="item-chat-btn" data-i18n="detail.chat">💬 Написать в чат</a>
+          </div>
+
+          <!-- Report -->
+          <div class="contact-card" id="item-report-card" style="display:none;">
+            <button class="btn btn-ghost w-full" id="item-report-btn" data-i18n="detail.report">🚩 Пожаловаться</button>
           </div>
 
           <!-- Share -->
@@ -237,6 +242,7 @@
         🎒 School Shop © 2026 — <span data-i18n="footer.made">Создано с ❤️</span>
       </p>
       <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" title="Скачать резервную копию" data-i18n-title="footer.export"><span data-i18n="footer.export">Экспорт</span></button>
+      <a href="about.html" class="btn btn-ghost btn-sm"><span data-i18n="footer.about">О проекте</span></a>
     </div>
   </footer>
 

@@ -146,6 +146,8 @@ function renderItem(item) {
   // Author
   itemAuthor.textContent = item.author;
   authorAvatar.textContent = item.author ? item.author.charAt(0).toUpperCase() : '?';
+  const authorLink = document.getElementById('author-link');
+  if (authorLink) authorLink.href = `user.html?name=${encodeURIComponent(item.author)}`;
 
   // Contact
   itemContact.textContent = item.contact || Lang.t('item.no.contact');
@@ -189,6 +191,13 @@ function renderItem(item) {
   if (chatBtn && chatCard && currentUser && item.author !== currentUser) {
     chatCard.style.display = '';
     chatBtn.href = `chat.html?item=${encodeURIComponent(item.id)}&user=${encodeURIComponent(item.author)}`;
+  }
+
+  // Report button
+  const reportBtn = document.getElementById('item-report-btn');
+  if (reportBtn && currentUser) {
+    reportBtn.closest('.contact-card').style.display = '';
+    reportBtn.addEventListener('click', () => handleReport(item));
   }
 
   // Recently viewed & similar items (show skeleton while loading)
@@ -254,6 +263,15 @@ function handleFavorite() {
 
   updateFavCount();
   Favorites.syncToServer();
+}
+
+// ───────────────────── Report ─────────────────────
+function handleReport(item) {
+  const text = `Жалоба на объявление\n\nID: ${item.id}\nНазвание: ${item.title}\nАвтор: ${item.author}\nСсылка: ${window.location.href}\n\nОпишите причину жалобы:`;
+  const encoded = encodeURIComponent(text);
+  const email = 'support@schoolshop.app';
+  window.open(`mailto:${email}?subject=Жалоба на объявление&body=${encoded}`, '_blank');
+  showToast(Lang.t('toast.report.sent'), 'success');
 }
 
 // ───────────────────── Delete Modal ─────────────────────

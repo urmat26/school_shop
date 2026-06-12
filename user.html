@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru" data-lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Пользователь School Shop">
+  <meta name="color-scheme" content="dark light">
+  <title>Пользователь — School Shop</title>
+  <script>
+    (function () {
+      var t = localStorage.getItem('marketplace_theme');
+      if (t !== 'light' && t !== 'dark') {
+        t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+      document.documentElement.style.colorScheme = t;
+    })();
+  </script>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+<body>
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><img src="logo.png" alt="School Shop Logo" class="logo-img"><div class="logo-text"><span>School</span> Shop</div></a>
+      <nav class="nav-links">
+        <a href="index.html" class="nav-link"><span class="nav-link-icon">🏠</span><span data-i18n="nav.home">Главная</span></a>
+        <a href="create.html" class="nav-link"><span class="nav-link-icon">➕</span><span data-i18n="nav.create">Создать</span></a>
+        <a href="favorites.html" class="nav-link"><span class="nav-link-icon">♥</span><span data-i18n="nav.favorites">Избранное</span><span class="fav-count-badge" id="fav-count-nav">0</span></a>
+        <a href="chat.html" class="nav-link"><span class="nav-link-icon">💬</span><span data-i18n="nav.chat">Чаты</span><span class="fav-count-badge chat-unread-badge" id="chat-unread-nav" style="display:none">0</span></a>
+        <a href="profile.html" class="nav-link profile-nav-link"><span class="nav-link-icon">👤</span><span data-i18n="nav.profile">Профиль</span></a>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle">☀️</button>
+        <select class="lang-select" id="lang-select"><option value="ru">🇷🇺</option><option value="kg">🇰🇬</option><option value="en">🇺🇸</option></select>
+        <button class="btn btn-primary btn-sm" id="login-btn">👤 Войти</button>
+        <div class="user-display" id="user-display" style="display:none;"><div class="user-avatar" id="user-avatar">U</div><span class="user-nickname" id="user-nickname"></span><button id="logout-btn">Выйти</button></div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-menu-nav">
+      <a href="index.html" class="mobile-menu-link">🏠 <span data-i18n="nav.home">Главная</span></a>
+      <a href="create.html" class="mobile-menu-link">➕ <span data-i18n="nav.create">Создать</span></a>
+      <a href="favorites.html" class="mobile-menu-link">♥ <span data-i18n="nav.favorites">Избранное</span><span class="fav-count-badge">0</span></a>
+      <a href="chat.html" class="mobile-menu-link">💬 <span data-i18n="nav.chat">Чаты</span></a>
+      <a href="profile.html" class="mobile-menu-link profile-nav-link-mobile">👤 <span data-i18n="nav.profile">Профиль</span></a>
+      <button class="theme-toggle mobile-theme-toggle">☀️</button>
+      <select class="lang-select mobile-lang-select" id="lang-select-mobile"><option value="ru">🇷🇺</option><option value="kg">🇰🇬</option><option value="en">🇺🇸</option></select>
+    </nav>
+  </div>
+
+  <main class="profile-page" id="user-page">
+    <div class="container">
+      <div class="profile-layout">
+        <aside class="profile-sidebar">
+          <div class="profile-card">
+            <div class="profile-avatar" id="user-avatar">U</div>
+            <h1 class="profile-nickname" id="user-nickname"></h1>
+            <div class="profile-name" id="user-name"></div>
+            <div class="profile-bio" id="user-bio"></div>
+            <div class="profile-email" id="user-email"></div>
+            <div class="profile-location" id="user-location"></div>
+            <div class="profile-since" id="user-since"></div>
+            <div class="profile-actions">
+              <a class="btn btn-primary w-full" id="user-chat-btn" data-i18n="detail.chat">💬 Написать в чат</a>
+            </div>
+          </div>
+        </aside>
+        <section class="profile-main">
+          <div class="profile-section-header">
+            <h2 class="profile-section-title" data-i18n="user.listings">Объявления</h2>
+            <span class="profile-section-count" id="user-items-count"></span>
+          </div>
+          <div id="user-items"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="footer-text">🎒 School Shop © 2026 — <span data-i18n="footer.made">Создано с ❤️</span></p>
+      <button class="btn btn-ghost btn-sm" onclick="downloadBackup()" data-i18n-title="footer.export"><span data-i18n="footer.export">Экспорт</span></button>
+      <a href="about.html" class="btn btn-ghost btn-sm"><span data-i18n="footer.about">О проекте</span></a>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+  <button class="scroll-top" id="scroll-top" data-i18n-title="scroll.top" title="Наверх">↑</button>
+
+  <script src="lang.js"></script>
+  <script src="theme.js"></script>
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="user.js"></script>
+</body>
+</html>
