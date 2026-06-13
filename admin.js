@@ -1,9 +1,12 @@
 const $ = id => document.getElementById(id);
 
 document.addEventListener('DOMContentLoaded', async () => {
-  Auth.init();
-  updateFavCount();
-  updateUnreadBadge();
+  try {
+    Auth.init();
+  } catch (e) { console.error('Auth.init error:', e); }
+
+  try { updateFavCount(); } catch (e) { console.error('updateFavCount error:', e); }
+  try { updateUnreadBadge(); } catch (e) { console.error('updateUnreadBadge error:', e); }
 
   const loginWrap = $('admin-login-wrap');
   const dashboard = $('admin-dashboard');
@@ -13,6 +16,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loginError = $('admin-login-error');
   const refreshBtn = $('admin-refresh-btn');
   const logoutBtn = $('admin-logout-btn');
+
+  if (!loginWrap || !dashboard || !loginBtn) {
+    console.error('Admin page: missing required DOM elements');
+    return;
+  }
 
   const showLogin = () => {
     loginWrap.style.display = '';
@@ -24,10 +32,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     dashboard.style.display = '';
   };
 
-  if (Auth.isAdmin()) {
-    showDashboard();
-    await loadAdminData();
-  } else {
+  try {
+    if (Auth.isAdmin()) {
+      showDashboard();
+      await loadAdminData();
+    } else {
+      showLogin();
+    }
+  } catch (e) {
+    console.error('Admin auth check error:', e);
     showLogin();
   }
 
