@@ -1,4 +1,4 @@
-const CACHE = 'school-shop-v4';
+const CACHE = 'school-shop-v3';
 const STATIC = [
   '/',
   '/index.html',
@@ -11,8 +11,6 @@ const STATIC = [
   '/user.html',
   '/about.html',
   '/offline.html',
-  '/admin.html',
-  '/admin.js',
   '/style.css',
   '/lang.js',
   '/theme.js',

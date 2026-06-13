@@ -2890,10 +2890,7 @@ ul, ol {
 .profile-nav-link,
 .profile-nav-link-mobile,
 #chat-nav-link,
-.admin-nav-link,
-.admin-nav-link-mobile {
-  display: none;
-}
+
 
 /* ───────────────────── Utility ───────────────────── */
 .visually-hidden {

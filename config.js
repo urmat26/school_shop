@@ -11,9 +11,6 @@ const CONFIG = {
     USE_VERCEL_PROXY: false, // true = использовать /api/data + /api/upload
     VERCEL_DATA_URL: '/api/data', // прокси для JSONBin
     VERCEL_UPLOAD_URL: '/api/upload', // прокси для ImgBB
-    // Администратор
-    ADMIN_USERNAME: 'Ratmir',
-    ADMIN_PASSWORD_HASH: 'b3e47a2b7312ec75ce6676fc1d30375ea7ae36a989eb65bbc896b5d230a149cf',
     // Настройки приложения
     ITEMS_PER_PAGE: 10,
     // Категории товаров
