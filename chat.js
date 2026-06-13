@@ -171,6 +171,7 @@ async function handleSend() {
     renderMessages();
     loadConversations();
     updateUnreadBadge();
+    showToast(Lang.t('toast.message.sent'), 'success');
   } catch (e) {
     showToast(e.message || 'Ошибка отправки', 'error');
   }

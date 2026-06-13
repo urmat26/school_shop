@@ -265,6 +265,7 @@ const LANGS = {
     'toast.restore.error': 'Ошибка восстановления',
     'toast.status.error': 'Ошибка обновления статуса',
     'toast.create.error': 'Ошибка создания объявления',
+    'toast.message.sent': 'Сообщение отправлено ✅',
 
     // ─── Items count ───
     'items.one': 'объявление',
@@ -592,6 +593,7 @@ const LANGS = {
     'toast.restore.error': 'Калыбына келтирүүдө ката',
     'toast.status.error': 'Статусту жаңыртууда ката',
     'toast.create.error': 'Жарыя түзүүдө ката',
+    'toast.message.sent': 'Билдирүү жөнөтүлдү ✅',
 
     'items.one': 'жарыя',
     'items.few': 'жарыя',
@@ -848,6 +850,7 @@ const LANGS = {
     'toast.restore.error': 'Error restoring',
     'toast.status.error': 'Error updating status',
     'toast.create.error': 'Error creating listing',
+    'toast.message.sent': 'Message sent ✅',
 
     'items.one': 'listing',
     'items.few': 'listings',
