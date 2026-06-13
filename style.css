@@ -2889,8 +2889,9 @@ ul, ol {
 /* ───────────────────── Nav Links (hidden until login) ───────────────────── */
 .profile-nav-link,
 .profile-nav-link-mobile,
-#chat-nav-link,
-
+#chat-nav-link {
+  display: none;
+}
 
 /* ───────────────────── Utility ───────────────────── */
 .visually-hidden {

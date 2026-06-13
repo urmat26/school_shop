@@ -342,6 +342,9 @@ const Auth = {
             unreadBadges.forEach(el => el.style.display = 'none');
         }
     },
+    _goToProfile() {
+        window.location.href = 'profile.html';
+    },
     requireAuth(callback) {
         const user = this.getUser();
         if (user) {
@@ -363,6 +366,16 @@ const Auth = {
         const logoutBtn = document.getElementById('logout-btn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => this.logout());
+        }
+        const userAvatar = document.getElementById('user-avatar');
+        if (userAvatar) {
+            userAvatar.style.cursor = 'pointer';
+            userAvatar.addEventListener('click', () => this._goToProfile());
+        }
+        const userNickname = document.getElementById('user-nickname');
+        if (userNickname) {
+            userNickname.style.cursor = 'pointer';
+            userNickname.addEventListener('click', () => this._goToProfile());
         }
         const modalBg = document.querySelector('.modal-overlay-bg');
         if (modalBg) {
