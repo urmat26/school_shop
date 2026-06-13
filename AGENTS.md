@@ -55,3 +55,25 @@ git add -A; if ($?) { git commit -m "..." }; if ($?) { git push }
 - Вход/регистрация с callback (например `requireAuth` из `create.html`) → вызов callback, без редиректа
 - Модалка авторизации — единая точка входа; отдельной страницы логина нет
 - Ссылка «Профиль» в навигации видна только когда пользователь залогинен (CSS `display: none` + JS меняет на `display: flex`)
+
+---
+
+## Состояние сессии (13.06.2026)
+
+### Что сделано
+- **item.js** — перезаписан (добавлен `"use strict"`, удалён лишний код) для устранения `Uncaught SyntaxError: Unexpected token '}'` (файл на диске был валиден, ошибка оставалась в браузере — возможно кеш SW/HTTP)
+- **item.js** — возвращена пропущенная привязка `deleteConfirm.addEventListener('click', handleDelete)` и `deleteModal.querySelector('.modal-overlay-bg').addEventListener('click', hideDeleteModal)`
+- **chat.js** — добавлен `showToast(Lang.t('toast.message.sent'), 'success')` после успешной отправки сообщения
+- **lang.js** — добавлен ключ `toast.message.sent` для всех трёх языков (ru/kg/en)
+
+### Открытые вопросы
+1. **SyntaxError** — пользователю нужно проверить на клиенте (Ctrl+F5 / очистка SW в DevTools → Application → Service Workers → Unregister + hard reload). При повторении — проверить **DevTools → Sources → item.js:341** что реально показывает браузер.
+2. **Перевод `chat.placeholder`** — ключ `chat.placeholder` не найден в коде; возможно ошибка была старой (проверить `chat.input.placeholder` на странице чата).
+3. **Toast в чате** — теперь показывается ✅ Сообщение отправлено при успешной отправке.
+
+### Коммиты сессии
+```
+414b0f1 Перезапись item.js для устранения мистической SyntaxError
+9cac894  fix: возвращена привязка события deleteConfirm к handleDelete
+a4d37b3  feat: добавлен toast об успешной отправке сообщения + переводы
+```
