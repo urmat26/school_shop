@@ -228,6 +228,10 @@ function renderItem(item) {
     e.preventDefault();
     window.open(`https://wa.me/?text=${url}%20${text}`, '_blank', 'noopener');
   });
+
+  deleteCancel.addEventListener('click', hideDeleteModal);
+  deleteModal.querySelector('.modal-overlay-bg').addEventListener('click', hideDeleteModal);
+  deleteConfirm.addEventListener('click', handleDelete);
 }
 
 // ───────────────────── Favorite ─────────────────────
