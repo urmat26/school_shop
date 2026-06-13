@@ -1,3 +1,4 @@
+"use strict";
 /* =========================================================
    item.js — Логика страницы одного объявления
    ========================================================= */
@@ -104,7 +105,6 @@ async function loadItem(id) {
     showLoading(false);
     itemContainer.style.display = 'grid';
 
-    // Increment views in background
     incrementViews(id);
 
   } catch (error) {
@@ -115,12 +115,10 @@ async function loadItem(id) {
 
 // ───────────────────── Render Item ─────────────────────
 function renderItem(item) {
-  // Title
   itemTitle.textContent = item.title;
   document.title = `${item.title} — Маркетплейс`;
   breadcrumbTitle.textContent = item.title;
 
-  // Image
   const imageUrl = item.image || getPlaceholderSVG(item.category);
   itemImage.src = imageUrl;
   itemImage.alt = item.title;
@@ -129,53 +127,42 @@ function renderItem(item) {
     this.src = getPlaceholderSVG(item.category);
   };
 
-  // Price
   const price = formatPrice(item.price);
   itemPrice.textContent = price;
   if (!item.price || item.price === 0) {
     itemPrice.classList.add('free');
   }
 
-  // Category
   itemCategory.dataset.category = item.category;
   itemCategory.innerHTML = `${getCategoryIcon(item.category)} <span data-i18n="cat.${escapeHtml(item.category)}">${Lang.t('cat.' + item.category)}</span>`;
 
-  // Description
   itemDescription.textContent = item.description || Lang.t('item.no.description');
 
-  // Author
   itemAuthor.textContent = item.author;
   authorAvatar.textContent = item.author ? item.author.charAt(0).toUpperCase() : '?';
   const authorLink = document.getElementById('author-link');
   if (authorLink) authorLink.href = `user.html?name=${encodeURIComponent(item.author)}`;
 
-  // Contact
   itemContact.textContent = item.contact || '';
 
-  // Date & Views
   itemDate.textContent = formatDate(item.created);
   const viewCount = (item.views || 0) + 1;
   itemViews.textContent = viewCount;
-  // Animate views counter
   itemViews.classList.remove('views-animate');
-  void itemViews.offsetWidth; // trigger reflow
+  void itemViews.offsetWidth;
   itemViews.classList.add('views-animate');
 
-  // Track recently viewed
   trackRecentlyViewed(item);
 
-  // Favorite
   const isFav = Favorites.isFavorite(item.id);
   favoriteBtn.classList.toggle('active', isFav);
   favoriteBtn.innerHTML = isFav ? '♥' : '♡';
   favoriteBtn.addEventListener('click', handleFavorite);
 
-  // Sold badge on detail image
   if (item.status === 'sold') {
     soldDetailBadge.style.display = 'flex';
   }
 
-  // Actions (only for owner)
   if (Auth.canEdit(item)) {
     if (item.status === 'deleted') {
       itemActions.style.display = 'none';
@@ -190,7 +177,6 @@ function renderItem(item) {
     }
   }
 
-  // Chat button (for non-owners, logged in)
   const chatCard = document.getElementById('item-chat-card');
   const chatBtn = document.getElementById('item-chat-btn');
   const currentUser = Auth.getUser();
@@ -199,20 +185,17 @@ function renderItem(item) {
     chatBtn.href = `chat.html?item=${encodeURIComponent(item.id)}&user=${encodeURIComponent(item.author)}`;
   }
 
-  // Report button
   const reportBtn = document.getElementById('item-report-btn');
   if (reportBtn && currentUser) {
     reportBtn.closest('.contact-card').style.display = '';
     reportBtn.addEventListener('click', () => handleReport(item));
   }
 
-  // Recently viewed & similar items (show skeleton while loading)
   if (recentlySkeleton) recentlySkeleton.style.display = 'grid';
   if (similarSkeleton) similarSkeleton.style.display = 'grid';
   renderRecentlyViewed();
   renderSimilarItems();
 
-  // Scroll to top
   const scrollBtn = document.getElementById('scroll-top');
   if (scrollBtn) {
     window.addEventListener('scroll', () => {
@@ -223,7 +206,6 @@ function renderItem(item) {
     });
   }
 
-  // Share
   const url = encodeURIComponent(window.location.href);
   const text = encodeURIComponent(`${item.title} — School Shop`);
   document.getElementById('share-btn')?.addEventListener('click', () => {
@@ -246,11 +228,6 @@ function renderItem(item) {
     e.preventDefault();
     window.open(`https://wa.me/?text=${url}%20${text}`, '_blank', 'noopener');
   });
-
-  // Delete modal events
-  deleteCancel.addEventListener('click', hideDeleteModal);
-  deleteModal.querySelector('.modal-overlay-bg').addEventListener('click', hideDeleteModal);
-  deleteConfirm.addEventListener('click', handleDelete);
 }
 
 // ───────────────────── Favorite ─────────────────────
