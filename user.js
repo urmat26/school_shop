@@ -50,17 +50,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       : Lang.t('profile.member.since');
   }
 
-  // Chat btn
+  // Items
+  const userItems = data.items.filter(i => i.author === username && i.status === 'active');
+
+  // Chat btn — set after items are known, use first active item
   const chatBtn = $('user-chat-btn');
   const currentUser = Auth.getUser();
   if (chatBtn && currentUser && currentUser !== username) {
-    chatBtn.href = `chat.html?item=&user=${encodeURIComponent(username)}`;
+    const firstItemId = userItems[0]?.id;
+    if (firstItemId) {
+      chatBtn.href = `chat.html?item=${encodeURIComponent(firstItemId)}&user=${encodeURIComponent(username)}`;
+    } else {
+      chatBtn.style.display = 'none';
+    }
   } else if (chatBtn) {
     chatBtn.style.display = 'none';
   }
-
-  // Items
-  const userItems = data.items.filter(i => i.author === username && i.status === 'active');
   const container = $('user-items');
   const countEl = $('user-items-count');
   if (countEl) {

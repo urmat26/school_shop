@@ -2889,7 +2889,9 @@ ul, ol {
 /* ───────────────────── Nav Links (hidden until login) ───────────────────── */
 .profile-nav-link,
 .profile-nav-link-mobile,
-#chat-nav-link {
+#chat-nav-link,
+.admin-nav-link,
+.admin-nav-link-mobile {
   display: none;
 }
 
@@ -3167,6 +3169,10 @@ ul, ol {
 
   .chat-sidebar {
     display: block;
+  }
+
+  .chat-sidebar.hidden {
+    display: none;
   }
 
   .chat-thread-header {

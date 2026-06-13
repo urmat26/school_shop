@@ -220,7 +220,7 @@ function createCardHTML(item, options = {}) {
     <article class="item-card" data-id="${escapeHtml(item.id)}">
       <div class="item-card-image">
         ${isSold ? '<div class="sold-badge">' + Lang.t('item.sold') + '</div>' : ''}
-        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy">
+        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy" onerror="this.onerror=null;this.src='${escapeHtml(getPlaceholderSVG(item.category))}'">
         <div class="item-card-badge">
           <span class="category-badge" data-category="${escapeHtml(item.category)}">
             ${getCategoryIcon(item.category)} <span data-i18n="cat.${escapeHtml(item.category)}">${Lang.t('cat.' + item.category)}</span>
@@ -248,7 +248,7 @@ function createMiniCardHTML(item) {
     const imageUrl = item.image || getPlaceholderSVG(item.category);
     return `
     <div class="recently-viewed-card" data-id="${escapeHtml(item.id)}" role="link" tabindex="0">
-      <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy">
+      <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(item.title)}" loading="lazy" onerror="this.onerror=null;this.src='${escapeHtml(getPlaceholderSVG(item.category))}'">
       <div class="recently-viewed-card-body">
         <div class="recently-viewed-card-title">${escapeHtml(item.title)}</div>
         <div class="recently-viewed-card-price">${escapeHtml(formatPrice(item.price))}</div>

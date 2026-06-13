@@ -341,6 +341,11 @@ const Auth = {
             chatMobileLinks.forEach(el => el.style.display = 'none');
             unreadBadges.forEach(el => el.style.display = 'none');
         }
+        const adminLinks = document.querySelectorAll('.admin-nav-link');
+        const adminMobileLinks = document.querySelectorAll('.admin-nav-link-mobile');
+        const isAdm = this.isAdmin();
+        adminLinks.forEach(el => el.style.display = isAdm ? 'flex' : 'none');
+        adminMobileLinks.forEach(el => el.style.display = isAdm ? 'flex' : 'none');
     },
     requireAuth(callback) {
         const user = this.getUser();
@@ -353,6 +358,20 @@ const Auth = {
             this.showModal('login', callback);
             return false;
         }
+    },
+    isAdmin() {
+        return localStorage.getItem('marketplace_admin') === 'true';
+    },
+    async adminLogin(login, pass) {
+        if (login !== CONFIG.ADMIN_USERNAME) return false;
+        const hash = await this.hashPassword(pass);
+        if (hash !== CONFIG.ADMIN_PASSWORD_HASH) return false;
+        localStorage.setItem('marketplace_admin', 'true');
+        return true;
+    },
+    adminLogout() {
+        localStorage.removeItem('marketplace_admin');
+        this.updateUI();
     },
     init() {
         this.updateUI();

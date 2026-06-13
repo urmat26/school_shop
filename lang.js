@@ -12,6 +12,7 @@ const LANGS = {
     'nav.favorites': 'Избранное',
     'nav.chat': 'Чаты',
     'nav.profile': 'Профиль',
+    'nav.admin': 'Админка',
 
     // ─── Theme ───
     'theme.light': 'Светлая тема',
@@ -357,6 +358,7 @@ const LANGS = {
     'nav.favorites': 'Тандалгандар',
     'nav.chat': 'Чаттар',
     'nav.profile': 'Профиль',
+    'nav.admin': 'Админка',
 
     'theme.light': 'Жарык тема',
     'theme.dark': 'Караңгы тема',
@@ -618,6 +620,7 @@ const LANGS = {
     'nav.favorites': 'Favorites',
     'nav.chat': 'Chats',
     'nav.profile': 'Profile',
+    'nav.admin': 'Admin',
 
     'theme.light': 'Light theme',
     'theme.dark': 'Dark theme',

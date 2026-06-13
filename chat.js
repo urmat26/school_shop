@@ -39,6 +39,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('chat-back-btn').addEventListener('click', () => {
     $('chat-thread').style.display = 'none';
     $('chat-placeholder').style.display = '';
+    if (window.innerWidth <= 768) {
+      const sidebar = document.getElementById('chat-sidebar');
+      if (sidebar) sidebar.classList.remove('hidden');
+    }
   });
 
   // Start auto-refresh every 10s
@@ -105,18 +109,24 @@ async function openConversation(itemId, otherUser) {
   $('chat-input').value = '';
   $('chat-input').focus();
 
-  // Find item title
+  if (window.innerWidth <= 768) {
+    const sidebar = document.getElementById('chat-sidebar');
+    if (sidebar) sidebar.classList.add('hidden');
+  }
+
   const item = allData.items.find(i => i.id === itemId);
   $('chat-thread-item').textContent = item ? item.title : '';
 
   const msgSkeleton = $('msg-skeleton');
   if (msgSkeleton) msgSkeleton.style.display = '';
 
-  // Mark as read
-  await markConversationRead(itemId, otherUser);
+  try {
+    await markConversationRead(itemId, otherUser);
+    allData = await fetchAll(true);
+  } catch (e) {
+    console.error('openConversation error:', e);
+  }
 
-  // Re-fetch to get latest
-  allData = await fetchAll(true);
   renderMessages();
   if (msgSkeleton) msgSkeleton.style.display = 'none';
   loadConversations();
